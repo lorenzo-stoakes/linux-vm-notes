@@ -8,7 +8,7 @@ This originally stems from a [set of notes][linux-gorman] I took from the excell
 
 In these notes I am specifically targeting the 4.6 kernel since it is the current mainline version and should remain a sane and stable basis for notes and hacks for the foreseeable future.
 
-Talking of hacks, the [sister repo][vm-hacks] will contain my code and patches intended to help me understand the VM subsystem.
+Talking of hacks the sister repo to this one, [linux-vm-hacks][vm-hacks], will contain my code and patches intended to help me understand the VM subsystem.
 
 For actually useful tools if ever I produce them, [memutils][memutils] is the place to be.
 
