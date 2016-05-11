@@ -12,8 +12,13 @@ Talking of hacks, the sister repo to this one - [linux-vm-hacks][vm-hacks] - wil
 
 For actually useful tools if ever I produce them, [memutils][memutils] is the place to be.
 
+## License
+
+These notes are licensed under [Creative Commons BY-NC-SA][license] - basically do what you want with them as long as it's non-commercial, provide proper attribution and if you make changes you have to distribute them under the same license.
+
 [linux-gorman]:https://github.com/lorenzo-stoakes/linux-gorman-book-notes
 [amazon-gorman]:http://www.amazon.co.uk/Understanding-Virtual-Memory-Manager-Perens/dp/0131453483
 [gorman]:http://www.csn.ul.ie/~mel/blog/
 [vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
 [memutils]:https://github.com/lorenzo-stoakes/memutils
+[license]:http://creativecommons.org/licenses/by-nc-sa/4.0/
