@@ -4,6 +4,10 @@ __NOTE:__ I'll be targeting [Linux 4.6-rc7][linux-4.6-rc7] for now until 4.6 is
  released release is made (quite likely tomorrow, 15th May 2016), at which point
  that will remain (for now :) the target release version these notes refer to.
 
+## Contents
+
+* [Fundamentals](fundamentals.md)
+
 ## Assumptions
 
 * I target [(almost-)4.6][linux-4.6-rc7].
@@ -17,10 +21,6 @@ __NOTE:__ I'll be targeting [Linux 4.6-rc7][linux-4.6-rc7] for now until 4.6 is
   document which should act as some kind of guide.
 
 * Arsenal will win the league at some point in the future.
-
-## Contents
-
-* [Fundamentals](fundamentals.md)
 
 ## Introduction
 
