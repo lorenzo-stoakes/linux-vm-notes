@@ -33,6 +33,10 @@ subsystem.
 For tools that might be of some actual use, [memutils][memutils] is the place to
 be.
 
+Additionally, I've created some [kernel hacking scripts][kernel-scripts] that
+some people might find useful for configuring, compiling and running kernels
+under qemu amongst other things.
+
 ## License
 
 These notes are licensed under [Creative Commons BY-NC-SA][license] - basically
@@ -52,4 +56,5 @@ Take a look at the official Creative Commons site if you need more details.
 [gorman]:http://www.csn.ul.ie/~mel/blog/
 [vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
 [memutils]:https://github.com/lorenzo-stoakes/memutils
+[kernel-scripts]:https://github.com/lorenzo-stoakes/kernel-scripts
 [license]:http://creativecommons.org/licenses/by-nc-sa/4.0/
