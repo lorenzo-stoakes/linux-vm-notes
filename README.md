@@ -6,7 +6,11 @@ __NOTE:__ I'll be targeting [Linux 4.6-rc7][linux-4.6-rc7] for now until 4.6 is
 
 ## Contents
 
-* [Fundamentals](fundamentals.md)
+1. [Fundamentals](fundamentals.md) - Overview of virtual memory concepts without
+   referencing any actual code or making assumptions about prior knowledge.
+
+2. [Page Tables](page-tables.md) - Discussion about how
+   [page table][page-table]s are implemented in linux.
 
 ## Assumptions
 
@@ -69,6 +73,7 @@ do what you want with them as long as you:
 Take a look at the official Creative Commons site if you need more details.
 
 [linux-4.6-rc7]:https://github.com/torvalds/linux/tree/v4.6-rc7
+[page-table]:https://en.wikipedia.org/wiki/Page_table
 [numa]:https://en.wikipedia.org/wiki/Non-uniform_memory_access
 [linux-gorman]:https://github.com/lorenzo-stoakes/linux-gorman-book-notes
 [amazon-gorman]:http://www.amazon.co.uk/Understanding-Virtual-Memory-Manager-Perens/dp/0131453483

@@ -8,8 +8,12 @@ specified.
 
 ## Basics
 
-* Here I'll go over some fundamental principles without referencing any code so
-  we have a basis to work with once we start digging in to the kernel.
+* In this section I go over some fundamental principles without referencing any
+  code so we have a basis to work with once we start digging in to the kernel. I
+  intentionally don't go into too much detail here.
+
+* This content will likely be duplicated elsewhere when we start digging into
+  things further.
 
 ### Virtual memory
 
@@ -186,6 +190,7 @@ Offset  = 1656
 * I'll get into more detail about the TLB and what the kernel code does with it
   in a later section.
 
+__[--> NEXT: Page Tables -->](page-tables.md)__
 
 [virtual-memory]:https://en.wikipedia.org/wiki/Virtual_memory
 [mmu]:https://en.wikipedia.org/wiki/Memory_management_unit
