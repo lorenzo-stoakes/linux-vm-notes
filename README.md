@@ -1,10 +1,28 @@
 # Linux VM Notes
 
-## Introduction
-
 __NOTE:__ I'll be targeting [Linux 4.6-rc7][linux-4.6-rc7] for now until 4.6 is
  released release is made (quite likely tomorrow, 15th May 2016), at which point
  that will remain (for now :) the target release version these notes refer to.
+
+## Assumptions
+
+* I target [(almost-)4.6][linux-4.6-rc7].
+
+* To begin with I'm going to focus on bog-standard x86-64 UMA
+  (i.e. non-[NUMA][numa]) - the notes will, without necessarily saying so,
+  assume this is the only system in existence.
+
+* I am stupid and constantly make mistakes. Don't take what I say to be
+  correct - check everything. I'm keeping track of the 'certainty level' of each
+  document which should act as some kind of guide.
+
+* Arsenal will win the league at some point in the future.
+
+## Contents
+
+* [Fundamentals](fundamentals.md)
+
+## Introduction
 
 This repo is a place for me to write up some notes on the linux 4.6 VM
 subsystem. I don't make any claim to their quality or usefulness, this is just a
@@ -51,6 +69,7 @@ do what you want with them as long as you:
 Take a look at the official Creative Commons site if you need more details.
 
 [linux-4.6-rc7]:https://github.com/torvalds/linux/tree/v4.6-rc7
+[numa]:https://en.wikipedia.org/wiki/Non-uniform_memory_access
 [linux-gorman]:https://github.com/lorenzo-stoakes/linux-gorman-book-notes
 [amazon-gorman]:http://www.amazon.co.uk/Understanding-Virtual-Memory-Manager-Perens/dp/0131453483
 [gorman]:http://www.csn.ul.ie/~mel/blog/
