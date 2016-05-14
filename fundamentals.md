@@ -167,7 +167,7 @@ Offset  = 1656
   assumes 4 levels regardless of architecture. Pretty nice right?
 
 * I'll get into more details about page tables and their actual implementation
-  in kernel code in a later section below.
+  in kernel code in a later section.
 
 ### Caching
 
