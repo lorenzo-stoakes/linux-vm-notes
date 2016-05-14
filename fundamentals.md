@@ -76,7 +76,7 @@ specified.
 
 * Obviously 4KiB can't store all possible mappings, but it lets us divide up
   each possible virtual address into 1024 different entries, each of which can
-  - and this is the really important bit - store a physical address of an
+  \- and this is the really important bit \- store a physical address of an
   entirely separate table in which we can use the 2nd index (e.g. 73 in our
   example above) to look up the next mapping.
 
