@@ -89,8 +89,7 @@ specified.
   different possible partitions, only providing the actual physical address of
   the page of memory the virtual address references in the very last table we
   look up. However since the work is actually done by the CPU, the hardware
-  architecture of the CPU specifies how things are divided (more on this
-  shortly.)
+  architecture of the CPU specifies how things are divided.
 
 * When we finally get the physical address of the page of memory we're
   interested in, we still need to know the precise location of the memory
