@@ -39,8 +39,8 @@ specified.
 ### Pages
 
 * If you mapped every single byte of RAM from a virtual address to a physical
-  one you'd need more memory than the system can possibly store just to store
-  the mappings - each physical address would take up space equal to the physical
+  one you'd need more memory than the system could possibly store for just the
+  mappings - each physical address would take up space equal to the physical
   word size (i.e. 4 bytes on a 32-bit system since a byte is 8 bits, 8 bytes on
   a 64-bit system), and you'd need an address for every byte. This is obviously
   a non-starter.
