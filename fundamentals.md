@@ -20,7 +20,7 @@ specified.
   rest of the notes are ALL about getting so bogged down in detail your body
   ends up preserved for future generations ;)
 
-### Virtual memory
+### Virtual Memory
 
 * In Linux (and most modern OSes) [virtual memory][virtual-memory] is used to
   simplify the management of, and prevent unauthorised access to, physical
@@ -65,7 +65,7 @@ specified.
   address space at once - a maximum of 48 bits or 256TiB, which would require a
   mere 256GiB per process.
 
-### Page tables
+### Page Tables
 
 * Before we look at how this is resolved, let's think about what a virtual
   address looks like - it's just a number in the computer like any other and
@@ -161,7 +161,7 @@ Offset  = 1656
   i.e. cache, mappings for fast lookup when it can to avoid this costly process,
   but more on that later.)
 
-### Page tables in linux
+### Page Tables in Linux
 
 * In linux there are 4 levels of [page table][page-table]s for ALL
   architectures. Now, clearly some architectures don't actually have 4 levels of
