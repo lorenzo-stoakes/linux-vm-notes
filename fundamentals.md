@@ -15,6 +15,11 @@ specified.
 * This content will likely be duplicated elsewhere when we start digging into
   things further.
 
+* This section intentionally doesn't reference any code to keep the fundamental
+  principles conceptual without getting too bogged down in detail. The entire
+  rest of the notes are ALL about getting so bogged down in detail your body
+  ends up preserved for future generations ;)
+
 ### Virtual memory
 
 * In Linux (and most modern OSes) [virtual memory][virtual-memory] is used to
