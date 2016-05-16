@@ -1,9 +1,5 @@
 # Linux VM Notes
 
-__NOTE:__ I'll be targeting [Linux 4.6-rc7][linux-4.6-rc7] for now until 4.6 is
- released release is made (quite likely tomorrow, 15th May 2016), at which point
- that will remain (for now :) the target release version these notes refer to.
-
 ## Contents
 
 1. [Fundamentals](fundamentals.md) - Overview of virtual memory concepts without
@@ -14,7 +10,7 @@ __NOTE:__ I'll be targeting [Linux 4.6-rc7][linux-4.6-rc7] for now until 4.6 is
 
 ## Assumptions
 
-* I target [(almost-)4.6][linux-4.6-rc7].
+* I target [4.6][linux-4.6].
 
 * To begin with I'm going to focus on bog-standard x86-64 UMA
   (i.e. non-[NUMA][numa]) - the notes will, without necessarily saying so,
@@ -72,7 +68,7 @@ do what you want with them as long as you:
 
 Take a look at the official Creative Commons site if you need more details.
 
-[linux-4.6-rc7]:https://github.com/torvalds/linux/tree/v4.6-rc7
+[linux-4.6]:https://github.com/torvalds/linux/tree/v4.6
 [page-table]:https://en.wikipedia.org/wiki/Page_table
 [numa]:https://en.wikipedia.org/wiki/Non-uniform_memory_access
 [linux-gorman]:https://github.com/lorenzo-stoakes/linux-gorman-book-notes
