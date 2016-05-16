@@ -113,6 +113,79 @@ much as possible between 32 and 64-bit x86.
                          |---------------------------PGDIR_SHIFT
 ```
 
+* But how does this relate to a 'sparse' layout of pages, what do these offsets
+  actually reference?
+
+* In linux, each process is assigned a PGD via
+  [struct mm_struct][mm_struct]`->pgd` - if a process (somehow?!) references no
+  memory at all it then only requires a single page of memory for mappings,
+  rather than the 256GiB of mostly empty space a full set of mappings would
+  need.
+
+* Mappings tables are generated as needed and the hierarchy of levels provides a
+  'sparse' set of mappings - a page of memory is used for
+  [page table][page-table] so, on average (obv. when you run out of space in a
+  PTE directory a new one will need to be created and the same goes for PMD and
+  PUD also, but these are on average not so common cases), mappings grow by a
+  page per 512 new mappings, or ~8 bytes per mapping amortised.
+
+* The best way of showing how this fits together is diagrammatically, so taking
+  the example address from above:
+
+```
+
+0000000000000000000000000000000000000000101100010111000000010000
+[   RESERVED   ][  PGD  ][  PUD  ][  PMD  ][  PTE  ][  OFFSET  ]
+
+PGD offset =    000000000 = 0
+PUD offset =    000000000 = 0
+PMD offset =    000000101 = 5
+PTE offset =    100010111 = 279
+phy offset = 000000010000 = 16
+
+
+      PGD
+    -------
+  0 |    -----\        PUD
+  . |-----|   |      -------
+  . /     /   \--->0 |    -----\        PMD
+  . \     \        . |-----|   |      -------
+  . /     /        . /     /   \--->0 /     /
+  . \     \        . \     \        . \     \
+  . /     /        . /     /        . /     /
+  . \     \        . \     \        . |-----|
+  . /     /        . /     /        5 |    -----\        PTE
+512 -------        . \     \        . |-----|   |      -------
+                   . /     /        . /     /   \--->0 /     /
+                 512 -------        . \     \        . \     \
+                                    . /     /        . /     /
+                                  512 -------        . |-----|
+                                                   279 |    -----\   Phys Page
+                                                     . |-----|   |      ---
+                                                     . /     /   \--->0 / /
+                                                     . \     \        . \ \
+                                                     . /     /        . / /
+                                                   512 -------        . |-|
+                                                                     16 |o|
+                                                                      . |-|
+                                                                      . |h|
+                                                                      . |-|
+                                                                      . |a|
+                                                                      . |-|
+                                                                      . |i|
+                                                                      . |-|
+                                                                      . |!|
+                                                                      . |-|
+                                                                      . / /
+                                                                      . \ \
+                                                                      . / /
+                                                                   4096 ---
+```
+
+* Since walking these tables is a relatively expensive operation, a cache is
+  maintained - the [Translation Lookaside Buffer (TLB)][tlb] - more on this in a
+  later section.
+
 ### 64-bit Address Space
 
 * In [current x86-64 implementations][x86-64-address-space] only the lower 48
@@ -156,9 +229,10 @@ much as possible between 32 and 64-bit x86.
 [PUD_SHIFT]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L33
 [PMD_SHIFT]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L40
 [PAGE_SHIFT]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L8
+[mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
+[tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 
 [x86-64-address-space]:https://en.wikipedia.org/wiki/X86-64#VIRTUAL-ADDRESS-SPACE
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
 
-[mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
