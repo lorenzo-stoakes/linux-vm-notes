@@ -2,6 +2,9 @@
 
 ## Contents
 
+* [Functions](funcs.md) - List of VM-related kernel functions and what they do,
+  categorised by the part of the VM they relate to.
+
 1. [Fundamentals](fundamentals.md) - Overview of virtual memory concepts without
    referencing any actual code or making assumptions about prior knowledge.
 
