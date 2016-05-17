@@ -260,8 +260,8 @@ static inline unsigned long __phys_addr_nodebug(unsigned long x)
 }
 ```
 
-* Considering [__START_KERNEL_map][__START_KERNEL_map] which is defined as
-  `ffffffff80000000`, we can see from the [memory map][x86-64-mm] that this is
+* What is [__START_KERNEL_map][__START_KERNEL_map] (which is defined as
+  `ffffffff80000000`)? We can see from the [memory map][x86-64-mm] that this is
   the virtual address above which the kernel is loaded:
 
 ```
@@ -272,10 +272,10 @@ ffffffffff600000 - ffffffffffdfffff (=8 MB) vsyscalls
 ffffffffffe00000 - ffffffffffffffff (=2 MB) unused hole
 ```
 
-* This function therefore differentiates between virtual addresses that have
-  been mapped from the direct physical mapping at [__PAGE_OFFSET][__PAGE_OFFSET]
-  and those that originate from the kernel itself from
-  [__START_KERNEL_map][__START_KERNEL_map] on.
+* [__phys_addr_nodebug()][__phys_addr_nodebug] therefore differentiates between
+  virtual addresses that have been mapped from the direct physical mapping at
+  [__PAGE_OFFSET][__PAGE_OFFSET] and those that originate from the kernel itself
+  from [__START_KERNEL_map][__START_KERNEL_map] on.
 
 * One important thing to note here is that [phys_base][phys_base] is used to
   offset the returned address if it is indeed a reference to a kernel symbol -
