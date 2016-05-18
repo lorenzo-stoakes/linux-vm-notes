@@ -430,7 +430,7 @@ struct page *follow_page_mask(struct vm_area_struct *vma,
 }
 ```
 
-[linux-4.6]:https://github.com/torvalds/linux/blob/v4.6/
+[linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [virtual-memory]:https://en.wikipedia.org/wiki/Virtual_memory
 [mmu]:https://en.wikipedia.org/wiki/Memory_management_unit
