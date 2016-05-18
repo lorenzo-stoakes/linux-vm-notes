@@ -285,6 +285,151 @@ ffffffffffe00000 - ffffffffffffffff (=2 MB) unused hole
   [Kdump: Smarter, Easier, Trustier (PDF)][kdump-paper], a paper on the
   subject.)
 
+### Traversing Page Tables
+
+* Since each of the directory tables are page-aligned, [PAGE_SHIFT][PAGE_SHIFT]
+  bits will always be 0 for every page table address. This is exploited to allow
+  the placing of flags in the lower bits of each entry.
+
+* A consequence of this is that the physical pages read from page tables have to
+  be masked to avoid these flags being interpreted as offsets. This can be
+  achieved via `&`'ing with [PAGE_MASK][PAGE_MASK], which is simply defined as
+  `~(`[PAGE_SIZE][PAGE_SIZE]`-1)` - subtracting 1 from a power of 2 results in a
+  mask for that number of possible values, in this case `1000000000000` becomes
+  `111111111111`, the `~` complement translates that to
+  `1111111111111111111111111111111111111111111111111111000000000000` - masking
+  out any flags.
+
+* Each process has an associated [struct mm_struct][mm_struct]:
+
+```c
+struct mm_struct {
+        ...
+
+        pgd_t * pgd;
+
+        ...
+};
+```
+
+__NOTE:__ The struct is pretty huge, so limiting to what we care about here -
+the PGD for the process :)
+
+* A number of functions are provided to make it easier to traverse page
+  tables. It's instructive to have a look at a utility function that performs
+  this task, [follow_page()][follow_page] (and subsequently
+  [follow_page_mask()][follow_page_mask]) is useful for this task (if a bit
+  large now, the 2.4.22 version was quite massively smaller :)
+
+```c
+static inline struct page *follow_page(struct vm_area_struct *vma,
+                     unsigned long address, unsigned int foll_flags)
+{
+        unsigned int unused_page_mask;
+        return follow_page_mask(vma, address, foll_flags, &unused_page_mask);
+}
+
+/**
+ * follow_page_mask - look up a page descriptor from a user-virtual address
+ * @vma: vm_area_struct mapping @address
+ * @address: virtual address to look up
+ * @flags: flags modifying lookup behaviour
+ * @page_mask: on output, *page_mask is set according to the size of the page
+ *
+ * @flags can have FOLL_ flags set, defined in <linux/mm.h>
+ *
+ * Returns the mapped (struct page *), %NULL if no mapping exists, or
+ * an error pointer if there is a mapping to something not represented
+ * by a page descriptor (see also vm_normal_page()).
+ */
+struct page *follow_page_mask(struct vm_area_struct *vma,
+                              unsigned long address, unsigned int flags,
+                              unsigned int *page_mask)
+{
+        pgd_t *pgd;
+        pud_t *pud;
+        pmd_t *pmd;
+        spinlock_t *ptl;
+        struct page *page;
+        struct mm_struct *mm = vma->vm_mm;
+
+        *page_mask = 0;
+
+        page = follow_huge_addr(mm, address, flags & FOLL_WRITE);
+        if (!IS_ERR(page)) {
+                BUG_ON(flags & FOLL_GET);
+                return page;
+        }
+
+        pgd = pgd_offset(mm, address);
+        if (pgd_none(*pgd) || unlikely(pgd_bad(*pgd)))
+                return no_page_table(vma, flags);
+
+        pud = pud_offset(pgd, address);
+        if (pud_none(*pud))
+                return no_page_table(vma, flags);
+        if (pud_huge(*pud) && vma->vm_flags & VM_HUGETLB) {
+                page = follow_huge_pud(mm, address, pud, flags);
+                if (page)
+                        return page;
+                return no_page_table(vma, flags);
+        }
+        if (unlikely(pud_bad(*pud)))
+                return no_page_table(vma, flags);
+
+        pmd = pmd_offset(pud, address);
+        if (pmd_none(*pmd))
+                return no_page_table(vma, flags);
+        if (pmd_huge(*pmd) && vma->vm_flags & VM_HUGETLB) {
+                page = follow_huge_pmd(mm, address, pmd, flags);
+                if (page)
+                        return page;
+                return no_page_table(vma, flags);
+        }
+        if ((flags & FOLL_NUMA) && pmd_protnone(*pmd))
+                return no_page_table(vma, flags);
+        if (pmd_devmap(*pmd)) {
+                ptl = pmd_lock(mm, pmd);
+                page = follow_devmap_pmd(vma, address, pmd, flags);
+                spin_unlock(ptl);
+                if (page)
+                        return page;
+        }
+        if (likely(!pmd_trans_huge(*pmd)))
+                return follow_page_pte(vma, address, pmd, flags);
+
+        ptl = pmd_lock(mm, pmd);
+        if (unlikely(!pmd_trans_huge(*pmd))) {
+                spin_unlock(ptl);
+                return follow_page_pte(vma, address, pmd, flags);
+        }
+        if (flags & FOLL_SPLIT) {
+                int ret;
+                page = pmd_page(*pmd);
+                if (is_huge_zero_page(page)) {
+                        spin_unlock(ptl);
+                        ret = 0;
+                        split_huge_pmd(vma, pmd, address);
+                } else {
+                        get_page(page);
+                        spin_unlock(ptl);
+                        lock_page(page);
+                        ret = split_huge_page(page);
+                        unlock_page(page);
+                        put_page(page);
+                }
+
+                return ret ? ERR_PTR(ret) :
+                        follow_page_pte(vma, address, pmd, flags);
+        }
+
+        page = follow_trans_huge_pmd(vma, address, pmd, flags);
+        spin_unlock(ptl);
+        *page_mask = HPAGE_PMD_NR - 1;
+        return page;
+}
+```
+
 [linux-4.6]:https://github.com/torvalds/linux/blob/v4.6/
 
 [virtual-memory]:https://en.wikipedia.org/wiki/Virtual_memory
@@ -328,5 +473,10 @@ ffffffffffe00000 - ffffffffffffffff (=2 MB) unused hole
 [phys_base-fixup]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L140
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
 [kdump-paper]:https://www.kernel.org/doc/ols/2007/ols2007v1-pages-167-178.pdf
+
+[PAGE_MASK]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L10
+[PAGE_SIZE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L9
+[follow_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L2186
+[follow_page_mask]:https://github.com/torvalds/linux/blob/v4.6/mm/gup.c#L214
 
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
