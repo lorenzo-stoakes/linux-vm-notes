@@ -12,6 +12,8 @@ be full of errors, swearing and Trump quotes.
 
 * pmd_page_vaddr > pmd_page?
 
+* `pfn_to_page()`, `pte_pfn()` seems to be useful.
+
 * No more `pte_offset()` for x86, can use
   [pte_offset_map_lock()][pte_offset_map_lock] (which assigns and locks a
   spinlock during the operation) which calls [pte_offset_map()][pte_offset_map]
