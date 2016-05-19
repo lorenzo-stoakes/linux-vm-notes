@@ -1,5 +1,11 @@
 # VM Functions
 
+__Certainty Level:__ Moderate, am trying to check functions as best I can, but
+might be making mistakes.
+
+__Architecture:__ These notes assume an x86-64 UMA system unless otherwise
+specified. [Linux 4.6][linux-4.6] is always targeted.
+
 ## Contents
 
 ### Address Translation
