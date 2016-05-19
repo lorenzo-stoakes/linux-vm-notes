@@ -17,12 +17,12 @@ specified. [Linux 4.6][linux-4.6] is always targeted.
 
 ### Page Tables
 
-* [pgd_offset()](#pgd_offset) - Gets virtual address of virtual address's PGD
-  entry.
-* [pud_offset()](#pud_offset) - Gets virtual address of virtual address's PUD
-  entry.
-* [pmd_offset()](#pmd_offset) - Gets virtual address of virtual address's PMD
-  entry.
+* [pgd_offset()](#pgd_offset) - Gets virtual address of specified virtual
+  address's PGD entry.
+* [pud_offset()](#pud_offset) - Gets virtual address of specified virtual
+  address's PUD entry.
+* [pmd_offset()](#pmd_offset) - Gets virtual address of specified virtual
+  address's PMD entry.
 
 ## Address Translation
 
