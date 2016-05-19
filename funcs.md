@@ -17,6 +17,9 @@ specified. [Linux 4.6][linux-4.6] is always targeted.
 
 ### Page Tables
 
+__NOTE:__ Confusingly, the `_offset` functions actually return a virtual address
+for the page table entry associated with the specified virtual address.
+
 * [pgd_offset()](#pgd_offset) - Gets virtual address of specified virtual
   address's PGD entry.
 * [pud_offset()](#pud_offset) - Gets virtual address of specified virtual
