@@ -1,6 +1,8 @@
-# Address Translation
+# VM Functions
 
-## phys_to_virt()
+## Address Translation
+
+### phys_to_virt()
 
 `void *phys_to_virt(phys_addr_t address)`
 
@@ -9,15 +11,15 @@ kernel-mapped virtual one.
 
 Wrapper around [__va()][__va].
 
-### Arguments
+#### Arguments
 
 * `address` - Physical address to be translated.
 
-### Returns
+#### Returns
 
 Kernel-mapped virtual address.
 
-## virt_to_phys()
+### virt_to_phys()
 
 `phys_addr_t virt_to_phys(volatile void *address)`
 
@@ -26,21 +28,21 @@ to a physical one.
 
 Wrapper around [__pa()][__pa].
 
-### Arguments
+#### Arguments
 
 * `address` - Kernel-mapped virtual address to be translated.
 
-### Returns
+#### Returns
 
 Physical address associated with specified virtual address.
 
-## __va()
+### __va()
 
 `#define __va(x) ((void *)((unsigned long)(x)+PAGE_OFFSET))`
 
 [__va()][__va] does the heavy lifting for `phys_to_virt()`, see above.
 
-## __pa()
+### __pa()
 
 `#define __pa(x) __phys_addr((unsigned long)(x))`
 
