@@ -23,6 +23,8 @@ specified. [Linux 4.6][linux-4.6] is always targeted.
   address's PUD entry.
 * [pmd_offset()](#pmd_offset) - Gets virtual address of specified virtual
   address's PMD entry.
+* [pte_offset_map()](#pte_offset_map) - Gets virtual address of specified
+  virtual address's PTE entry (in x86-64 PTEs are always mapped into memory.)
 
 ## Address Translation
 
@@ -140,7 +142,46 @@ _virtual_ address to the PMD entry.
 A pointer to (hence virtual address of) a [pmd_t][pmd_t] entry which itself
 contains the physical address for the corresponding PTE with associated flags.
 
+### pte_offset_map()
 
+`pte_t *pte_offset_map(pmd_t *pmd, unsigned long address)`
+
+[pte_offset_map()][pte_offset_map] has a confusing name - it returns a virtual
+address, NOT an offset/index. The function locates the PTE _entry_ for the
+specified _virtual_ address associated with the specified PMD entry, and returns
+a _virtual_ address to the PTE entry.
+
+The `_map` part of the name refers to mapping in the PTE directory if it isn't
+already present in [high memory][high-memory]. This is used by architectures
+which have a small address space and have [CONFIG_HIGHPTE][CONFIG_HIGHPTE]
+set. In x86-64 there is no such pressure on address space so the `_map` is
+redundant and the function is therefore essentially a wrapper around
+[pte_offset_kernel()][pte_offset_kernel].
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Locking
+
+The appropriate (spin)lock to hold can be obtained via
+[pte_lockptr()][pte_lockptr], generally this is acquired _after_ the PTE entry
+pointer is obtained. However there is a lot of lockless code in the kernel that
+avoids holding this.
+
+The helper function [pte_offset_map_lock()][pte_offset_map_lock] acquires the
+PTE lock after retrieving the pointer to the PTE entry. The lock is released via
+[pte_unmap_unlock()][pte_unmap_unlock].
+
+#### Arguments
+
+* `pmd` - A pointer to the PMD entry belonging to the virtual `address`.
+
+* `address` - The _virtual_ address whose PTE we seek.
+
+#### Returns
+
+A pointer to (hence virtual address of) a [pte_t][pte_t] entry which itself
+contains the physical address for the corresponding physical page with
+associated flags.
 
 [phys_to_virt]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L136
 [__va]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L54
@@ -154,3 +195,11 @@ contains the physical address for the corresponding PTE with associated flags.
 [pud_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L270
 [pmd_offset]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L639
 [pmd_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L291
+[pte_offset_map]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64.h#L140
+[high-memory]:https://en.wikipedia.org/wiki/High_memory
+[CONFIG_HIGHPTE]:http://cateee.net/lkddb/web-lkddb/HIGHPTE.html
+[pte_offset_kernel]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L600
+[pte_lockptr]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1619
+[pte_offset_map_lock]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1680
+[pte_unmap_unlock]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1689
+[pte_t]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L18
