@@ -2,6 +2,9 @@
 
 ## Address Translation
 
+* [phys_to_virt()](#phys_to_virt) - Translates physical to virtual address.
+* [virt_to_phys()](#virt_to_phys) - Translates virtual to physical address.
+
 ### phys_to_virt()
 
 `void *phys_to_virt(phys_addr_t address)`
