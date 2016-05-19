@@ -195,7 +195,8 @@ associated flags.
 [pte_lockptr()][pte_lockptr] _after_ determining the virtual address of the PTE
 entry.
 
-See the above section on `pte_offset_map()` for details on the function.
+See the above section on `pte_offset_map()` for more details on what the
+function is retrieving.
 
 #### Locking
 
