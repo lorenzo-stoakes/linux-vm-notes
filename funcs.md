@@ -25,6 +25,8 @@ specified. [Linux 4.6][linux-4.6] is always targeted.
   address's PMD entry.
 * [pte_offset_map()](#pte_offset_map) - Gets virtual address of specified
   virtual address's PTE entry (in x86-64 PTEs are always mapped into memory.)
+* [pte_offset_map_lock()](#pte_offset_map_lock) - Gets virtual address of
+  specified virtual address's PTE entry then acquires PTE lock.
 
 ## Address Translation
 
@@ -176,6 +178,41 @@ PTE lock after retrieving the pointer to the PTE entry. The lock is released via
 * `pmd` - A pointer to the PMD entry belonging to the virtual `address`.
 
 * `address` - The _virtual_ address whose PTE we seek.
+
+#### Returns
+
+A pointer to (hence virtual address of) a [pte_t][pte_t] entry which itself
+contains the physical address for the corresponding physical page with
+associated flags.
+
+### pte_offset_map_lock()
+
+`pte_t *pte_offset_map_lock(struct mm_struct *mm, pmd_t *pmd, unsigned long address,
+                            spinlock_t **ptlp)`
+
+[pte_offset_map_lock()][pte_offset_map_lock] performs the same task as
+[pte_offset_map()][pte_offset_map], but also acquires the spinlock returned by
+[pte_lockptr()][pte_lockptr] _after_ determining the virtual address of the PTE
+entry.
+
+See the above section on `pte_offset_map()` for details on the function.
+
+#### Locking
+
+The caller is responsible for releasing the acquired spinlock via
+[pte_unmap_unlock()][pte_unmap_unlock].
+
+#### Arguments
+
+* `mm` - The [struct mm_struct][mm_struct] associated with the process whose PTE
+  we seek.
+
+* `pmd` - A pointer to the PMD entry belonging to the virtual `address`.
+
+* `address` - The _virtual_ address whose PTE we seek.
+
+* `ptlp` - __OUT__ - A pointer to a `spinlock_t *` which will reference the
+  spinlock acquired by the function.
 
 #### Returns
 
