@@ -30,6 +30,7 @@ for the page table entry associated with the specified virtual address.
   virtual address's PTE entry (in x86-64 PTEs are always mapped into memory.)
 * [pte_offset_map_lock()](#pte_offset_map_lock) - Gets virtual address of
   specified virtual address's PTE entry then acquires PTE lock.
+*
 
 ## Address Translation
 
@@ -223,6 +224,8 @@ The caller is responsible for releasing the acquired spinlock via
 A pointer to (hence virtual address of) a [pte_t][pte_t] entry which itself
 contains the physical address for the corresponding physical page with
 associated flags.
+
+[linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [phys_to_virt]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L136
 [__va]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L54
