@@ -1,9 +1,15 @@
 # VM Functions
 
-## Address Translation
+## Contents
+
+### Address Translation
 
 * [phys_to_virt()](#phys_to_virt) - Translates physical to virtual address.
 * [virt_to_phys()](#virt_to_phys) - Translates virtual to physical address.
+* [__va()](#__va) - Translates physical to virtual address.
+* [__pa()](#__pa) - Translates virtual to physical address.
+
+## Address Translation
 
 ### phys_to_virt()
 
