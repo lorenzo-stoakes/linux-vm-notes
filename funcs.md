@@ -30,7 +30,6 @@ for the page table entry associated with the specified virtual address.
   virtual address's PTE entry (in x86-64 PTEs are always mapped into memory.)
 * [pte_offset_map_lock()](#pte_offset_map_lock) - Gets virtual address of
   specified virtual address's PTE entry then acquires PTE lock.
-*
 
 ## Address Translation
 
@@ -51,6 +50,8 @@ Wrapper around [__va()][__va].
 
 Kernel-mapped virtual address.
 
+---
+
 ### virt_to_phys()
 
 `phys_addr_t virt_to_phys(volatile void *address)`
@@ -68,6 +69,8 @@ Wrapper around [__pa()][__pa].
 
 Physical address associated with specified virtual address.
 
+---
+
 ### __va()
 
 `void *__va(phys_addr_t address)`
@@ -75,6 +78,8 @@ Physical address associated with specified virtual address.
 [__va()][__va] does the heavy lifting for `phys_to_virt()`, see above.
 
 __NOTE:__ Macro, inferring function signature.
+
+---
 
 ### __pa()
 
@@ -108,6 +113,8 @@ __NOTE:__ Macro, inferring function signature.
 A pointer to (hence virtual address of) a [pgd_t][pgd_t] entry which itself
 contains the physical address for the corresponding PUD with associated flags.
 
+---
+
 ### pud_offset()
 
 `pud_t *pud_offset(pgd_t *pgd, unsigned long address)`
@@ -128,6 +135,8 @@ _virtual_ address to the PUD entry.
 A pointer to (hence virtual address of) a [pud_t][pud_t] entry which itself
 contains the physical address for the corresponding PMD with associated flags.
 
+---
+
 ### pmd_offset()
 
 `pmd_t *pmd_offset(pud_t *pud, unsigned long address)`
@@ -147,6 +156,8 @@ _virtual_ address to the PMD entry.
 
 A pointer to (hence virtual address of) a [pmd_t][pmd_t] entry which itself
 contains the physical address for the corresponding PTE with associated flags.
+
+---
 
 ### pte_offset_map()
 
@@ -188,6 +199,8 @@ PTE lock after retrieving the pointer to the PTE entry. The lock is released via
 A pointer to (hence virtual address of) a [pte_t][pte_t] entry which itself
 contains the physical address for the corresponding physical page with
 associated flags.
+
+---
 
 ### pte_offset_map_lock()
 
