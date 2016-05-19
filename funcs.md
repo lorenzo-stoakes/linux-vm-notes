@@ -215,6 +215,8 @@ entry.
 See the above section on `pte_offset_map()` for more details on what the
 function is retrieving.
 
+__NOTE:__ Macro, inferring function signature.
+
 #### Locking
 
 The caller is responsible for releasing the acquired spinlock via
