@@ -29,7 +29,7 @@ for the page table entry associated with the specified virtual address.
 * [pmd_offset()](#pmd_offset) - Gets virtual address of specified virtual
   address's PMD entry.
 * [pte_offset_map()](#pte_offset_map) - Gets virtual address of specified
-  virtual address's PTE entry (in x86-64 PTEs are always mapped into memory.)
+  virtual address's PTE entry (always mapped in x86-64.)
 * [pte_offset_map_lock()](#pte_offset_map_lock) - Gets virtual address of
   specified virtual address's PTE entry then acquires PTE lock.
 
