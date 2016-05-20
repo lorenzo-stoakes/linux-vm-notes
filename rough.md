@@ -3,6 +3,10 @@
 __NOTE:__ These are rough notes intentionally not linked from elsewhere, and may
 be full of errors, swearing and Trump quotes.
 
+## General
+
+* `pfn_to_page()`, `pte_pfn()` seems to be useful.
+
 ## 2.4.22 -> 4.6
 
 * Seems like missing page levels is handled via
@@ -10,9 +14,7 @@ be full of errors, swearing and Trump quotes.
 
 * `CONFIG_PGTABLE_LEVELS` is used to determine number of pg table levels now.
 
-* pmd_page_vaddr > pmd_page?
-
-* `pfn_to_page()`, `pte_pfn()` seems to be useful.
+## Big Blocks of Code
 
 * No more `pte_offset()` for x86, can use
   [pte_offset_map_lock()][pte_offset_map_lock] (which assigns and locks a
@@ -72,8 +74,6 @@ static inline pte_t *pte_offset_kernel_ljs(pmd_t *pmd, unsigned long address)
 }
 ```
 
-* Seems `__pXX_offset()` -> `pXX_index()` renaming has taken place - an
-  improvement I think :)
 
 * There are new mechanisms in the VM - obv. huge page tables (+ transparent),
   but also 'devmap' and page splitting as referenced in
