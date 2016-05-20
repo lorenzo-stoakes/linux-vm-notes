@@ -44,6 +44,17 @@ for the page table entry associated with the specified virtual address.
 * [pte_val()](#pte_val) - Gets the raw [pteval_t][pteval_t] associated with the
   specified PTE entry.
 
+#### Retrieving Page Table Entry Indexes
+
+* [pgd_index()](#pgd_index) - Gets the index of the specified _virtual_
+  address's PGD entry within its PGD.
+* [pud_index()](#pud_index) - Gets the index of the specified _virtual_
+  address's PUD entry within its PUD.
+* [pmd_index()](#pmd_index) - Gets the index of the specified _virtual_
+  address's PMD entry within its PMD.
+* [pte_index()](#pte_index) - Gets the index of the specified _virtual_
+  address's PTE entry within its PTE directory.
+
 ## Address Translation
 
 ### phys_to_virt()
@@ -355,6 +366,111 @@ specified PTE entry.
 
 ---
 
+### pgd_index()
+
+`unsigned long pgd_index(unsigned long address)`
+
+[pgd_index()][pgd_index] returns the index of the specified _virtual_ address's
+associated PGD entry within its PGD page.
+
+Directly from the code:
+
+```c
+/*
+ * the pgd page can be thought of an array like this: pgd_t[PTRS_PER_PGD]
+ *
+ * this macro returns the index of the entry in the pgd page which would
+ * control the given virtual address
+*/
+```
+
+On x86-64, [PTRS_PER_PGD][PTRS_PER_PGD] is 512.
+
+#### Arguments
+
+* `address` - _Virtual_ address whose PGD entry index we seek.
+
+#### Returns
+
+Index of the virtual address's PGD entry within its PGD.
+
+---
+
+### pud_index()
+
+`unsigned long pud_index(unsigned long address)`
+
+[pud_index()][pud_index] returns the index of the specified _virtual_ address's
+associated PUD entry within its PUD page.
+
+Adapted from the code comment for [pgd_index()][pgd_index]:
+
+The PUD page can be thought of an array like this: `pud_t[PTRS_PER_PUD]`. This
+macro returns the index of the entry in the pud page which would control the
+given virtual address.
+
+On x86-64, [PTRS_PER_PGD][PTRS_PER_PUD] is 512.
+
+#### Arguments
+
+* `address` - _Virtual_ address whose PUD entry index we seek.
+
+#### Returns
+
+Index of the virtual address's PUD entry within its PUD.
+
+---
+
+### pmd_index()
+
+`unsigned long pmd_index(unsigned long address)`
+
+[pmd_index()][pmd_index] returns the index of the specified _virtual_ address's
+associated PMD entry within its PMD page.
+
+Adapted from the code comment for [pgd_index()][pgd_index]:
+
+The PMD page can be thought of an array like this: `pmd_t[PTRS_PER_PMD]`. This
+macro returns the index of the entry in the pmd page which would control the
+given virtual address.
+
+On x86-64, [PTRS_PER_PMD][PTRS_PER_PMD] is 512.
+
+#### Arguments
+
+* `address` - _Virtual_ address whose PMD entry index we seek.
+
+#### Returns
+
+Index of the virtual address's PMD entry within its PMD.
+
+---
+
+### pte_index()
+
+`unsigned long pte_index(unsigned long address)`
+
+[pte_index()][pte_index] returns the index of the specified _virtual_ address's
+associated PTE entry within its PTE page.
+
+Adapted from the code comment for [pgd_index()][pgd_index]:
+
+The PTE page can be thought of an array like this: `pte_t[PTRS_PER_PTE]`. This
+macro returns the index of the entry in the pte page which would control the
+given virtual address.
+
+On x86-64, [PTRS_PER_PTE][PTRS_PER_PTE] is 512.
+
+#### Arguments
+
+* `address` - _Virtual_ address whose PTE entry index we seek.
+
+#### Returns
+
+Index of the virtual address's PTE entry within its PTE directory.
+
+---
+
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [pgdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
@@ -386,3 +502,11 @@ specified PTE entry.
 [pud_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L77
 [pmd_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L82
 [pte_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L86
+[pgd_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L708
+[PTRS_PER_PGD]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L28
+[pud_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L679
+[PTRS_PER_PUD]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L34
+[pmd_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L575
+[PTRS_PER_PMD]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L41
+[pte_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L595
+[PTRS_PER_PTE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L46
