@@ -60,7 +60,10 @@ for the page table entry associated with the specified virtual address.
 __NOTE:__ There's room for confusion here - the `pXX_page_vaddr()` functions
 each return the virtual address of the physical page referred to by the
 specified entry, so e.g. `pgd_page_vaddr()` returns the address of a PUD page,
-`pud_page_vaddr()` returns the address of a PMD page, etc.
+`pud_page_vaddr()` returns the address of a PMD page, etc. Equally, the
+`pXX_page()` functions return a pointer to the [struct page][page] for the page
+_referred to_ by the specified entry, e.g. `pgd_page()` returns the `struct
+page` for a PUD, `pud_page()` returns the `struct page` for a PMD, etc.
 
 * [pgd_page_vaddr()](#pgd_page_vaddr) - Gets the virtual address of the PUD page
   pointed to by the specified PGD entry.
@@ -68,6 +71,14 @@ specified entry, so e.g. `pgd_page_vaddr()` returns the address of a PUD page,
   pointed to by the specified PUD entry.
 * [pmd_page_vaddr()](#pmd_page_vaddr) - Gets the virtual address of the PTE page
   pointed to by the specified PMD entry.
+* [pgd_page()](#pgd_page) - Gets the virtual address of the [struct page][page]
+  describing the PUD page pointed to by the specified PGD entry.
+* [pud_page()](#pud_page) - Gets the virtual address of the [struct page][page]
+  describing the PMD page pointed to by the specified PUD entry.
+* [pmd_page()](#pmd_page) - Gets the virtual address of the [struct page][page]
+  describing the PTE page pointed to by the specified PMD entry.
+* [pte_page()](#pte_page) - Gets the virtual address of the [struct page][page]
+  describing the physical page pointed to by the specified PTE entry.
 
 ## Address Translation
 
@@ -551,12 +562,99 @@ The _virtual_ address of the PTE page.
 
 ---
 
+### pgd_page()
+
+`struct page *pgd_page(pgd_t pgd)`
+
+[pgd_page()][pgd_page] returns the virtual address of the [struct page][page] of
+the PUD pointed to by the specified PGD entry. This is a bit confusing, as
+`pgd_page()` returns the [struct page][page] for a PUD, not a PGD.
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `pgd` - PGD entry whose pointed-at PUD page's [struct page][page] is desired.
+
+#### Returns
+
+The virtual address of the [struct page][page] describing the PGD entry's
+pointed-at PUD page.
+
+---
+
+### pud_page()
+
+`struct page *pud_page(pud_t pud)`
+
+[pud_page()][pud_page] returns the virtual address of the [struct page][page] of
+the PMD pointed to by the specified PUD entry. This is a bit confusing, as
+`pud_page()` returns the [struct page][page] for a PMD, not a PUD.
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `pud` - PUD entry whose pointed-at PMD page's [struct page][page] is desired.
+
+#### Returns
+
+The virtual address of the [struct page][page] describing the PUD entry's
+pointed-at PMD page.
+
+---
+
+### pmd_page()
+
+`struct page *pmd_page(pmd_t pmd)`
+
+[pmd_page()][pmd_page] returns the virtual address of the [struct page][page] of
+the PTE pointed to by the specified PMD entry. This is a bit confusing, as
+`pmd_page()` returns the [struct page][page] for a PTE, not a PMD.
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `pmd` - PMD entry whose pointed-at PTE page's [struct page][page] is desired.
+
+#### Returns
+
+The virtual address of the [struct page][page] describing the PMD entry's
+pointed-at PTE page.
+
+---
+
+### pte_page()
+
+`struct page *pte_page(pte_t pte)`
+
+[pte_page()][pte_page] returns the virtual address of the [struct page][page] of
+the physical page pointed to by the specified PTE entry. This is a bit
+confusing, as `pte_page()` returns the [struct page][page] for the ultimate
+physical page, not a PTE.
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `pte` - PTE entry whose pointed-at physical page's [struct page][page] is
+  desired.
+
+#### Returns
+
+The virtual address of the [struct page][page] describing the PTE entry's
+pointed-at physical page.
+
+---
+
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [pgdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
 [pudval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L14
 [pmdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L13
 [pteval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L12
+[page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
 
 [phys_to_virt]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L136
 [__va]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L54
@@ -593,3 +691,7 @@ The _virtual_ address of the PTE page.
 [pgd_page_vaddr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L667
 [pud_page_vaddr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L626
 [pmd_page_vaddr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L557
+[pgd_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L676
+[pud_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L635
+[pmd_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L566
+[pte_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L171
