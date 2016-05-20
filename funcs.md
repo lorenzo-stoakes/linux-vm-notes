@@ -64,10 +64,8 @@ specified entry, so e.g. `pgd_page_vaddr()` returns the address of a PUD page,
 
 * [pgd_page_vaddr()](#pgd_page_vaddr) - Gets the virtual address of the PUD page
   pointed to by the specified PGD entry.
-
 * [pud_page_vaddr()](#pud_page_vaddr) - Gets the virtual address of the PMD page
   pointed to by the specified PUD entry.
-
 * [pmd_page_vaddr()](#pmd_page_vaddr) - Gets the virtual address of the PTE page
   pointed to by the specified PMD entry.
 
