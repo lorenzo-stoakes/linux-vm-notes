@@ -60,10 +60,11 @@ for the page table entry associated with the specified virtual address.
 __NOTE:__ There's room for confusion here - the `pXX_page_vaddr()` functions
 each return the virtual address of the physical page referred to by the
 specified entry, so e.g. `pgd_page_vaddr()` returns the address of a PUD page,
-`pud_page_vaddr()` returns the address of a PMD page, etc. Equally, the
-`pXX_page()` functions return a pointer to the [struct page][page] for the page
-_referred to_ by the specified entry, e.g. `pgd_page()` returns the `struct
-page` for a PUD, `pud_page()` returns the `struct page` for a PMD, etc.
+`pud_page_vaddr()` returns the address of a PMD page, etc.
+
+Equally, the `pXX_page()` functions return a pointer to the [struct page][page]
+for the page _referred to_ by the specified entry, e.g. `pgd_page()` returns the
+`struct page` for a PUD, `pud_page()` returns the `struct page` for a PMD, etc.
 
 * [pgd_page_vaddr()](#pgd_page_vaddr) - Gets the virtual address of the PUD page
   pointed to by the specified PGD entry.
