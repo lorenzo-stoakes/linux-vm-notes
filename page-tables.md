@@ -14,7 +14,7 @@ specified. [Linux 4.6][linux-4.6] is always targeted.
   memory addresses and actual physical memory addresses via a CPU control
   register, rendering the actual addresses used by running code 'virtual'.
 
-* The mappings are performed at the granularity of [page][page]s,
+* The mappings are performed at the granularity of [page][page/ref]s,
   i.e. contiguous blocks of memory of a set size. In x86-64 you can have page
   sizes of 4KiB, 2MiB and 1GiB, though typically 4KiB (2^12) will be used in
   most cases.
@@ -376,7 +376,7 @@ no_page:
 [virtual-memory]:https://en.wikipedia.org/wiki/Virtual_memory
 [mmu]:https://en.wikipedia.org/wiki/Memory_management_unit
 [ring]:https://en.wikipedia.org/wiki/Protection_ring
-[page]:https://en.wikipedia.org/wiki/Page_(computer_memory)
+[page/ref]:https://en.wikipedia.org/wiki/Page_(computer_memory)
 [page-table]:https://en.wikipedia.org/wiki/Page_table
 [pgd_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L252
 [pgdval_t]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
