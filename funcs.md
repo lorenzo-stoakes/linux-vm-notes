@@ -78,7 +78,7 @@ page` for a PUD, `pud_page()` returns the `struct page` for a PMD, etc.
 * [pmd_page()](#pmd_page) - Gets the virtual address of the [struct page][page]
   describing the PTE page pointed to by the specified PMD entry.
 * [pte_page()](#pte_page) - Gets the virtual address of the [struct page][page]
-  describing the physical page pointed to by the specified PTE entry.
+  describing the page pointed to by the specified PTE entry.
 
 ## Address Translation
 
