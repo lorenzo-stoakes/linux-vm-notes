@@ -409,7 +409,7 @@ The PUD page can be thought of an array like this: `pud_t[PTRS_PER_PUD]`. This
 macro returns the index of the entry in the pud page which would control the
 given virtual address.
 
-On x86-64, [PTRS_PER_PGD][PTRS_PER_PUD] is 512.
+On x86-64, [PTRS_PER_PUD][PTRS_PER_PUD] is 512.
 
 #### Arguments
 
