@@ -506,6 +506,7 @@ a virtual one.
 The _virtual_ address of the PUD page.
 
 ---
+
 ### pud_page_vaddr()
 
 `unsigned long pud_page_vaddr(pud_t pud)`
@@ -525,6 +526,8 @@ a virtual one.
 #### Returns
 
 The _virtual_ address of the PMD page.
+
+---
 
 ### pmd_page_vaddr()
 
