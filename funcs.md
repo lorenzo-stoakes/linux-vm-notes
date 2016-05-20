@@ -46,14 +46,14 @@ for the page table entry associated with the specified virtual address.
 
 #### Retrieving Page Table Entry Indexes
 
-* [pgd_index()](#pgd_index) - Gets the index of the specified _virtual_
-  address's PGD entry within its PGD.
-* [pud_index()](#pud_index) - Gets the index of the specified _virtual_
-  address's PUD entry within its PUD.
-* [pmd_index()](#pmd_index) - Gets the index of the specified _virtual_
-  address's PMD entry within its PMD.
-* [pte_index()](#pte_index) - Gets the index of the specified _virtual_
-  address's PTE entry within its PTE directory.
+* [pgd_index()](#pgd_index) - Gets the index of the specified virtual address's
+  PGD entry within its PGD.
+* [pud_index()](#pud_index) - Gets the index of the specified virtual address's
+  PUD entry within its PUD.
+* [pmd_index()](#pmd_index) - Gets the index of the specified virtual address's
+  PMD entry within its PMD.
+* [pte_index()](#pte_index) - Gets the index of the specified virtual address's
+  PTE entry within its PTE directory.
 
 ## Address Translation
 
