@@ -241,11 +241,11 @@ ffff880000000000 - ffffc7ffffffffff (=64 TB) direct mapping of all phys. memory
   [__phys_addr_nodebug()][__phys_addr_nodebug]:
 
 ```c
-#define __pa(x)         __phys_addr((unsigned long)(x))
+#define __pa(x)        __phys_addr((unsigned long)(x))
 
 ...
 
-#define __phys_addr(x)          __phys_addr_nodebug(x)
+#define __phys_addr(x) __phys_addr_nodebug(x)
 
 ...
 
