@@ -194,8 +194,6 @@ Offset  = 1656
 * I'll get into more detail about the TLB and what the kernel code does with it
   in a later section.
 
-__[NEXT: Page Tables](page-tables.md)__
-
 [virtual-memory]:https://en.wikipedia.org/wiki/Virtual_memory
 [mmu]:https://en.wikipedia.org/wiki/Memory_management_unit
 [context-switch]:https://en.wikipedia.org/wiki/Context_switch
