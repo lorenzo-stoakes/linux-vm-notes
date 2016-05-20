@@ -5,7 +5,8 @@ be full of errors, swearing and Trump quotes.
 
 ## General
 
-* `pfn_to_page()`, `pte_pfn()` seems to be useful.
+* `pfn_to_page()`, `pte_pfn()` seem to be useful. `pfn_to_page()` ultimately
+  calls `__pfn_to_page()` which varies depending on memory model - COVER.
 
 ## 2.4.22 -> 4.6
 
@@ -307,6 +308,8 @@ struct mm_struct {
         atomic_long_t hugetlb_usage;
 #endif
 ```
+
+[pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L81
 
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
