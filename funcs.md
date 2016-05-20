@@ -55,6 +55,22 @@ for the page table entry associated with the specified virtual address.
 * [pte_index()](#pte_index) - Gets the index of the specified virtual address's
   PTE entry within its PTE directory.
 
+#### Retrieving Pages
+
+__NOTE:__ There's room for confusion here - the `pXX_page_vaddr()` functions
+each return the virtual address of the physical page referred to by the
+specified entry, so e.g. `pgd_page_vaddr()` returns the address of a PUD page,
+`pud_page_vaddr()` returns the address of a PMD page, etc.
+
+* [pgd_page_vaddr()](#pgd_page_vaddr) - Gets the virtual address of the PUD page
+  pointed to by the specified PGD entry.
+
+* [pud_page_vaddr()](#pud_page_vaddr) - Gets the virtual address of the PMD page
+  pointed to by the specified PUD entry.
+
+* [pmd_page_vaddr()](#pmd_page_vaddr) - Gets the virtual address of the PTE page
+  pointed to by the specified PMD entry.
+
 ## Address Translation
 
 ### phys_to_virt()
@@ -471,6 +487,69 @@ Index of the virtual address's PTE entry within its PTE directory.
 
 ---
 
+### pgd_page_vaddr()
+
+`unsigned long pgd_page_vaddr(pgd_t pgd)`
+
+[pgd_page_vaddr()][pgd_page_vaddr] returns the _virtual_ address of the PUD page
+stored in the specified `pgd` PGD _entry_. As a result, and rather confusingly,
+`pgd_page_vaddr()` returns the virtual address of a PUD page.
+
+This can be seen as essentially dereferencing the PGD - though the function has
+the added steps of masking out any flags and converting the physical address to
+a virtual one.
+
+#### Arguments
+
+* `pgd` - PGD entry whose pointed-at PUD page is desired.
+
+#### Returns
+
+The _virtual_ address of the PUD page.
+
+---
+### pud_page_vaddr()
+
+`unsigned long pud_page_vaddr(pud_t pud)`
+
+[pud_page_vaddr()][pud_page_vaddr] returns the _virtual_ address of the PMD page
+stored in the specified `pud` PUD _entry_. As a result, and rather confusingly,
+`pud_page_vaddr()` returns the virtual address of a PMD page.
+
+This can be seen as essentially dereferencing the PUD - though the function has
+the added steps of masking out any flags and converting the physical address to
+a virtual one.
+
+#### Arguments
+
+* `pud` - PUD entry whose pointed-at PMD page is desired.
+
+#### Returns
+
+The _virtual_ address of the PMD page.
+
+### pmd_page_vaddr()
+
+`unsigned long pmd_page_vaddr(pmd_t pmd)`
+
+[pmd_page_vaddr()][pmd_page_vaddr] returns the _virtual_ address of the PTE page
+stored in the specified `pmd` PMD _entry_. As a result, and rather confusingly,
+`pmd_page_vaddr()` returns the virtual address of a PTE page.
+
+This can be seen as essentially dereferencing the PMD - though the function has
+the added steps of masking out any flags and converting the physical address to
+a virtual one.
+
+#### Arguments
+
+* `pmd` - PMD entry whose pointed-at PTE page is desired.
+
+#### Returns
+
+The _virtual_ address of the PTE page.
+
+---
+
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [pgdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
@@ -510,3 +589,6 @@ Index of the virtual address's PTE entry within its PTE directory.
 [PTRS_PER_PMD]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L41
 [pte_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L595
 [PTRS_PER_PTE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L46
+[pgd_page_vaddr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L667
+[pud_page_vaddr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L626
+[pmd_page_vaddr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L557
