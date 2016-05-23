@@ -95,6 +95,10 @@ for the page _referred to_ by the specified entry, e.g. `pgd_page()` returns the
 * [pud_none()](#pud_none) - Determines if the specified PUD entry is empty.
 * [pmd_none()](#pmd_none) - Determines if the specified PMD entry is empty.
 * [pte_none()](#pte_none) - Determines if the specified PTE entry is empty.
+* [pgd_flags()](#pgd_flags) - Retrieves bitfield containing PGD flags.
+* [pud_flags()](#pud_flags) - Retrieves bitfield containing PUD flags.
+* [pmd_flags()](#pmd_flags) - Retrieves bitfield containing PMD flags.
+* [pte_flags()](#pte_flags) - Retrieves bitfield containing PTE flags.
 
 ## Address Translation
 
@@ -808,6 +812,85 @@ empty (i.e. does not point to a physical page) or not.
 
 ---
 
+### pgd_flags()
+
+`pgdval_t pgd_flags(pgd_t pgd)`
+
+[pgd_flags()][pgd_flags] retrieves a bitfield containing the flags associated
+with the specified PGD.
+
+Typically this won't be accessed directly, rather a function wrapper for a
+specific flag will be used.
+
+#### Arguments
+
+* `pgd` - PGD entry whose flags we desire.
+
+#### Returns
+
+A bitfield containing the PGD entry's flags.
+
+---
+
+### pud_flags()
+
+`pudval_t pud_flags(pud_t pud)`
+
+[pud_flags()][pud_flags] retrieves a bitfield containing the flags associated
+with the specified PUD.
+
+Typically this won't be accessed directly, rather a function wrapper for a
+specific flag will be used.
+
+#### Arguments
+
+* `pud` - PUD entry whose flags we desire.
+
+#### Returns
+
+A bitfield containing the PUD entry's flags.
+
+---
+
+### pmd_flags()
+
+`pmdval_t pmd_flags(pmd_t pmd)`
+
+[pmd_flags()][pmd_flags] retrieves a bitfield containing the flags associated
+with the specified PMD.
+
+Typically this won't be accessed directly, rather a function wrapper for a
+specific flag will be used.
+
+#### Arguments
+
+* `pmd` - PMD entry whose flags we desire.
+
+#### Returns
+
+A bitfield containing the PMD entry's flags.
+
+---
+
+### pte_flags()
+
+`pteval_t pte_flags(pte_t pte)`
+
+[pte_flags()][pte_flags] retrieves a bitfield containing the flags associated
+with the specified PTE.
+
+Typically this won't be accessed directly, rather a function wrapper for a
+specific flag will be used.
+
+#### Arguments
+
+* `pte` - PTE entry whose flags we desire.
+
+#### Returns
+
+A bitfield containing the PTE entry's flags.
+
+---
 
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
@@ -869,3 +952,7 @@ empty (i.e. does not point to a physical page) or not.
 [pud_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L616
 [pmd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L550
 [pte_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L480
+[pgd_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L264
+[pud_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L324
+[pmd_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L342
+[pte_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L357
