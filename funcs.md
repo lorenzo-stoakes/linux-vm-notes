@@ -983,6 +983,8 @@ the case when either [transparent huge pages][trans-huge] or the
 
 Truthy (non-zero) if the PTE page is present, 0 if not.
 
+---
+
 ### pte_present()
 
 `int pte_present(pte_t pte)`
@@ -1004,7 +1006,6 @@ Looking at each flag:
   is used by NUMA balancing (irrelevant for our assumed architecture, UMA
   x86-64) or the [mprotect][mprotect] `PROT_NONE` flag having been set by the
   user.
-
 
 #### Arguments
 
