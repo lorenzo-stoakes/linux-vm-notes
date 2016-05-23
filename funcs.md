@@ -960,7 +960,8 @@ Looking at each flag:
 
 * `_PAGE_PROTNONE` indicates that the page is resident, but not accessible. This
   is used by NUMA balancing (irrelevant for our assumed architecture, UMA
-  x86-64) or the [mprotect][mprotect] `PROT_NONE` flag being set by the user.
+  x86-64) or the [mprotect][mprotect] `PROT_NONE` flag having been set by the
+  user.
 
 * `_PAGE_PSE` indicates that huge pages are in use, and needs to be checked here
   because (according to the comment for the [pmd_present()][pmd_present]
@@ -1001,7 +1002,8 @@ Looking at each flag:
 
 * `_PAGE_PROTNONE` indicates that the page is resident, but not accessible. This
   is used by NUMA balancing (irrelevant for our assumed architecture, UMA
-  x86-64) or the [mprotect][mprotect] `PROT_NONE` flag being set by the user.
+  x86-64) or the [mprotect][mprotect] `PROT_NONE` flag having been set by the
+  user.
 
 
 #### Arguments
