@@ -35,14 +35,22 @@ for the page table entry associated with the specified virtual address.
 
 #### Retrieving Native Page Table Values
 
-* [pgd_val()](#pgd_val) - Gets the raw [pgdval_t][pgdval_t] associated with the
-  specified PGD entry.
-* [pud_val()](#pud_val) - Gets the raw [pudval_t][pudval_t] associated with the
-  specified PUD entry.
-* [pmd_val()](#pmd_val) - Gets the raw [pmdval_t][pmdval_t] associated with the
-  specified PMD entry.
-* [pte_val()](#pte_val) - Gets the raw [pteval_t][pteval_t] associated with the
-  specified PTE entry.
+* [native_pgd_val()](#native_pgd_val) - Gets the native [pgdval_t][pgdval_t]
+  associated with the specified PGD entry.
+* [native_pud_val()](#native_pud_val) - Gets the native [pudval_t][pudval_t]
+  associated with the specified PUD entry.
+* [native_pmd_val()](#native_pmd_val) - Gets the native [pmdval_t][pmdval_t]
+  associated with the specified PMD entry.
+* [native_pte_val()](#native_pte_val) - Gets the native [pteval_t][pteval_t]
+  associated with the specified PTE entry.
+* [pgd_val()](#pgd_val) - Gets the [pgdval_t][pgdval_t] associated with the
+  specified PGD entry, possibly paravirtualised.
+* [pud_val()](#pud_val) - Gets the [pudval_t][pudval_t] associated with the
+  specified PUD entry, possibly paravirtualised.
+* [pmd_val()](#pmd_val) - Gets the [pmdval_t][pmdval_t] associated with the
+  specified PMD entry, possibly paravirtualised.
+* [pte_val()](#pte_val) - Gets the [pteval_t][pteval_t] associated with the
+  specified PTE entry, possibly paravirtualised.
 
 #### Retrieving Page Table Entry Indexes
 
@@ -292,17 +300,105 @@ associated flags.
 
 ---
 
-### pgd_val()
+### native_pgd_val()
 
-`pgdval_t pgd_val(pgd_t pgd)`
+`pgdval_t native_pgd_val(pgd_t pgd)`
 
-[pgd_val()][pgd_val] extracts the underlying native value of the specified PGD
-entry (note the argument is not a pointer.)
+[native_pgd_val()][native_pgd_val] extracts the underlying native value of the
+specified PGD entry (note the argument is not a pointer.)
 
 The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
 enforce type safety - `typedef struct { pgdval_t pgd; } pgd_t;`.
 
 On x86-64 [pgdval_t][pgdval_t] is just an `unsigned long`.
+
+#### Arguments
+
+* `pgd` - The [pgd_t][pgd_t] whose value we seek.
+
+#### Returns
+
+The [pgdval_t][pgdval_t] (i.e. `unsigned long` on x86-64) associated with the
+specified PGD entry.
+
+---
+
+### native_pud_val()
+
+`pudval_t native_pud_val(pud_t pud)`
+
+[native_pud_val()][native_pud_val] extracts the underlying native value of the
+specified PUD entry (note the argument is not a pointer.)
+
+The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
+enforce type safety - `typedef struct { pudval_t pud; } pud_t;`.
+
+On x86-64 [pudval_t][pudval_t] is just an `unsigned long`.
+
+#### Arguments
+
+* `pud` - The [pud_t][pud_t] whose value we seek.
+
+#### Returns
+
+The [pudval_t][pudval_t] (i.e. `unsigned long` on x86-64) associated with the
+specified PUD entry.
+
+---
+
+### native_pmd_val()
+
+`pmdval_t native_pmd_val(pmd_t pmd)`
+
+[native_pmd_val()][native_pmd_val] extracts the underlying native value of the
+specified PMD entry (note the argument is not a pointer.)
+
+The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
+enforce type safety - `typedef struct { pmdval_t pmd; } pmd_t;`.
+
+On x86-64 [pmdval_t][pmdval_t] is just an `unsigned long`.
+
+#### Arguments
+
+* `pmd` - The [pmd_t][pmd_t] whose value we seek.
+
+#### Returns
+
+The [pmdval_t][pmdval_t] (i.e. `unsigned long` on x86-64) associated with the
+specified PMD entry.
+
+---
+
+### native_pte_val()
+
+`pteval_t native_pte_val(pte_t pte)`
+
+[native_pte_val()][native_pte_val] extracts the underlying native value of the
+specified PTE entry (note the argument is not a pointer.)
+
+The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
+enforce type safety - `typedef struct { pteval_t pte; } pte_t;`.
+
+On x86-64 [pteval_t][pteval_t] is just an `unsigned long`.
+
+#### Arguments
+
+* `pte` - The [pte_t][pte_t] whose value we seek.
+
+#### Returns
+
+The [pteval_t][pteval_t] (i.e. `unsigned long` on x86-64) associated with the
+specified PTE entry.
+
+---
+
+### pgd_val()
+
+`pgdval_t pgd_val(pgd_t pgd)`
+
+[pgd_val()][pgd_val] is a wrapper around [native_pgd_val()][native_pgd_val]
+unless the system is [paravirtualised][paravirtualisation] in which case a
+different [pgd_val()][pgd_val/native] is used.
 
 __NOTE:__ Macro, inferring function signature.
 
@@ -321,13 +417,9 @@ specified PGD entry.
 
 `pudval_t pud_val(pud_t pud)`
 
-[pud_val()][pud_val] extracts the underlying native value of the specified PUD
-entry (note the argument is not a pointer.)
-
-The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
-enforce type safety - `typedef struct { pudval_t pud; } pud_t;`.
-
-On x86-64 [pudval_t][pudval_t] is just an `unsigned long`.
+[pud_val()][pud_val] is a wrapper around [native_pud_val()][native_pud_val]
+unless the system is [paravirtualised][paravirtualisation] in which case a
+different [pud_val()][pud_val/native] is used.
 
 __NOTE:__ Macro, inferring function signature.
 
@@ -346,13 +438,9 @@ specified PUD entry.
 
 `pmdval_t pmd_val(pmd_t pmd)`
 
-[pmd_val()][pmd_val] extracts the underlying native value of the specified PMD
-entry (note the argument is not a pointer.)
-
-The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
-enforce type safety - `typedef struct { pmdval_t pmd; } pmd_t;`.
-
-On x86-64 [pmdval_t][pmdval_t] is just an `unsigned long`.
+[pmd_val()][pmd_val] is a wrapper around [native_pmd_val()][native_pmd_val]
+unless the system is [paravirtualised][paravirtualisation] in which case a
+different [pmd_val()][pmd_val/native] is used.
 
 __NOTE:__ Macro, inferring function signature.
 
@@ -371,13 +459,9 @@ specified PMD entry.
 
 `pteval_t pte_val(pte_t pte)`
 
-[pte_val()][pte_val] extracts the underlying native value of the specified PTE
-entry (note the argument is not a pointer.)
-
-The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
-enforce type safety - `typedef struct { pteval_t pte; } pte_t;`.
-
-On x86-64 [pteval_t][pteval_t] is just an `unsigned long`.
+[pte_val()][pte_val] is a wrapper around [native_pte_val()][native_pte_val]
+unless the system is [paravirtualised][paravirtualisation] in which case a
+different [pte_val()][pte_val/native] is used.
 
 __NOTE:__ Macro, inferring function signature.
 
@@ -677,10 +761,19 @@ pointed-at physical page.
 [pte_offset_map_lock]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1680
 [pte_unmap_unlock]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1689
 [pte_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L18
+[native_pgd_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L259
+[native_pud_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L277
+[native_pmd_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L298
+[native_pte_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L352
 [pgd_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L73
+[paravirtualisation]:https://en.wikipedia.org/wiki/Paravirtualization
+[pgd_val/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L421
 [pud_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L77
+[pud_val/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L554
 [pmd_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L82
+[pmd_val/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L514
 [pte_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L86
+[pte_val/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L393
 [pgd_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L708
 [PTRS_PER_PGD]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L28
 [pud_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L679
