@@ -753,7 +753,7 @@ empty (i.e. does not point to a PUD) or not.
 
 #### Returns
 
-1 if PGD empty, 0 if not.
+1 if the PGD is empty, 0 if not.
 
 ---
 
@@ -770,7 +770,7 @@ empty (i.e. does not point to a PMD) or not.
 
 #### Returns
 
-1 if PUD empty, 0 if not.
+1 if the PUD is empty, 0 if not.
 
 ---
 
@@ -787,7 +787,7 @@ empty (i.e. does not point to a PTE) or not.
 
 #### Returns
 
-1 if PMD empty, 0 if not.
+1 if the PMD is empty, 0 if not.
 
 ---
 
@@ -804,7 +804,7 @@ empty (i.e. does not point to a physical page) or not.
 
 #### Returns
 
-1 if PTE empty, 0 if not.
+1 if the PTE is empty, 0 if not.
 
 ---
 
