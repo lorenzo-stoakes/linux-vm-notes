@@ -91,14 +91,14 @@ for the page _referred to_ by the specified entry, e.g. `pgd_page()` returns the
 
 #### Page Table Entry State
 
-* [pgd_none()](#pgd_none) - Determines if the specified PGD entry is empty.
-* [pud_none()](#pud_none) - Determines if the specified PUD entry is empty.
-* [pmd_none()](#pmd_none) - Determines if the specified PMD entry is empty.
-* [pte_none()](#pte_none) - Determines if the specified PTE entry is empty.
 * [pgd_flags()](#pgd_flags) - Retrieves bitfield containing PGD flags.
 * [pud_flags()](#pud_flags) - Retrieves bitfield containing PUD flags.
 * [pmd_flags()](#pmd_flags) - Retrieves bitfield containing PMD flags.
 * [pte_flags()](#pte_flags) - Retrieves bitfield containing PTE flags.
+* [pgd_none()](#pgd_none) - Determines if the specified PGD entry is empty.
+* [pud_none()](#pud_none) - Determines if the specified PUD entry is empty.
+* [pmd_none()](#pmd_none) - Determines if the specified PMD entry is empty.
+* [pte_none()](#pte_none) - Determines if the specified PTE entry is empty.
 
 ## Address Translation
 
@@ -744,74 +744,6 @@ pointed-at physical page.
 
 ---
 
-### pgd_none()
-
-`int pgd_none(pgd_t pgd)`
-
-[pgd_none()][pgd_none] determines whether the specified PGD entry is in fact
-empty (i.e. does not point to a PUD) or not.
-
-#### Arguments
-
-* `pgd` - PGD entry which we want to determine is empty or not.
-
-#### Returns
-
-1 if the PGD is empty, 0 if not.
-
----
-
-### pud_none()
-
-`int pud_none(pud_t pud)`
-
-[pud_none()][pud_none] determines whether the specified PUD entry is in fact
-empty (i.e. does not point to a PMD) or not.
-
-#### Arguments
-
-* `pud` - PUD entry which we want to determine is empty or not.
-
-#### Returns
-
-1 if the PUD is empty, 0 if not.
-
----
-
-### pmd_none()
-
-`int pmd_none(pmd_t pmd)`
-
-[pmd_none()][pmd_none] determines whether the specified PMD entry is in fact
-empty (i.e. does not point to a PTE) or not.
-
-#### Arguments
-
-* `pmd` - PMD entry which we want to determine is empty or not.
-
-#### Returns
-
-1 if the PMD is empty, 0 if not.
-
----
-
-### pte_none()
-
-`int pte_none(pte_t pte)`
-
-[pte_none()][pte_none] determines whether the specified PTE entry is in fact
-empty (i.e. does not point to a physical page) or not.
-
-#### Arguments
-
-* `pte` - PTE entry which we want to determine is empty or not.
-
-#### Returns
-
-1 if the PTE is empty, 0 if not.
-
----
-
 ### pgd_flags()
 
 `pgdval_t pgd_flags(pgd_t pgd)`
@@ -892,6 +824,74 @@ A bitfield containing the PTE entry's flags.
 
 ---
 
+### pgd_none()
+
+`int pgd_none(pgd_t pgd)`
+
+[pgd_none()][pgd_none] determines whether the specified PGD entry is in fact
+empty (i.e. does not point to a PUD) or not.
+
+#### Arguments
+
+* `pgd` - PGD entry which we want to determine is empty or not.
+
+#### Returns
+
+1 if the PGD is empty, 0 if not.
+
+---
+
+### pud_none()
+
+`int pud_none(pud_t pud)`
+
+[pud_none()][pud_none] determines whether the specified PUD entry is in fact
+empty (i.e. does not point to a PMD) or not.
+
+#### Arguments
+
+* `pud` - PUD entry which we want to determine is empty or not.
+
+#### Returns
+
+1 if the PUD is empty, 0 if not.
+
+---
+
+### pmd_none()
+
+`int pmd_none(pmd_t pmd)`
+
+[pmd_none()][pmd_none] determines whether the specified PMD entry is in fact
+empty (i.e. does not point to a PTE) or not.
+
+#### Arguments
+
+* `pmd` - PMD entry which we want to determine is empty or not.
+
+#### Returns
+
+1 if the PMD is empty, 0 if not.
+
+---
+
+### pte_none()
+
+`int pte_none(pte_t pte)`
+
+[pte_none()][pte_none] determines whether the specified PTE entry is in fact
+empty (i.e. does not point to a physical page) or not.
+
+#### Arguments
+
+* `pte` - PTE entry which we want to determine is empty or not.
+
+#### Returns
+
+1 if the PTE is empty, 0 if not.
+
+---
+
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [pgdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
@@ -948,11 +948,11 @@ A bitfield containing the PTE entry's flags.
 [pud_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L635
 [pmd_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L566
 [pte_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L171
-[pgd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L694
-[pud_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L616
-[pmd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L550
-[pte_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L480
 [pgd_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L264
 [pud_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L324
 [pmd_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L342
 [pte_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L357
+[pgd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L694
+[pud_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L616
+[pmd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L550
+[pte_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L480
