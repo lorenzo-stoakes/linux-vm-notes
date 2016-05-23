@@ -85,6 +85,10 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 
 #### Page Table Entry State
 
+__NOTE:__ The `pXX_<flag>()` functions retrieve flags from the specified `pXX`,
+however they refer to the pointed-at page, e.g. `pgd_present()` determines if
+the pointed-at PUD page is present.
+
 * [pgd_flags()](#pgd_flags) - Retrieves bitfield containing PGD flags.
 * [pud_flags()](#pud_flags) - Retrieves bitfield containing PUD flags.
 * [pmd_flags()](#pmd_flags) - Retrieves bitfield containing PMD flags.
@@ -93,6 +97,14 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 * [pud_none()](#pud_none) - Determines if the specified PUD entry is empty.
 * [pmd_none()](#pmd_none) - Determines if the specified PMD entry is empty.
 * [pte_none()](#pte_none) - Determines if the specified PTE entry is empty.
+* [pgd_present()](#pgd_present) - Determines if the pointed-at PUD page is
+  present, i.e. resident in memory rather than swapped out.
+* [pud_present()](#pud_present) - Determines if the pointed-at PMD page is
+  present, i.e. resident in memory rather than swapped out.
+* [pmd_present()](#pmd_present) - Determines if the pointed-at PTE page is
+  present, i.e. resident in memory rather than swapped out.
+* [pte_present()](#pte_present) - Determines if the pointed-at physical page is
+  present, i.e. resident in memory rather than swapped out.
 
 ## Address Translation
 
@@ -886,6 +898,123 @@ empty (i.e. does not point to a physical page) or not.
 
 ---
 
+### pgd_present()
+
+`int pgd_present(pgd_t pgd)`
+
+[pgd_present()][pgd_present] determines whether the page containing the PUD that
+the specified PGD entry points at is 'present' - i.e. whether it is currently
+resident in memory and not swapped out.
+
+The function uses [pgd_flags()][pgd_flags] to retrieve the PGD entry's flags
+then tests whether [_PAGE_PRESENT][_PAGE_PRESENT] is set.
+
+#### Arguments
+
+* `pgd` - PGD entry pointing at the PUD page which we want to determine is
+  present or not.
+
+#### Returns
+
+Truthy (non-zero) if the PUD page is present, 0 if not.
+
+---
+
+### pud_present()
+
+`int pud_present(pud_t pud)`
+
+[pud_present()][pud_present] determines whether the page containing the PMD that
+the specified PUD entry points at is 'present' - i.e. whether it is currently
+resident in memory and not swapped out.
+
+The function uses [pud_flags()][pud_flags] to retrieve the PUD entry's flags
+then tests whether [_PAGE_PRESENT][_PAGE_PRESENT] is set.
+
+#### Arguments
+
+* `pud` - PUD entry pointing at the PMD page which we want to determine is
+  present or not.
+
+#### Returns
+
+Truthy (non-zero) if the PMD page is present, 0 if not.
+
+---
+
+### pmd_present()
+
+`int pmd_present(pmd_t pmd)`
+
+[pmd_present()][pmd_present] determines whether the page containing the PTE that
+the specified PMD entry points at is 'present' - i.e. whether it is currently
+resident in memory and not swapped out.
+
+The function uses [pmd_flags()][pmd_flags] to retrieve the PMD entry's flags
+then tests whether [_PAGE_PRESENT][_PAGE_PRESENT],
+[_PAGE_PROTNONE][_PAGE_PROTNONE] or [_PAGE_PSE][_PAGE_PSE] are set.
+
+Looking at each flag:
+
+* `_PAGE_PRESENT` indicates whether the PMD page is actually resident or not.
+
+* `_PAGE_PROTNONE` indicates that the page is resident, but not accessible. This
+  is used by NUMA balancing (irrelevant for our assumed architecture, UMA
+  x86-64) or the [mprotect][mprotect] `PROT_NONE` flag being set by the user.
+
+* `_PAGE_PSE` indicates that huge pages are in use, and needs to be checked here
+  because (according to the comment for the [pmd_present()][pmd_present]
+  function) the [split_huge_page()][split_huge_page] function will temporarily
+  clear the present bit, so we need a means of determining whether the page is
+  still actually present when this happens.
+
+The `_PAGE_PROTNONE` and `_PAGE_PSE` flags seem only to be meaningful at the PMD
+level when the PTE is a huge page (i.e. 2MiB in x86-64), which seems only to be
+the case when either [transparent huge pages][trans-huge] or the
+[device mapper][device-mapper] are in use.
+
+#### Arguments
+
+* `pmd` - PMD entry pointing at the PTE page which we want to determine is
+  present or not.
+
+#### Returns
+
+Truthy (non-zero) if the PTE page is present, 0 if not.
+
+### pte_present()
+
+`int pte_present(pte_t pte)`
+
+[pte_present()][pte_present] determines whether the physical page that the
+specified PTE entry points at is 'present' - i.e. whether it is currently
+resident in memory and not swapped out.
+
+The function uses [pte_flags()][pte_flags] to retrieve PTE flags then tests
+whether [_PAGE_PRESENT][_PAGE_PRESENT] or [_PAGE_PROTNONE][_PAGE_PROTNONE] are
+set.
+
+Looking at each flag:
+
+* `_PAGE_PRESENT` is the flag that indicates whether the PMD page is actually
+  resident or not.
+
+* `_PAGE_PROTNONE` indicates that the page is resident, but not accessible. This
+  is used by NUMA balancing (irrelevant for our assumed architecture, UMA
+  x86-64) or the [mprotect][mprotect] `PROT_NONE` flag being set by the user.
+
+
+#### Arguments
+
+* `pte` - PTE entry pointing at the physical page which we want to determine is
+  present or not.
+
+#### Returns
+
+Truthy (non-zero) if the physical page is present, 0 if not.
+
+---
+
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [pgdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
@@ -950,3 +1079,14 @@ empty (i.e. does not point to a physical page) or not.
 [pud_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L616
 [pmd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L550
 [pte_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L480
+[pgd_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L662
+[_PAGE_PRESENT]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L40
+[pud_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L621
+[pmd_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L521
+[_PAGE_PROTNONE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L116
+[mprotect]:http://man7.org/linux/man-pages/man2/mprotect.2.html
+[split_huge_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/huge_mm.h#L92
+[_PAGE_PSE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L47
+[trans-huge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
+[device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
+[pte_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L491
