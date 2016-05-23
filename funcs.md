@@ -398,7 +398,7 @@ specified PTE entry.
 
 [pgd_val()][pgd_val] is a wrapper around [native_pgd_val()][native_pgd_val]
 unless the system is [paravirtualised][paravirtualisation] in which case a
-different [pgd_val()][pgd_val/native] is used.
+different [pgd_val()][pgd_val/para] is used.
 
 __NOTE:__ Macro, inferring function signature.
 
@@ -419,7 +419,7 @@ specified PGD entry.
 
 [pud_val()][pud_val] is a wrapper around [native_pud_val()][native_pud_val]
 unless the system is [paravirtualised][paravirtualisation] in which case a
-different [pud_val()][pud_val/native] is used.
+different [pud_val()][pud_val/para] is used.
 
 __NOTE:__ Macro, inferring function signature.
 
@@ -440,7 +440,7 @@ specified PUD entry.
 
 [pmd_val()][pmd_val] is a wrapper around [native_pmd_val()][native_pmd_val]
 unless the system is [paravirtualised][paravirtualisation] in which case a
-different [pmd_val()][pmd_val/native] is used.
+different [pmd_val()][pmd_val/para] is used.
 
 __NOTE:__ Macro, inferring function signature.
 
@@ -461,7 +461,7 @@ specified PMD entry.
 
 [pte_val()][pte_val] is a wrapper around [native_pte_val()][native_pte_val]
 unless the system is [paravirtualised][paravirtualisation] in which case a
-different [pte_val()][pte_val/native] is used.
+different [pte_val()][pte_val/para] is used.
 
 __NOTE:__ Macro, inferring function signature.
 
