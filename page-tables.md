@@ -190,7 +190,7 @@ phy offset = 000000010000 = 16
 
 * In [current x86-64 implementations][x86-64-address-space] only the lower 48
   bits of an address are used - the remaining higher order bits must all be
-  equal to the 47th bit, i.e. allowable addresses are 128TiB (47 bits) in the
+  equal to the 48th bit, i.e. allowable addresses are 128TiB (47 bits) in the
   `0000000000000000` - `00007fffffffffff` range, and 128TiB (47 bits) in the
   `ffff800000000000` - `ffffffffffffffff` range - the address space is divided
   into upper and lower portions.
