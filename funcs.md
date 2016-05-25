@@ -51,6 +51,12 @@ for the page table entry associated with the specified virtual address.
   specified PMD entry, possibly paravirtualised.
 * [pte_val()](#pte_val) - Gets the [pteval_t][pteval_t] associated with the
   specified PTE entry, possibly paravirtualised.
+* [pud_pfn()](#pud_pfn) - Gets the Page Frame Number (PFN) of the PMD physical
+  page contained in the specified PUD entry.
+* [pmd_pfn()](#pmd_pfn) - Gets the Page Frame Number (PFN) of the PTE physical
+  page contained in the specified PMD entry.
+* [pte_pfn()](#pte_pfn) - Gets the Page Frame Number (PFN) of the physical page
+  contained in the specified PTE entry.
 
 #### Retrieving Page Table Entry Indexes
 
@@ -490,6 +496,93 @@ __NOTE:__ Macro, inferring function signature.
 
 The [pteval_t][pteval_t] (i.e. `unsigned long` on x86-64) associated with the
 specified PTE entry.
+
+---
+
+### pud_pfn()
+
+`unsigned long pud_pfn(pud_t pud)`
+
+[pud_pfn()][pud_pfn] determines the Page Frame Number (PFN) of the PMD physical
+address contained within the specified PUD entry.
+
+The PFN of a physical address is simply the (masked) address's value shifted
+right by the number of bits of the page size, so in a standard x86-64
+configuration, 12 bits (equivalent to the default 4KiB page size), and `pfn =
+masked_phys_addr >> 12`.
+
+Obviously, if the entry is empty or not present the returned PFN will be
+invalid.
+
+If you think of memory as an array of physical pages, the PFN is simply the
+index of the page within that array.
+
+#### Arguments
+
+* `pud` - The [pud_t][pud_t] which contains the PMD physical address whose PFN
+  we desire.
+
+#### Returns
+
+The PFN of the PMD physical address contained in the PUD entry.
+
+---
+
+### pmd_pfn()
+
+`unsigned long pmd_pfn(pmd_t pmd)`
+
+[pmd_pfn()][pmd_pfn] determines the Page Frame Number (PFN) of the PTE physical
+address contained within the specified PMD entry.
+
+The PFN of a physical address is simply the (masked) address's value shifted
+right by the number of bits of the page size, so in a standard x86-64
+configuration, 12 bits (equivalent to the default 4KiB page size), and `pfn =
+masked_phys_addr >> 12`.
+
+Obviously, if the entry is empty or not present the returned PFN will be
+invalid.
+
+If you think of memory as an array of physical pages, the PFN is simply the
+index of the page within that array.
+
+#### Arguments
+
+* `pmd` - The [pmd_t][pmd_t] which contains the PTE physical address whose PFN
+  we desire.
+
+#### Returns
+
+The PFN of the PTE physical address contained in the PMD entry.
+
+---
+
+### pte_pfn()
+
+`unsigned long pte_pfn(pte_t pte)`
+
+[pte_pfn()][pte_pfn] determines the Page Frame Number (PFN) of the physical
+address contained within the specified PTE entry.
+
+The PFN of a physical address is simply the (masked) address's value shifted
+right by the number of bits of the page size, so in a standard x86-64
+configuration, 12 bits (equivalent to the default 4KiB page size), and `pfn =
+masked_phys_addr >> 12`.
+
+Obviously, if the entry is empty or not present the returned PFN will be
+invalid.
+
+If you think of memory as an array of physical pages, the PFN is simply the
+index of the page within that array.
+
+#### Arguments
+
+* `pte` - The [pte_t][pte_t] which contains the physical address whose PFN we
+  desire.
+
+#### Returns
+
+The PFN of the physical address contained in the PTE entry.
 
 ---
 
@@ -1059,6 +1152,10 @@ Truthy (non-zero) if the physical page is present, 0 if not.
 [pmd_val/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L514
 [pte_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L86
 [pte_val/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L393
+[pud_pfn]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L166
+[pmd_pfn]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L161
+[pte_pfn]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L156
+
 [pgd_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L708
 [PTRS_PER_PGD]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L28
 [pud_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L679
