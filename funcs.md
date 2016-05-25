@@ -864,7 +864,8 @@ pointed-at physical page.
 `pgdval_t pgd_flags(pgd_t pgd)`
 
 [pgd_flags()][pgd_flags] retrieves a bitfield containing the flags associated
-with the specified PGD.
+with the PGD entry which, if the entry is non-empty, relate to the PUD whose
+physical address (or swap metadata) is contained within the entry.
 
 Typically this won't be accessed directly, rather a function wrapper for a
 specific flag will be used.
@@ -884,7 +885,8 @@ A bitfield containing the PGD entry's flags.
 `pudval_t pud_flags(pud_t pud)`
 
 [pud_flags()][pud_flags] retrieves a bitfield containing the flags associated
-with the specified PUD.
+with the PUD entry which, if the entry is non-empty, relate to the PMD whose
+physical address (or swap metadata) is contained within the entry.
 
 Typically this won't be accessed directly, rather a function wrapper for a
 specific flag will be used.
@@ -904,7 +906,8 @@ A bitfield containing the PUD entry's flags.
 `pmdval_t pmd_flags(pmd_t pmd)`
 
 [pmd_flags()][pmd_flags] retrieves a bitfield containing the flags associated
-with the specified PMD.
+with the PMD entry which, if the entry is non-empty, relate to the PTE whose
+physical address (or swap metadata) is contained within the entry.
 
 Typically this won't be accessed directly, rather a function wrapper for a
 specific flag will be used.
@@ -924,7 +927,8 @@ A bitfield containing the PMD entry's flags.
 `pteval_t pte_flags(pte_t pte)`
 
 [pte_flags()][pte_flags] retrieves a bitfield containing the flags associated
-with the specified PTE.
+with the PTE entry which, if the entry is non-empty, relate to the physical page
+whose physical address (or swap metadata) is contained within the entry.
 
 Typically this won't be accessed directly, rather a function wrapper for a
 specific flag will be used.
