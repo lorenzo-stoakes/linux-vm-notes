@@ -328,7 +328,9 @@ associated flags.
 `pgdval_t native_pgd_val(pgd_t pgd)`
 
 [native_pgd_val()][native_pgd_val] extracts the underlying native value of the
-specified PGD entry.
+specified PGD entry which itself is either empty, contains the physical address
+of a PUD page and associated flags, or contains swap metadata with associated
+flags and the 'present' flag unset.
 
 The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
 enforce type safety - `typedef struct { pgdval_t pgd; } pgd_t;`.
@@ -351,7 +353,9 @@ specified PGD entry.
 `pudval_t native_pud_val(pud_t pud)`
 
 [native_pud_val()][native_pud_val] extracts the underlying native value of the
-specified PUD entry.
+specified PUD entry which itself is either empty, contains the physical address
+of a PMD page and associated flags, or contains swap metadata with associated
+flags and the 'present' flag unset.
 
 The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
 enforce type safety - `typedef struct { pudval_t pud; } pud_t;`.
@@ -374,7 +378,9 @@ specified PUD entry.
 `pmdval_t native_pmd_val(pmd_t pmd)`
 
 [native_pmd_val()][native_pmd_val] extracts the underlying native value of the
-specified PMD entry.
+specified PTE entry which itself is either empty, contains the physical address
+of a PUD page and associated flags, or contains swap metadata with associated
+flags and the 'present' flag unset.
 
 The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
 enforce type safety - `typedef struct { pmdval_t pmd; } pmd_t;`.
@@ -397,7 +403,9 @@ specified PMD entry.
 `pteval_t native_pte_val(pte_t pte)`
 
 [native_pte_val()][native_pte_val] extracts the underlying native value of the
-specified PTE entry.
+specified PTE entry which itself is either empty, contains the physical address
+of a physical page and associated flags, or contains swap metadata with
+associated flags and the 'present' flag unset.
 
 The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
 enforce type safety - `typedef struct { pteval_t pte; } pte_t;`.
