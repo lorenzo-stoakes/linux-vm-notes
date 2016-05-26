@@ -1123,8 +1123,8 @@ set.
 
 Looking at each flag:
 
-* `_PAGE_PRESENT` is the flag that indicates whether the PMD page is actually
-  resident or not.
+* `_PAGE_PRESENT` is the flag that indicates whether the physical page is
+  actually resident or not.
 
 * `_PAGE_PROTNONE` indicates that the page is resident, but not accessible. This
   is used by NUMA balancing (irrelevant for our assumed architecture, UMA
