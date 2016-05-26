@@ -107,7 +107,6 @@ e.g. `pgd_present()` determines if the pointed-at PUD page is present.
 * [pud_none()](#pud_none) - Determines if the specified PUD entry is empty.
 * [pmd_none()](#pmd_none) - Determines if the specified PMD entry is empty.
 * [pte_none()](#pte_none) - Determines if the specified PTE entry is empty.
-
 * [pgd_present()](#pgd_present) - Determines if the pointed-at PUD page is
   present, i.e. resident in memory rather than swapped out.
 * [pud_present()](#pud_present) - Determines if the pointed-at PMD page is
@@ -116,24 +115,20 @@ e.g. `pgd_present()` determines if the pointed-at PUD page is present.
   present, i.e. resident in memory rather than swapped out.
 * [pte_present()](#pte_present) - Determines if the pointed-at physical page is
   present, i.e. resident in memory rather than swapped out.
-
 * [pgd_bad()](#pgd_bad) - Determines if the specified PGD entry or its
   descendants are not in a safe state to be modified.
 * [pud_bad()](#pud_bad) - Determines if the specified PUD entry or its
   descendants are not in a safe state to be modified.
 * [pmd_bad()](#pmd_bad) - Determines if the specified PMD entry or its
   descendants are not in a safe state to be modified.
-
 * [pmd_young()](#pmd_young) - Determines if the PTE page pointed-at by the
   specified PMD entry is marked accessed.
 * [pte_young()](#pte_young) - Determines if the physical page pointed-at by the
   specified PTE entry is marked accessed.
-
 * [pmd_dirty()](#pmd_dirty) - Determines if the PTE page pointed-at by the
   specified PMD entry is marked dirty.
 * [pte_dirty()](#pte_dirty) - Determines if the physical page pointed-at by the
   specified PTE entry is marked dirty.
-
 * [pud_huge()](#pud_huge) - Determines if the PMD page pointed-at by the
   specified PUD entry is huge in the context of [hugetlb][hugetlb].
 * [pmd_huge()](#pmd_huge) - Determines if the PTE page pointed-at by the
