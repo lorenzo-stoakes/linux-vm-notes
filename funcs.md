@@ -241,7 +241,7 @@ _virtual_ address to the PMD entry.
 
 * `pud` - A pointer to the PUD entry belonging to the virtual `address`.
 
-* `address` - The _virtual_ address whose PUD we seek.
+* `address` - The _virtual_ address whose PMD we seek.
 
 #### Returns
 
