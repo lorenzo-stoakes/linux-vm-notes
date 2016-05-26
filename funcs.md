@@ -111,6 +111,12 @@ determines if the pointed-at PUD page is present.
   present, i.e. resident in memory rather than swapped out.
 * [pte_present()](#pte_present) - Determines if the pointed-at physical page is
   present, i.e. resident in memory rather than swapped out.
+* [pgd_bad()](#pgd_bad) - Determines if the specified PGD entry or its
+  descendants are not in a safe state to be modified.
+* [pud_bad()](#pud_bad) - Determines if the specified PUD entry or its
+  descendants are not in a safe state to be modified.
+* [pmd_bad()](#pmd_bad) - Determines if the specified PMD entry or its
+  descendants are not in a safe state to be modified.
 
 ## Address Translation
 
@@ -1132,6 +1138,159 @@ Truthy (non-zero) if the physical page is present, 0 if not.
 
 ---
 
+### pgd_bad
+
+`int pgd_bad(pgd_t pgd)`
+
+[pgd_bad()][pgd_bad] determines whether the specified PGD entry itself is not in
+a state where it, or descendent tables, can be safely modified.
+
+__NOTE:__ It seems to me that it also determines whether a page table entry is
+in a consistent state _at all_, since page tables that are marked empty/swapped
+out/read-only make no sense for the purposes of page table traversal (discussed
+below), but based on the definition from
+[Understanding the Linux Virtual Memory Manager][amazon-gorman] and what I've
+found online so far, 'modifiability' seems to be the canonical explanation so
+far, so I'm being conservative and sticking with that. On other architectures it
+seems the definition is more nebulous, I briefly
+[looked into][arm64-stackoverflow] recently where the definition was - does this
+entry actually refer to a lower level table.
+
+In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
+`_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set.
+
+It's important to keep in mind that the PGD entry, if non-empty, contains the
+physical address/swap metadata for the page that contains a corresponding PUD.
+
+If the page isn't present (i.e. swapped out) then modifying the entry itself
+will overwrite swap metadata, adjusting flags on the assumption the entry is a
+physical address may result in invalid state, and trying to traverse the entry
+in order to modify a lower level entry will not work since the entry is not a
+physical address.
+
+If the page isn't set dirty/accessed this would imply that the PUD page contains
+no entries, which would make no sense - a PGD entry pointing to an empty PUD
+indicates inconsistent state.
+
+Finally, if the page is read-only then clearly its descendant entries cannot be
+modified and presumably the read-only provision indicates that the entry's flags
+should also not be adjusted (other than code that is knowingly and intentionally
+removing the read-only status, which will not be performing a `pgd_bad()`
+check.)
+
+#### Arguments
+
+* `pgd` - PGD entry we either (potentially) intend to modify or whose
+  descendants we (potentially) intend to modify.
+
+#### Returns
+
+Truthy (non-zero) if the PGD entry or its descendants are unsafe to modify.
+
+---
+
+### pud_bad
+
+`int pud_bad(pud_t pud)`
+
+[pud_bad()][pud_bad] determines whether the specified PUD entry itself is not in
+a state where it, or descendent tables, can be safely modified.
+
+__NOTE:__ It seems to me that it also determines whether a page table entry is
+in a consistent state _at all_, since page tables that are marked empty/swapped
+out/read-only make no sense for the purposes of page table traversal (discussed
+below), but based on the definition from
+[Understanding the Linux Virtual Memory Manager][amazon-gorman] and what I've
+found online so far, 'modifiability' seems to be the canonical explanation so
+far, so I'm being conservative and sticking with that. On other architectures it
+seems the definition is more nebulous, I briefly
+[looked into][arm64-stackoverflow] recently where the definition was - does this
+entry actually refer to a lower level table.
+
+In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
+`_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set.
+
+It's important to keep in mind that the PUD entry, if non-empty, contains the
+physical address/swap metadata for the page that contains a corresponding PMD.
+
+If the page isn't present (i.e. swapped out) then modifying the entry itself
+will overwrite swap metadata, adjusting flags on the assumption the entry is a
+physical address may result in invalid state, and trying to traverse the entry
+in order to modify a lower level entry will not work since the entry is not a
+physical address.
+
+If the page isn't set dirty/accessed this would imply that the PMD page contains
+no entries, which would make no sense - a PUD entry pointing to an empty PMD
+indicates inconsistent state.
+
+Finally, if the page is read-only then clearly its descendant entries cannot be
+modified and presumably the read-only provision indicates that the entry's flags
+should also not be adjusted (other than code that is knowingly and intentionally
+removing the read-only status, which will not be performing a `pud_bad()`
+check.)
+
+#### Arguments
+
+* `pud` - PUD entry we either (potentially) intend to modify or whose
+  descendants we (potentially) intend to modify.
+
+#### Returns
+
+Truthy (non-zero) if the PUD entry or its descendants are unsafe to modify.
+
+---
+
+### pmd_bad
+
+`int pmd_bad(pmd_t pmd)`
+
+[pmd_bad()][pmd_bad] determines whether the specified PMD entry itself is not in
+a state where it, or descendent tables, can be safely modified.
+
+__NOTE:__ It seems to me that it also determines whether a page table entry is
+in a consistent state _at all_, since page tables that are marked empty/swapped
+out/read-only make no sense for the purposes of page table traversal (discussed
+below), but based on the definition from
+[Understanding the Linux Virtual Memory Manager][amazon-gorman] and what I've
+found online so far, 'modifiability' seems to be the canonical explanation so
+far, so I'm being conservative and sticking with that. On other architectures it
+seems the definition is more nebulous, I briefly
+[looked into][arm64-stackoverflow] recently where the definition was - does this
+entry actually refer to a lower level table.
+
+In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
+`_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set.
+
+It's important to keep in mind that the PMD entry, if non-empty, contains the
+physical address/swap metadata for the page that contains a corresponding PTE.
+
+If the page isn't present (i.e. swapped out) then modifying the entry itself
+will overwrite swap metadata, adjusting flags on the assumption the entry is a
+physical address may result in invalid state, and trying to traverse the entry
+in order to modify a lower level entry will not work since the entry is not a
+physical address.
+
+If the page isn't set dirty/accessed this would imply that the PTE page contains
+no entries, which would make no sense - a PMD entry pointing to an empty PTE
+indicates inconsistent state.
+
+Finally, if the page is read-only then clearly its descendant entries cannot be
+modified and presumably the read-only provision indicates that the entry's flags
+should also not be adjusted (other than code that is knowingly and intentionally
+removing the read-only status, which will not be performing a `pmd_bad()`
+check.)
+
+#### Arguments
+
+* `pmd` - PMD entry we either (potentially) intend to modify or whose
+  descendants we (potentially) intend to modify.
+
+#### Returns
+
+Truthy (non-zero) if the PMD entry or its descendants are unsafe to modify.
+
+---
+
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [pgdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
@@ -1210,3 +1369,8 @@ Truthy (non-zero) if the physical page is present, 0 if not.
 [trans-huge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
 [pte_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L491
+[pgd_bad]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L689
+[amazon-gorman]:http://www.amazon.co.uk/Understanding-Virtual-Memory-Manager-Perens/dp/0131453483
+[arm64-stackoverflow]:http://stackoverflow.com/a/37433195/6380063
+[pud_bad]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L650
+[pmd_bad]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L605
