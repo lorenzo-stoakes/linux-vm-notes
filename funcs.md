@@ -958,8 +958,7 @@ A bitfield containing the PTE entry's flags.
 
 `int pgd_none(pgd_t pgd)`
 
-[pgd_none()][pgd_none] determines whether the specified PGD entry is in fact
-empty (i.e. does not point to a PUD) or not.
+[pgd_none()][pgd_none] determines whether the specified PGD entry is empty.
 
 #### Arguments
 
@@ -975,8 +974,7 @@ empty (i.e. does not point to a PUD) or not.
 
 `int pud_none(pud_t pud)`
 
-[pud_none()][pud_none] determines whether the specified PUD entry is in fact
-empty (i.e. does not point to a PMD) or not.
+[pud_none()][pud_none] determines whether the specified PUD entry is empty.
 
 #### Arguments
 
@@ -992,8 +990,7 @@ empty (i.e. does not point to a PMD) or not.
 
 `int pmd_none(pmd_t pmd)`
 
-[pmd_none()][pmd_none] determines whether the specified PMD entry is in fact
-empty (i.e. does not point to a PTE) or not.
+[pmd_none()][pmd_none] determines whether the specified PMD entry is empty.
 
 #### Arguments
 
@@ -1009,8 +1006,7 @@ empty (i.e. does not point to a PTE) or not.
 
 `int pte_none(pte_t pte)`
 
-[pte_none()][pte_none] determines whether the specified PTE entry is in fact
-empty (i.e. does not point to a physical page) or not.
+[pte_none()][pte_none] determines whether the specified PTE entry is empty.
 
 #### Arguments
 
