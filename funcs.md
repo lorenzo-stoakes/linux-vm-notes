@@ -1026,9 +1026,9 @@ empty (i.e. does not point to a physical page) or not.
 
 `int pgd_present(pgd_t pgd)`
 
-[pgd_present()][pgd_present] determines whether the page containing the PUD page
-that the specified PGD entry points at is 'present' - i.e. whether it is
-currently resident in memory and not swapped out or otherwise unavailable.
+[pgd_present()][pgd_present] determines whether the PUD page that the specified
+PGD entry points at is 'present' - i.e. whether it is currently resident in
+memory and not swapped out or otherwise unavailable.
 
 The function uses [pgd_flags()][pgd_flags] to retrieve the PGD entry's flags
 then tests whether [_PAGE_PRESENT][_PAGE_PRESENT] is set.
@@ -1048,9 +1048,9 @@ Truthy (non-zero) if the PUD page is present, 0 if not.
 
 `int pud_present(pud_t pud)`
 
-[pud_present()][pud_present] determines whether the page containing the PMD page
-that the specified PUD entry points at is 'present' - i.e. whether it is
-currently resident in memory and not swapped out or otherwise unavailable.
+[pud_present()][pud_present] determines whether the PMD page that the specified
+PUD entry points at is 'present' - i.e. whether it is currently resident in
+memory and not swapped out or otherwise unavailable.
 
 The function uses [pud_flags()][pud_flags] to retrieve the PUD entry's flags
 then tests whether [_PAGE_PRESENT][_PAGE_PRESENT] is set.
@@ -1070,9 +1070,9 @@ Truthy (non-zero) if the PMD page is present, 0 if not.
 
 `int pmd_present(pmd_t pmd)`
 
-[pmd_present()][pmd_present] determines whether the page containing the PTE page
-that the specified PMD entry points at is 'present' - i.e. whether it is
-currently resident in memory and not swapped out or otherwise unavailable.
+[pmd_present()][pmd_present] determines whether the PTE page that the specified
+PMD entry points at is 'present' - i.e. whether it is currently resident in
+memory and not swapped out or otherwise unavailable.
 
 The function uses [pmd_flags()][pmd_flags] to retrieve the PMD entry's flags
 then tests whether [_PAGE_PRESENT][_PAGE_PRESENT],
