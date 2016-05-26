@@ -1080,7 +1080,8 @@ then tests whether [_PAGE_PRESENT][_PAGE_PRESENT],
 
 Looking at each flag:
 
-* `_PAGE_PRESENT` indicates whether the PMD page is actually resident or not.
+* `_PAGE_PRESENT` indicates whether the pointed-at PTE page is actually resident
+  or not.
 
 * `_PAGE_PROTNONE` indicates that the page is resident, but not accessible. This
   is used by NUMA balancing (irrelevant for our assumed architecture, UMA
