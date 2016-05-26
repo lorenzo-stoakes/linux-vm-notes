@@ -27,14 +27,14 @@
 
 ## Introduction
 
-This repo is a place for me to write up some notes on the linux 4.6 VM
-subsystem. I don't make any claim to their quality or usefulness, this is just a
-'scratchpad' of sorts for me to use a reference in the future.
+This repo contains my notes on the linux 4.6 VM subsystem. I don't make any claim
+to their quality or usefulness :)
 
-These originate from [notes][linux-gorman] I took from the excellent
-[Understanding the Linux Virtual Memory Manager][amazon-gorman] by
+This work first originated from the [notes][linux-gorman] I took from the
+excellent [Understanding the Linux Virtual Memory Manager][amazon-gorman] by
 [Mel Gorman][gorman] which, while great, target the 2.4.22 kernel which was
-released in 2003, somewhat out of date :)
+released in 2003, somewhat out of date, the obvious next stage of study was to
+do something similar for a recent kernel.
 
 I am specifically targeting the 4.6 kernel since it is the (almost-)current
 mainline version at the time of writing and should remain a sane and stable
