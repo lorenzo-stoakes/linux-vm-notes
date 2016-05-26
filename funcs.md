@@ -121,6 +121,22 @@ e.g. `pgd_present()` determines if the pointed-at PUD page is present.
   descendants are not in a safe state to be modified.
 * [pmd_bad()](#pmd_bad) - Determines if the specified PMD entry or its
   descendants are not in a safe state to be modified.
+* [pmd_young()](#pmd_young) - Determines if the PTE page pointed-at by the
+  specified PMD entry is marked accessed.
+* [pte_young()](#pte_young) - Determines if the physical page pointed-at by the
+  specified PTE entry is marked accessed.
+* [pmd_dirty()](#pmd_dirty) - Determines if the PTE page pointed-at by the
+  specified PMD entry is marked dirty.
+* [pte_dirty()](#pte_dirty) - Determines if the physical page pointed-at by the
+  specified PTE entry is marked dirty.
+* [pud_huge()](#pud_huge) - Determines if the PMD page pointed-at by the
+  specified PUD entry is huge in the context of [hugetlb][hugetlb].
+* [pmd_huge()](#pmd_huge) - Determines if the PTE page pointed-at by the
+  specified PMD entry is huge in the context of [hugetlb][hugetlb].
+* [pte_huge()](#pte_huge) - Determines if the physical page pointed-at by the
+  specified PTE entry is huge.
+* [pmd_trans_huge()](#pmd_trans_huge) - Determines if the PTE page pointed-at by
+  the specified PMD entry is a [transparently-assigned][transhuge] huge page.
 
 ## Address Translation
 
@@ -1092,7 +1108,7 @@ Looking at each flag:
 
 The `_PAGE_PROTNONE` and `_PAGE_PSE` flags seem only to be meaningful at the PMD
 level when the PTE is a huge page (i.e. 2MiB in x86-64), which seems only to be
-the case when either [transparent huge pages][trans-huge] or the
+the case when either [transparent huge pages][transhuge] or the
 [device mapper][device-mapper] are in use.
 
 #### Arguments
@@ -1292,6 +1308,166 @@ Truthy (non-zero) if the PMD entry or its descendants are unsafe to modify.
 
 ---
 
+### pmd_young
+
+`int pmd_young(pmd_t pmd)`
+
+[pmd_young()][pmd_young] determines whether the specified PMD entry has the
+`_PAGE_ACCESSED` flag set, i.e. whether the PTE page it refers to has been
+accessed since the flag was last cleared.
+
+#### Arguments
+
+* `pmd` - The PMD entry whose accessed flag state we want to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PMD entry is marked accessed.
+
+---
+
+### pte_young
+
+`int pte_young(pte_t pte)`
+
+[pte_young()][pte_young] determines whether the specified PTE entry has the
+`_PAGE_ACCESSED` flag set, i.e. whether the physical page it refers to has been
+accessed since the flag was last cleared.
+
+#### Arguments
+
+* `pte` - The PTE entry whose accessed flag state we want to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PTE entry is marked accessed.
+
+---
+
+### pmd_dirty
+
+`int pmd_dirty(pmd_t pmd)`
+
+[pmd_dirty()][pmd_dirty] determines whether the specified PMD entry has the
+`_PAGE_DIRTY` flag set, i.e. whether the PTE page it refers to has been modified
+since the flag was last cleared.
+
+This function can only be meaningfully used if `pmd_present()` returns true.
+
+#### Arguments
+
+* `pmd` - The PMD entry whose dirty flag state we want to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PMD entry is marked dirty.
+
+---
+
+### pte_dirty
+
+`int pte_dirty(pte_t pte)`
+
+[pte_dirty()][pte_dirty] determines whether the specified PTE entry has the
+`_PAGE_DIRTY` flag set, i.e. whether the physical page it refers to has been
+modified since the flag was last cleared.
+
+This function can only be meaningfully used if `pte_present()` returns true.
+
+#### Arguments
+
+* `pte` - The PTE entry whose dirty flag state we want to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PTE entry is marked dirty.
+
+---
+
+### pud_huge
+
+`int pud_huge(pud_t pud)`
+
+[pud_huge()][pud_huge] determines whether the specified PUD entry is marked huge
+in the context of [hugetlb][hugetlb], i.e. whether the PMD page it refers to is
+huge under the `hugetlb` scheme.
+
+This simply checks the `_PAGE_PSE` (i.e. huge page) flag.
+
+#### Arguments
+
+* `pud` - The PUD entry whose huge flag state we want to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PUD entry is marked huge.
+
+---
+
+### pmd_huge
+
+`int pmd_huge(pmd_t pmd)`
+
+[pmd_huge()][pmd_huge] determines whether the specified PMD entry is marked huge
+in the context of [hugetlb][hugetlb], i.e. whether the PTE page it refers to is
+huge under the `hugetlb` scheme.
+
+This function determines whether the specified PMD entry is non-empty and either
+not marked present or marked present and has the `_PAGE_PSE` (i.e. huge page)
+flag set.
+
+#### Arguments
+
+* `pmd` - The PMD entry we want to determine is marked huge under the `hugetlb`
+  scheme.
+
+#### Returns
+
+Truthy (non-zero) if the PMD entry is marked huge under the `hugetlb` scheme.
+
+---
+
+### pte_huge
+
+`int pte_huge(pte_t pte)`
+
+[pte_huge()][pte_huge] determines whether the specified PTE entry is marked
+huge, i.e. whether the physical page it refers to is huge.
+
+This simply checks the `_PAGE_PSE` (i.e. huge page) flag.
+
+#### Arguments
+
+* `pte` - The PTE entry we want to determine is marked huge or not.
+
+#### Returns
+
+Truthy (non-zero) if the PTE entry is marked huge.
+
+---
+
+### pmd_trans_huge
+
+`int pmd_trans_huge(pmd_t pmd)`
+
+[pmd_trans_huge()][pmd_trans_huge] determines whether the specified PMD entry is
+marked huge in the context of [transparent huge pages][transhuge].
+
+This checks that the `_PAGE_PSE` flag is set and the `_PAGE_DEVMAP` flag is
+_not_ set.
+
+#### Arguments
+
+* `pmd` - The PMD entry we want to determine is marked huge or not under the
+  Transparent Huge Pages scheme.
+
+#### Returns
+
+Truthy (non-zero) if the PMD entry is marked huge under the Transparent Huge
+Pages scheme.
+
+---
+
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [pgdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
@@ -1299,6 +1475,8 @@ Truthy (non-zero) if the PMD entry or its descendants are unsafe to modify.
 [pmdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L13
 [pteval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L12
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
+[hugetlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/hugetlbpage.txt
+[transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
 
 [phys_to_virt]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L136
 [__va]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L54
@@ -1367,7 +1545,6 @@ Truthy (non-zero) if the PMD entry or its descendants are unsafe to modify.
 [mprotect]:http://man7.org/linux/man-pages/man2/mprotect.2.html
 [split_huge_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/huge_mm.h#L92
 [_PAGE_PSE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L47
-[trans-huge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
 [pte_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L491
 [pgd_bad]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L689
@@ -1375,3 +1552,11 @@ Truthy (non-zero) if the PMD entry or its descendants are unsafe to modify.
 [arm64-stackoverflow]:http://stackoverflow.com/a/37433195/6380063
 [pud_bad]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L650
 [pmd_bad]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L605
+[pmd_young]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L126
+[pte_young]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L116
+[pmd_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L121
+[pte_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L97
+[pud_huge]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/hugetlbpage.c#L68
+[pmd_huge]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/hugetlbpage.c#L62
+[pte_huge]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L136
+[pmd_trans_huge]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L179
