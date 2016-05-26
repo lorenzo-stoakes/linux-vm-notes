@@ -92,13 +92,17 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 #### Page Table Entry State
 
 __NOTE:__ Confusingly, the `pXX_<flag>()` functions retrieve flags from the
-specified `pXX`, however they refer to the pointed-at page, e.g. `pgd_present()`
-determines if the pointed-at PUD page is present.
+specified `pXX` entry, however they refer to the pointed-at page,
+e.g. `pgd_present()` determines if the pointed-at PUD page is present.
 
-* [pgd_flags()](#pgd_flags) - Retrieves bitfield containing PGD flags.
-* [pud_flags()](#pud_flags) - Retrieves bitfield containing PUD flags.
-* [pmd_flags()](#pmd_flags) - Retrieves bitfield containing PMD flags.
-* [pte_flags()](#pte_flags) - Retrieves bitfield containing PTE flags.
+* [pgd_flags()](#pgd_flags) - Retrieves bitfield containing the specified PGD
+  entry's flags.
+* [pud_flags()](#pud_flags) - Retrieves bitfield containing the specified PUD
+  entry's flags.
+* [pmd_flags()](#pmd_flags) - Retrieves bitfield containing the specified PMD
+  entry's flags.
+* [pte_flags()](#pte_flags) - Retrieves bitfield containing the specified PTE
+  entry's flags.
 * [pgd_none()](#pgd_none) - Determines if the specified PGD entry is empty.
 * [pud_none()](#pud_none) - Determines if the specified PUD entry is empty.
 * [pmd_none()](#pmd_none) - Determines if the specified PMD entry is empty.
