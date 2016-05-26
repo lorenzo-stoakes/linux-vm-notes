@@ -1028,7 +1028,7 @@ empty (i.e. does not point to a physical page) or not.
 
 [pgd_present()][pgd_present] determines whether the page containing the PUD that
 the specified PGD entry points at is 'present' - i.e. whether it is currently
-resident in memory and not swapped out.
+resident in memory and not swapped out or otherwise unavailable.
 
 The function uses [pgd_flags()][pgd_flags] to retrieve the PGD entry's flags
 then tests whether [_PAGE_PRESENT][_PAGE_PRESENT] is set.
@@ -1050,7 +1050,7 @@ Truthy (non-zero) if the PUD page is present, 0 if not.
 
 [pud_present()][pud_present] determines whether the page containing the PMD that
 the specified PUD entry points at is 'present' - i.e. whether it is currently
-resident in memory and not swapped out.
+resident in memory and not swapped out or otherwise unavailable.
 
 The function uses [pud_flags()][pud_flags] to retrieve the PUD entry's flags
 then tests whether [_PAGE_PRESENT][_PAGE_PRESENT] is set.
@@ -1072,7 +1072,7 @@ Truthy (non-zero) if the PMD page is present, 0 if not.
 
 [pmd_present()][pmd_present] determines whether the page containing the PTE that
 the specified PMD entry points at is 'present' - i.e. whether it is currently
-resident in memory and not swapped out.
+resident in memory and not swapped out or otherwise unavailable.
 
 The function uses [pmd_flags()][pmd_flags] to retrieve the PMD entry's flags
 then tests whether [_PAGE_PRESENT][_PAGE_PRESENT],
@@ -1115,7 +1115,7 @@ Truthy (non-zero) if the PTE page is present, 0 if not.
 
 [pte_present()][pte_present] determines whether the physical page that the
 specified PTE entry points at is 'present' - i.e. whether it is currently
-resident in memory and not swapped out.
+resident in memory and not swapped out or otherwise unavailable.
 
 The function uses [pte_flags()][pte_flags] to retrieve PTE flags then tests
 whether [_PAGE_PRESENT][_PAGE_PRESENT] or [_PAGE_PROTNONE][_PAGE_PROTNONE] are
@@ -1166,11 +1166,11 @@ In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
 It's important to keep in mind that the PGD entry, if non-empty, contains the
 physical address/swap metadata for the page that contains a corresponding PUD.
 
-If the page isn't present (i.e. swapped out) then modifying the entry itself
-will overwrite swap metadata, adjusting flags on the assumption the entry is a
-physical address may result in invalid state, and trying to traverse the entry
-in order to modify a lower level entry will not work since the entry is not a
-physical address.
+If the page isn't present (e.g., but not only, swapped out) then modifying the
+entry itself will overwrite metadata, adjusting flags on the assumption the
+entry is a physical address may result in invalid state, and trying to traverse
+the entry in order to modify a lower level entry will not work since the entry
+is not a physical address.
 
 If the page isn't set dirty/accessed this would imply that the PUD page contains
 no entries, which would make no sense - a PGD entry pointing to an empty PUD
@@ -1217,11 +1217,11 @@ In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
 It's important to keep in mind that the PUD entry, if non-empty, contains the
 physical address/swap metadata for the page that contains a corresponding PMD.
 
-If the page isn't present (i.e. swapped out) then modifying the entry itself
-will overwrite swap metadata, adjusting flags on the assumption the entry is a
-physical address may result in invalid state, and trying to traverse the entry
-in order to modify a lower level entry will not work since the entry is not a
-physical address.
+If the page isn't present (e.g., but not only, swapped out) then modifying the
+entry itself will overwrite metadata, adjusting flags on the assumption the
+entry is a physical address may result in invalid state, and trying to traverse
+the entry in order to modify a lower level entry will not work since the entry
+is not a physical address.
 
 If the page isn't set dirty/accessed this would imply that the PMD page contains
 no entries, which would make no sense - a PUD entry pointing to an empty PMD
@@ -1268,11 +1268,11 @@ In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
 It's important to keep in mind that the PMD entry, if non-empty, contains the
 physical address/swap metadata for the page that contains a corresponding PTE.
 
-If the page isn't present (i.e. swapped out) then modifying the entry itself
-will overwrite swap metadata, adjusting flags on the assumption the entry is a
-physical address may result in invalid state, and trying to traverse the entry
-in order to modify a lower level entry will not work since the entry is not a
-physical address.
+If the page isn't present (e.g., but not only, swapped out) then modifying the
+entry itself will overwrite metadata, adjusting flags on the assumption the
+entry is a physical address may result in invalid state, and trying to traverse
+the entry in order to modify a lower level entry will not work since the entry
+is not a physical address.
 
 If the page isn't set dirty/accessed this would imply that the PTE page contains
 no entries, which would make no sense - a PMD entry pointing to an empty PTE
