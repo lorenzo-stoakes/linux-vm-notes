@@ -317,57 +317,45 @@ the PGD for the process :)
 
 * A number of functions are provided to make it easier to traverse page
   tables. It's instructive to have a look at a utility function that performs
-  this task, [follow_page()][follow_page] (and subsequently
-  [follow_page_mask()][follow_page_mask] and
-  [follow_page_pte()][follow_page_pte]) is useful for this task.
-
-* Since the actual `follow_page()` code is large and contains handling for
-  various things we're not interested in at this point, I've extracted and
-  combined the actual functions to obtain a smaller pedagogical version for the
-  simple case (which may contain errors or miss case handling, you've been
-  warned), `follow_page_ljs()`:
+  this task, [__follow_pte()][__follow_pte] is useful for this task:
 
 ```c
-struct page *follow_page_ljs(struct vm_area_struct *vma,
-                             unsigned long address, unsigned int flags)
+static int __follow_pte(struct mm_struct *mm, unsigned long address,
+                pte_t **ptepp, spinlock_t **ptlp)
 {
         pgd_t *pgd;
         pud_t *pud;
         pmd_t *pmd;
-        spinlock_t *ptl;
-        pte_t *ptep, pte;
-        struct page *page;
-        struct mm_struct *mm = vma->vm_mm;
+        pte_t *ptep;
 
         pgd = pgd_offset(mm, address);
         if (pgd_none(*pgd) || unlikely(pgd_bad(*pgd)))
-                return no_page_table(vma, flags);
+                goto out;
 
         pud = pud_offset(pgd, address);
-        if (pud_none(*pud))
-                return no_page_table(vma, flags);
-        if (unlikely(pud_bad(*pud)))
-                return no_page_table(vma, flags);
+        if (pud_none(*pud) || unlikely(pud_bad(*pud)))
+                goto out;
 
         pmd = pmd_offset(pud, address);
-        if (pmd_none(*pmd))
-                return no_page_table(vma, flags);
-        if (unlikely(pmd_bad(*pmd)))
-                return no_page_table(vma, flags);
+        VM_BUG_ON(pmd_trans_huge(*pmd));
+        if (pmd_none(*pmd) || unlikely(pmd_bad(*pmd)))
+                goto out;
 
-        ptep = pte_offset_map_lock(mm, pmd, address, &ptl);
-        pte = *ptep;
-        if (!pte_present(pte))
-                goto no_page;
+        /* We cannot handle huge page PFN maps. Luckily they don't exist. */
+        if (pmd_huge(*pmd))
+                goto out;
 
-        page = pfn_to_page(pte_pfn(pte));
-
-        pte_unmap_unlock(ptep, ptl);
-        return page;
-
-no_page:
-        pte_unmap_unlock(ptep, ptl);
-        return no_page_table(vma, flags);
+        ptep = pte_offset_map_lock(mm, pmd, address, ptlp);
+        if (!ptep)
+                goto out;
+        if (!pte_present(*ptep))
+                goto unlock;
+        *ptepp = ptep;
+        return 0;
+unlock:
+        pte_unmap_unlock(ptep, *ptlp);
+out:
+        return -EINVAL;
 }
 ```
 
@@ -417,6 +405,4 @@ no_page:
 
 [PAGE_MASK]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L10
 [PAGE_SIZE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L9
-[follow_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L2186
-[follow_page_mask]:https://github.com/torvalds/linux/blob/v4.6/mm/gup.c#L214
-[follow_page_pte]:https://github.com/torvalds/linux/blob/v4.6/mm/gup.c#L63
+[__follow_pte]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3594
