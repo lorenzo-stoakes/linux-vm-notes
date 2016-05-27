@@ -71,7 +71,7 @@ for the page table entry associated with the specified virtual address.
 
 #### Retrieving Pages
 
-__NOTE:__ Confusingly, `pXX_page[_vaddr]()` deals with the pointed-at entry, so
+__NOTE:__ Confusingly, `pXX_page[_vaddr]()` deals with the pointed at entry, so
 e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 
 * [pgd_page_vaddr()](#pgd_page_vaddr) - Gets the virtual address of the PUD page
@@ -92,8 +92,8 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 #### Page Table Entry State
 
 __NOTE:__ Confusingly, the `pXX_<flag>()` functions retrieve flags from the
-specified `pXX` entry, however they refer to the pointed-at page,
-e.g. `pgd_present()` determines if the pointed-at PUD page is present.
+specified `pXX` entry, however they refer to the pointed at page,
+e.g. `pgd_present()` determines if the pointed at PUD page is present.
 
 * [pgd_flags()](#pgd_flags) - Retrieves bitfield containing the specified PGD
   entry's flags.
@@ -107,13 +107,13 @@ e.g. `pgd_present()` determines if the pointed-at PUD page is present.
 * [pud_none()](#pud_none) - Determines if the specified PUD entry is empty.
 * [pmd_none()](#pmd_none) - Determines if the specified PMD entry is empty.
 * [pte_none()](#pte_none) - Determines if the specified PTE entry is empty.
-* [pgd_present()](#pgd_present) - Determines if the pointed-at PUD page is
+* [pgd_present()](#pgd_present) - Determines if the pointed at PUD page is
   present, i.e. resident in memory rather than swapped out.
-* [pud_present()](#pud_present) - Determines if the pointed-at PMD page is
+* [pud_present()](#pud_present) - Determines if the pointed at PMD page is
   present, i.e. resident in memory rather than swapped out.
-* [pmd_present()](#pmd_present) - Determines if the pointed-at PTE page is
+* [pmd_present()](#pmd_present) - Determines if the pointed at PTE page is
   present, i.e. resident in memory rather than swapped out.
-* [pte_present()](#pte_present) - Determines if the pointed-at physical page is
+* [pte_present()](#pte_present) - Determines if the pointed at physical page is
   present, i.e. resident in memory rather than swapped out.
 * [pgd_bad()](#pgd_bad) - Determines if the specified PGD entry or its
   descendants are not in a safe state to be modified.
@@ -121,27 +121,27 @@ e.g. `pgd_present()` determines if the pointed-at PUD page is present.
   descendants are not in a safe state to be modified.
 * [pmd_bad()](#pmd_bad) - Determines if the specified PMD entry or its
   descendants are not in a safe state to be modified.
-* [pmd_young()](#pmd_young) - Determines if the PTE page pointed-at by the
+* [pmd_young()](#pmd_young) - Determines if the PTE page pointed at by the
   specified PMD entry is marked accessed.
-* [pte_young()](#pte_young) - Determines if the physical page pointed-at by the
+* [pte_young()](#pte_young) - Determines if the physical page pointed at by the
   specified PTE entry is marked accessed.
-* [pmd_dirty()](#pmd_dirty) - Determines if the PTE page pointed-at by the
+* [pmd_dirty()](#pmd_dirty) - Determines if the PTE page pointed at by the
   specified PMD entry is marked dirty.
-* [pte_dirty()](#pte_dirty) - Determines if the physical page pointed-at by the
+* [pte_dirty()](#pte_dirty) - Determines if the physical page pointed at by the
   specified PTE entry is marked dirty.
-* [pud_huge()](#pud_huge) - Determines if the PMD page pointed-at by the
+* [pud_huge()](#pud_huge) - Determines if the PMD page pointed at by the
   specified PUD entry is huge in the context of [hugetlb][hugetlb].
-* [pmd_huge()](#pmd_huge) - Determines if the PTE page pointed-at by the
+* [pmd_huge()](#pmd_huge) - Determines if the PTE page pointed at by the
   specified PMD entry is huge in the context of [hugetlb][hugetlb].
-* [pte_huge()](#pte_huge) - Determines if the physical page pointed-at by the
+* [pte_huge()](#pte_huge) - Determines if the physical page pointed at by the
   specified PTE entry is huge (without context.)
-* [pmd_trans_huge()](#pmd_trans_huge) - Determines if the PTE page pointed-at by
+* [pmd_trans_huge()](#pmd_trans_huge) - Determines if the PTE page pointed at by
   the specified PMD entry is a [transparent huge page][transhuge].
-* [pgd_large()](#pgd_large) - Determines if the pointed-at PUD page is huge
+* [pgd_large()](#pgd_large) - Determines if the pointed at PUD page is huge
   (without context.)
-* [pud_large()](#pud_large) - Determines if the pointed-at PMD page is huge
+* [pud_large()](#pud_large) - Determines if the pointed at PMD page is huge
   (without context.)
-* [pmd_large()](#pmd_large) - Determines if the pointed-at PTE page is huge
+* [pmd_large()](#pmd_large) - Determines if the pointed at PTE page is huge
   (without context.)
 
 
@@ -754,7 +754,7 @@ a virtual one.
 
 #### Arguments
 
-* `pgd` - PGD entry whose pointed-at PUD page is desired.
+* `pgd` - PGD entry whose pointed at PUD page is desired.
 
 #### Returns
 
@@ -776,7 +776,7 @@ a virtual one.
 
 #### Arguments
 
-* `pud` - PUD entry whose pointed-at PMD page is desired.
+* `pud` - PUD entry whose pointed at PMD page is desired.
 
 #### Returns
 
@@ -798,7 +798,7 @@ a virtual one.
 
 #### Arguments
 
-* `pmd` - PMD entry whose pointed-at PTE page is desired.
+* `pmd` - PMD entry whose pointed at PTE page is desired.
 
 #### Returns
 
@@ -818,12 +818,12 @@ __NOTE:__ Macro, inferring function signature.
 
 #### Arguments
 
-* `pgd` - PGD entry whose pointed-at PUD page's [struct page][page] is desired.
+* `pgd` - PGD entry whose pointed at PUD page's [struct page][page] is desired.
 
 #### Returns
 
 The virtual address of the [struct page][page] describing the PGD entry's
-pointed-at PUD page.
+pointed at PUD page.
 
 ---
 
@@ -839,12 +839,12 @@ __NOTE:__ Macro, inferring function signature.
 
 #### Arguments
 
-* `pud` - PUD entry whose pointed-at PMD page's [struct page][page] is desired.
+* `pud` - PUD entry whose pointed at PMD page's [struct page][page] is desired.
 
 #### Returns
 
 The virtual address of the [struct page][page] describing the PUD entry's
-pointed-at PMD page.
+pointed at PMD page.
 
 ---
 
@@ -860,12 +860,12 @@ __NOTE:__ Macro, inferring function signature.
 
 #### Arguments
 
-* `pmd` - PMD entry whose pointed-at PTE page's [struct page][page] is desired.
+* `pmd` - PMD entry whose pointed at PTE page's [struct page][page] is desired.
 
 #### Returns
 
 The virtual address of the [struct page][page] describing the PMD entry's
-pointed-at PTE page.
+pointed at PTE page.
 
 ---
 
@@ -882,13 +882,13 @@ __NOTE:__ Macro, inferring function signature.
 
 #### Arguments
 
-* `pte` - PTE entry whose pointed-at physical page's [struct page][page] is
+* `pte` - PTE entry whose pointed at physical page's [struct page][page] is
   desired.
 
 #### Returns
 
 The virtual address of the [struct page][page] describing the PTE entry's
-pointed-at physical page.
+pointed at physical page.
 
 ---
 
@@ -1098,7 +1098,7 @@ then tests whether `_PAGE_PRESENT`, `_PAGE_PROTNONE` or `_PAGE_PSE` are set.
 
 Looking at each flag:
 
-* `_PAGE_PRESENT` indicates whether the pointed-at PTE page is actually resident
+* `_PAGE_PRESENT` indicates whether the pointed at PTE page is actually resident
   or not.
 
 * `_PAGE_PROTNONE` indicates that the PTE page is resident, but not
