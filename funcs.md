@@ -129,6 +129,12 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
   specified PMD entry has been modified.
 * [pte_dirty()](#pte_dirty) - Determines if the physical page pointed at by the
   specified PTE entry has been modified.
+* [pmd_write()](#pmd_write) - Determines if the PTE page pointed at by the
+  specified PMD entry is writable.
+* [pte_write()](#pte_write) - Determines if the physical page pointed at by the
+  specified PTE entry is writable.
+* [pte_exec()](#pte_exec) - Determines if the physical page pointed at by the
+  specified PTE entry is executable.
 
 ##### Huge Pages
 
@@ -1392,6 +1398,62 @@ Truthy (non-zero) if the PTE entry is marked dirty.
 
 ---
 
+### pmd_write
+
+`int pmd_write(pmd_t pmd)`
+
+[pmd_write()][pmd_write] determines whether the specified PMD entry has the
+`_PAGE_RW` flag set, i.e. whether the PTE page it refers to is _not_ read-only.
+
+#### Arguments
+
+* `pmd` - The PMD entry whose read/write flag state we want to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PMD entry is marked read/write.
+
+---
+
+### pte_write
+
+`int pte_write(pte_t pte)`
+
+[pte_write()][pte_write] determines whether the specified PTE entry has the
+`_PAGE_RW` flag set, i.e. whether the physical page it refers to is _not_
+read-only.
+
+#### Arguments
+
+* `pte` - The PTE entry whose read/write flag state we want to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PTE entry is marked read/write.
+
+---
+
+### pte_exec
+
+`int pte_exec(pte_t pte)`
+
+[pte_exec()][pte_exec] determines whether the specified PTE entry has the
+`_PAGE_NX` flag set, i.e. whether the physical page it refers to contains bytes
+that can be executed.
+
+This uses the [NX bit][nx-bit] feature of x86-64 which determines whether bytes
+in a specific page are permitted to be executed or not.
+
+#### Arguments
+
+* `pte` - The PTE entry whose executable flag state we want to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PTE entry is marked executable.
+
+---
+
 ### pud_huge
 
 `int pud_huge(pud_t pud)`
@@ -1629,3 +1691,7 @@ Truthy (non-zero) if the PMD entry is marked huge.
 [pgd_large]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64.h#L130
 [pud_large]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L644
 [pmd_large]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L173
+[pmd_write]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L850
+[pte_write]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L131
+[pte_exec]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L146
+[nx-bit]:https://en.wikipedia.org/wiki/NX_bit
