@@ -16,6 +16,9 @@ pud_large -> pse/present pud_huge -> pse
 pmd_large -> pse         pmd_huge -> pse/not present
 ```
 
+* Need to consider `pgprot`s in general + how they relate to flags,
+  e.g. `pte_flags()` returns a `pteval_t`.
+
 ## 2.4.22 -> 4.6
 
 * Seems like missing page levels is handled via
