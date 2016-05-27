@@ -129,6 +129,9 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
   specified PMD entry is marked dirty.
 * [pte_dirty()](#pte_dirty) - Determines if the physical page pointed at by the
   specified PTE entry is marked dirty.
+
+##### Huge Pages
+
 * [pud_huge()](#pud_huge) - Determines if the PMD page pointed at by the
   specified PUD entry is huge in the context of [hugetlb][hugetlb].
 * [pmd_huge()](#pmd_huge) - Determines if the PTE page pointed at by the
