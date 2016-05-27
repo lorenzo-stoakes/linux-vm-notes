@@ -136,7 +136,7 @@ e.g. `pgd_present()` determines if the pointed-at PUD page is present.
 * [pte_huge()](#pte_huge) - Determines if the physical page pointed-at by the
   specified PTE entry is huge.
 * [pmd_trans_huge()](#pmd_trans_huge) - Determines if the PTE page pointed-at by
-  the specified PMD entry is a [transparently-assigned][transhuge] huge page.
+  the specified PMD entry is a [transparent huge page][transhuge].
 * [pgd_large()](#pgd_large) - Determines if the pointed-at PUD page is huge
   (without context.)
 * [pud_large()](#pud_large) - Determines if the pointed-at PMD page is huge
