@@ -1172,7 +1172,7 @@ Truthy (non-zero) if the physical page is present, 0 if not.
 
 ---
 
-### pgd_bad
+### pgd_bad()
 
 `int pgd_bad(pgd_t pgd)`
 
@@ -1223,7 +1223,7 @@ Truthy (non-zero) if the PGD entry or its descendants are unsafe to modify.
 
 ---
 
-### pud_bad
+### pud_bad()
 
 `int pud_bad(pud_t pud)`
 
@@ -1274,7 +1274,7 @@ Truthy (non-zero) if the PUD entry or its descendants are unsafe to modify.
 
 ---
 
-### pmd_bad
+### pmd_bad()
 
 `int pmd_bad(pmd_t pmd)`
 
@@ -1325,7 +1325,7 @@ Truthy (non-zero) if the PMD entry or its descendants are unsafe to modify.
 
 ---
 
-### pmd_young
+### pmd_young()
 
 `int pmd_young(pmd_t pmd)`
 
@@ -1343,7 +1343,7 @@ Truthy (non-zero) if the PMD entry is marked accessed.
 
 ---
 
-### pte_young
+### pte_young()
 
 `int pte_young(pte_t pte)`
 
@@ -1361,7 +1361,7 @@ Truthy (non-zero) if the PTE entry is marked accessed.
 
 ---
 
-### pmd_dirty
+### pmd_dirty()
 
 `int pmd_dirty(pmd_t pmd)`
 
@@ -1381,7 +1381,7 @@ Truthy (non-zero) if the PMD entry is marked dirty.
 
 ---
 
-### pte_dirty
+### pte_dirty()
 
 `int pte_dirty(pte_t pte)`
 
@@ -1401,7 +1401,7 @@ Truthy (non-zero) if the PTE entry is marked dirty.
 
 ---
 
-### pmd_write
+### pmd_write()
 
 `int pmd_write(pmd_t pmd)`
 
@@ -1418,7 +1418,7 @@ Truthy (non-zero) if the PMD entry is marked read/write.
 
 ---
 
-### pte_write
+### pte_write()
 
 `int pte_write(pte_t pte)`
 
@@ -1436,7 +1436,7 @@ Truthy (non-zero) if the PTE entry is marked read/write.
 
 ---
 
-### pte_exec
+### pte_exec()
 
 `int pte_exec(pte_t pte)`
 
@@ -1457,7 +1457,7 @@ Truthy (non-zero) if the PTE entry is marked executable.
 
 ---
 
-### pte_global
+### pte_global()
 
 `int pte_global(pte_t pte)`
 
@@ -1487,7 +1487,7 @@ Truthy (non-zero) if the PTE entry is marked global.
 
 ---
 
-### pte_special
+### pte_special()
 
 `int pte_special(pte_t pte)`
 
@@ -1509,7 +1509,7 @@ Truthy (non-zero) if the PTE entry is marked special.
 
 ---
 
-### pud_huge
+### pud_huge()
 
 `int pud_huge(pud_t pud)`
 
@@ -1529,7 +1529,7 @@ Truthy (non-zero) if the PUD entry is marked huge.
 
 ---
 
-### pmd_huge
+### pmd_huge()
 
 `int pmd_huge(pmd_t pmd)`
 
@@ -1552,7 +1552,7 @@ Truthy (non-zero) if the PMD entry is marked huge under the `hugetlb` scheme.
 
 ---
 
-### pte_huge
+### pte_huge()
 
 `int pte_huge(pte_t pte)`
 
@@ -1571,7 +1571,7 @@ Truthy (non-zero) if the PTE entry is marked huge.
 
 ---
 
-### pmd_trans_huge
+### pmd_trans_huge()
 
 `int pmd_trans_huge(pmd_t pmd)`
 
@@ -1593,7 +1593,7 @@ Pages scheme.
 
 ---
 
-### pgd_large
+### pgd_large()
 
 `int pgd_large(pgd_t pgd)`
 
@@ -1612,7 +1612,7 @@ Truthy (non-zero) if the PGD entry is marked huge.
 
 ---
 
-### pud_large
+### pud_large()
 
 `int pud_large(pud_t pud)`
 
@@ -1633,7 +1633,7 @@ Truthy (non-zero) if the PUD entry is marked huge.
 
 ---
 
-### pmd_large
+### pmd_large()
 
 `int pmd_large(pmd_t pmd)`
 
