@@ -1062,7 +1062,7 @@ PGD entry points at is 'present' - i.e. whether it is currently resident in
 memory and not swapped out or otherwise unavailable.
 
 The function uses [pgd_flags()][pgd_flags] to retrieve the PGD entry's flags
-then tests whether [_PAGE_PRESENT][_PAGE_PRESENT] is set.
+then tests whether `_PAGE_PRESENT` is set.
 
 #### Arguments
 
@@ -1084,7 +1084,7 @@ PUD entry points at is 'present' - i.e. whether it is currently resident in
 memory and not swapped out or otherwise unavailable.
 
 The function uses [pud_flags()][pud_flags] to retrieve the PUD entry's flags
-then tests whether [_PAGE_PRESENT][_PAGE_PRESENT] is set.
+then tests whether `_PAGE_PRESENT` is set.
 
 #### Arguments
 
@@ -1149,8 +1149,7 @@ specified PTE entry points at is 'present' - i.e. whether it is currently
 resident in memory and not swapped out or otherwise unavailable.
 
 The function uses [pte_flags()][pte_flags] to retrieve PTE flags then tests
-whether [_PAGE_PRESENT][_PAGE_PRESENT] or [_PAGE_PROTNONE][_PAGE_PROTNONE] are
-set.
+whether `_PAGE_PRESENT` or `_PAGE_PROTNONE` are set.
 
 Looking at each flag:
 
