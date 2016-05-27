@@ -135,6 +135,10 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
   specified PTE entry is writable.
 * [pte_exec()](#pte_exec) - Determines if the physical page pointed at by the
   specified PTE entry is executable.
+* [pte_global()](#pte_global) - Determines whether ordinary [TLB][tlb] flushes
+  do not clear the specified PTE entry mapping.
+* [pte_special()](#pte_special) - Determines whether the 'user-defined' special
+  flag is set for the specified PTE entry.
 
 ##### Huge Pages
 
@@ -1454,6 +1458,58 @@ Truthy (non-zero) if the PTE entry is marked executable.
 
 ---
 
+### pte_global
+
+`int pte_global(pte_t pte)`
+
+[pte_global()][pte_global] determines whether the specified PTE entry has the
+`_PAGE_GLOBAL` flag set, i.e. whether the [TLB][tlb] cache entry mapping the
+PTE's corresponding virtual address to the physical page it points at ought to
+be cleared when the TLB is flushed, either manually or by a context switch.
+
+This flag is useful for pages which are shared across all processes and are
+regularly accessed.
+
+Once set, TLB flushes caused by a task switch (i.e. assigning a new PGD to the
+`cr3` register) or a call to [__flush_tlb()][__flush_tlb] (which simply reads
+then writes back `cr3`) will not invalidate the global entry.
+
+If you want to finally invalidate such an entry, a call to
+[__flush_tlb_global()][__flush_tlb_global] and subsequently
+[invpcid_flush_all()][invpcid_flush_all] is required.
+
+#### Arguments
+
+* `pte` - The PTE entry whose global flag state we want to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PTE entry is marked global.
+
+---
+
+### pte_special
+
+`int pte_special(pte_t pte)`
+
+[pte_special()][pte_special] determines whether the specified PTE entry has the
+`_PAGE_SPECIAL` flag set, i.e. whether the 'user-defined' special flag is set.
+
+I put 'user-defined' in quotes to avoid confusion between user and kernel - here
+user is in the sense of the software rather than the CPU. The `_PAGE_SPECIAL`
+flag is an alias for `_PAGE_BIT_SOFTW1` - bit 9 (base-0), first of the 3 bits
+between 9 and 11 which the CPU simply ignores.
+
+#### Arguments
+
+* `pte` - The PTE entry whose special flag state we want to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PTE entry is marked special.
+
+---
+
 ### pud_huge
 
 `int pud_huge(pud_t pud)`
@@ -1606,6 +1662,7 @@ Truthy (non-zero) if the PMD entry is marked huge.
 [pmdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L13
 [pteval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L12
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
+[tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [hugetlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/hugetlbpage.txt
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
 
@@ -1695,3 +1752,8 @@ Truthy (non-zero) if the PMD entry is marked huge.
 [pte_write]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L131
 [pte_exec]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L146
 [nx-bit]:https://en.wikipedia.org/wiki/NX_bit
+[pte_global]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L141
+[__flush_tlb]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L62
+[__flush_tlb_global]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L63
+[invpcid_flush_all]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L48
+[pte_special]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L151
