@@ -91,7 +91,7 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 
 #### Page Table Entry State
 
-#### State
+##### State
 
 * [pgd_flags()](#pgd_flags) - Retrieves bitfield containing the specified PGD
   entry's flags.
@@ -112,7 +112,7 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 * [pmd_bad()](#pmd_bad) - Determines if the specified PMD entry or its
   descendants are not in a safe state to be modified.
 
-#### Flags
+##### Flags
 
 __NOTE:__ Confusingly, the `pXX_<flag>()` functions retrieve flags from the
 specified `pXX` entry, however they refer to the pointed at page,
