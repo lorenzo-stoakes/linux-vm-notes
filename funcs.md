@@ -91,6 +91,10 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 
 #### Page Table Entry State
 
+__NOTE:__ Confusingly, the `pXX_<flag>()` functions retrieve flags from the
+specified `pXX` entry, however they refer to the pointed at page,
+e.g. `pgd_present()` determines if the pointed at PUD page is present.
+
 ##### State
 
 * [pgd_flags()](#pgd_flags) - Retrieves bitfield containing the specified PGD
@@ -113,10 +117,6 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
   descendants are not in a safe state to be modified.
 
 ##### Flags
-
-__NOTE:__ Confusingly, the `pXX_<flag>()` functions retrieve flags from the
-specified `pXX` entry, however they refer to the pointed at page,
-e.g. `pgd_present()` determines if the pointed at PUD page is present.
 
 * [pgd_present()](#pgd_present) - Determines if the pointed at PUD page is
   present, i.e. resident in memory rather than swapped out.
