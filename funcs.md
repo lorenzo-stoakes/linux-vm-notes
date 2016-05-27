@@ -137,6 +137,13 @@ e.g. `pgd_present()` determines if the pointed-at PUD page is present.
   specified PTE entry is huge.
 * [pmd_trans_huge()](#pmd_trans_huge) - Determines if the PTE page pointed-at by
   the specified PMD entry is a [transparently-assigned][transhuge] huge page.
+* [pgd_large()](#pgd_large) - Determines if the pointed-at PUD page is huge
+  (without context.)
+* [pud_large()](#pud_large) - Determines if the pointed-at PMD page is huge
+  (without context.)
+* [pmd_large()](#pmd_large) - Determines if the pointed-at PTE page is huge
+  (without context.)
+
 
 ## Address Translation
 
@@ -1467,6 +1474,67 @@ Pages scheme.
 
 ---
 
+### pgd_large
+
+`int pgd_large(pgd_t pgd)`
+
+[pgd_large()][pgd_large] determines whether the specified PGD entry is marked
+huge, indicating the PUD page it points at is huge.
+
+This function is defined as returning 0 on x86-64 - PUD pages are never huge.
+
+#### Arguments
+
+* `pgd` - The PGD entry we want to determine is marked huge or not.
+
+#### Returns
+
+Truthy (non-zero) if the PGD entry is marked huge.
+
+---
+
+### pud_large
+
+`int pud_large(pud_t pud)`
+
+[pud_large()][pud_large] determines whether the specified PUD entry is marked
+huge, indicating the PMD page it points at is huge.
+
+The function tests the `_PAGE_PSE` and `_PAGE_PRESENT` flags to determine
+whether the page is marked huge and not swapped out/otherwise unavailable,
+respectively.
+
+#### Arguments
+
+* `pud` - The PUD entry we want to determine is marked huge or not.
+
+#### Returns
+
+Truthy (non-zero) if the PUD entry is marked huge.
+
+---
+
+### pmd_large
+
+`int pmd_large(pmd_t pmd)`
+
+[pmd_large()][pmd_large] determines whether the specified PMD entry is marked
+huge, indicating the PTE page it points at is huge.
+
+The function simply tests the `_PAGE_PSE` flag to determine whether the page is
+marked huge. It differs from [pud_large()][pud_large] in that it doesn't also
+check for the present flag, an odd inconsistency.
+
+#### Arguments
+
+* `pmd` - The PMD entry we want to determine is marked huge or not.
+
+#### Returns
+
+Truthy (non-zero) if the PMD entry is marked huge.
+
+---
+
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [pgdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
@@ -1556,3 +1624,6 @@ Pages scheme.
 [pmd_huge]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/hugetlbpage.c#L62
 [pte_huge]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L136
 [pmd_trans_huge]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L179
+[pgd_large]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64.h#L130
+[pud_large]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L644
+[pmd_large]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L173
