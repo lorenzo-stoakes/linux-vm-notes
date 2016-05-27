@@ -8,6 +8,14 @@ be full of errors, swearing and Trump quotes.
 * `pfn_to_page()`, `pte_pfn()` seem to be useful. `pfn_to_page()` ultimately
   calls `__pfn_to_page()` which varies depending on memory model - COVER.
 
+* `pXX_large()` seems to duplicate `pXX_huge()`, though the latter seems to be
+  in hugetlb context, and there are some variations, for example:
+
+```
+pud_large -> pse/present pud_huge -> pse
+pmd_large -> pse         pmd_huge -> pse/not present
+```
+
 ## 2.4.22 -> 4.6
 
 * Seems like missing page levels is handled via
