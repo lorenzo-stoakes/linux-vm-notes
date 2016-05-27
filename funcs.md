@@ -91,9 +91,7 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 
 #### Page Table Entry State
 
-__NOTE:__ Confusingly, the `pXX_<flag>()` functions retrieve flags from the
-specified `pXX` entry, however they refer to the pointed at page,
-e.g. `pgd_present()` determines if the pointed at PUD page is present.
+#### State
 
 * [pgd_flags()](#pgd_flags) - Retrieves bitfield containing the specified PGD
   entry's flags.
@@ -107,6 +105,19 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pud_none()](#pud_none) - Determines if the specified PUD entry is empty.
 * [pmd_none()](#pmd_none) - Determines if the specified PMD entry is empty.
 * [pte_none()](#pte_none) - Determines if the specified PTE entry is empty.
+* [pgd_bad()](#pgd_bad) - Determines if the specified PGD entry or its
+  descendants are not in a safe state to be modified.
+* [pud_bad()](#pud_bad) - Determines if the specified PUD entry or its
+  descendants are not in a safe state to be modified.
+* [pmd_bad()](#pmd_bad) - Determines if the specified PMD entry or its
+  descendants are not in a safe state to be modified.
+
+#### Flags
+
+__NOTE:__ Confusingly, the `pXX_<flag>()` functions retrieve flags from the
+specified `pXX` entry, however they refer to the pointed at page,
+e.g. `pgd_present()` determines if the pointed at PUD page is present.
+
 * [pgd_present()](#pgd_present) - Determines if the pointed at PUD page is
   present, i.e. resident in memory rather than swapped out.
 * [pud_present()](#pud_present) - Determines if the pointed at PMD page is
@@ -115,12 +126,6 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
   present, i.e. resident in memory rather than swapped out.
 * [pte_present()](#pte_present) - Determines if the pointed at physical page is
   present, i.e. resident in memory rather than swapped out.
-* [pgd_bad()](#pgd_bad) - Determines if the specified PGD entry or its
-  descendants are not in a safe state to be modified.
-* [pud_bad()](#pud_bad) - Determines if the specified PUD entry or its
-  descendants are not in a safe state to be modified.
-* [pmd_bad()](#pmd_bad) - Determines if the specified PMD entry or its
-  descendants are not in a safe state to be modified.
 * [pmd_young()](#pmd_young) - Determines if the PTE page pointed at by the
   specified PMD entry has been accessed.
 * [pte_young()](#pte_young) - Determines if the physical page pointed at by the
@@ -1053,125 +1058,6 @@ A bitfield containing the PTE entry's flags.
 
 ---
 
-### pgd_present()
-
-`int pgd_present(pgd_t pgd)`
-
-[pgd_present()][pgd_present] determines whether the PUD page that the specified
-PGD entry points at is 'present' - i.e. whether it is currently resident in
-memory and not swapped out or otherwise unavailable.
-
-The function uses [pgd_flags()][pgd_flags] to retrieve the PGD entry's flags
-then tests whether `_PAGE_PRESENT` is set.
-
-#### Arguments
-
-* `pgd` - PGD entry pointing at the PUD page which we want to determine is
-  present or not.
-
-#### Returns
-
-Truthy (non-zero) if the PUD page is present, 0 if not.
-
----
-
-### pud_present()
-
-`int pud_present(pud_t pud)`
-
-[pud_present()][pud_present] determines whether the PMD page that the specified
-PUD entry points at is 'present' - i.e. whether it is currently resident in
-memory and not swapped out or otherwise unavailable.
-
-The function uses [pud_flags()][pud_flags] to retrieve the PUD entry's flags
-then tests whether `_PAGE_PRESENT` is set.
-
-#### Arguments
-
-* `pud` - PUD entry pointing at the PMD page which we want to determine is
-  present or not.
-
-#### Returns
-
-Truthy (non-zero) if the PMD page is present, 0 if not.
-
----
-
-### pmd_present()
-
-`int pmd_present(pmd_t pmd)`
-
-[pmd_present()][pmd_present] determines whether the PTE page that the specified
-PMD entry points at is 'present' - i.e. whether it is currently resident in
-memory and not swapped out or otherwise unavailable.
-
-The function uses [pmd_flags()][pmd_flags] to retrieve the PMD entry's flags
-then tests whether `_PAGE_PRESENT`, `_PAGE_PROTNONE` or `_PAGE_PSE` are set.
-
-Looking at each flag:
-
-* `_PAGE_PRESENT` indicates whether the pointed at PTE page is actually resident
-  or not.
-
-* `_PAGE_PROTNONE` indicates that the PTE page is resident, but not
-  accessible. This is used by NUMA balancing (irrelevant for our assumed
-  architecture, UMA x86-64) or the [mprotect][mprotect] `PROT_NONE` flag having
-  been set by the user.
-
-* `_PAGE_PSE` indicates that huge pages are in use, and needs to be checked here
-  because (according to the comment for the [pmd_present()][pmd_present]
-  function) the [split_huge_page()][split_huge_page] function will temporarily
-  clear the present bit, so we need a means of determining whether the page is
-  still actually present when this happens.
-
-The `_PAGE_PROTNONE` and `_PAGE_PSE` flags seem only to be meaningful at the PMD
-level when the PTE is a huge page (i.e. 2MiB in x86-64), which seems only to be
-the case when either [transparent huge pages][transhuge] or the
-[device mapper][device-mapper] are in use.
-
-#### Arguments
-
-* `pmd` - PMD entry pointing at the PTE page which we want to determine is
-  present or not.
-
-#### Returns
-
-Truthy (non-zero) if the PTE page is present, 0 if not.
-
----
-
-### pte_present()
-
-`int pte_present(pte_t pte)`
-
-[pte_present()][pte_present] determines whether the physical page that the
-specified PTE entry points at is 'present' - i.e. whether it is currently
-resident in memory and not swapped out or otherwise unavailable.
-
-The function uses [pte_flags()][pte_flags] to retrieve PTE flags then tests
-whether `_PAGE_PRESENT` or `_PAGE_PROTNONE` are set.
-
-Looking at each flag:
-
-* `_PAGE_PRESENT` is the flag that indicates whether the physical page is
-  actually resident or not.
-
-* `_PAGE_PROTNONE` indicates that the page is resident, but not accessible. This
-  is used by NUMA balancing (irrelevant for our assumed architecture, UMA
-  x86-64) or the [mprotect][mprotect] `PROT_NONE` flag having been set by the
-  user.
-
-#### Arguments
-
-* `pte` - PTE entry pointing at the physical page which we want to determine is
-  present or not.
-
-#### Returns
-
-Truthy (non-zero) if the physical page is present, 0 if not.
-
----
-
 ### pgd_bad()
 
 `int pgd_bad(pgd_t pgd)`
@@ -1322,6 +1208,125 @@ check.)
 #### Returns
 
 Truthy (non-zero) if the PMD entry or its descendants are unsafe to modify.
+
+---
+
+### pgd_present()
+
+`int pgd_present(pgd_t pgd)`
+
+[pgd_present()][pgd_present] determines whether the PUD page that the specified
+PGD entry points at is 'present' - i.e. whether it is currently resident in
+memory and not swapped out or otherwise unavailable.
+
+The function uses [pgd_flags()][pgd_flags] to retrieve the PGD entry's flags
+then tests whether `_PAGE_PRESENT` is set.
+
+#### Arguments
+
+* `pgd` - PGD entry pointing at the PUD page which we want to determine is
+  present or not.
+
+#### Returns
+
+Truthy (non-zero) if the PUD page is present, 0 if not.
+
+---
+
+### pud_present()
+
+`int pud_present(pud_t pud)`
+
+[pud_present()][pud_present] determines whether the PMD page that the specified
+PUD entry points at is 'present' - i.e. whether it is currently resident in
+memory and not swapped out or otherwise unavailable.
+
+The function uses [pud_flags()][pud_flags] to retrieve the PUD entry's flags
+then tests whether `_PAGE_PRESENT` is set.
+
+#### Arguments
+
+* `pud` - PUD entry pointing at the PMD page which we want to determine is
+  present or not.
+
+#### Returns
+
+Truthy (non-zero) if the PMD page is present, 0 if not.
+
+---
+
+### pmd_present()
+
+`int pmd_present(pmd_t pmd)`
+
+[pmd_present()][pmd_present] determines whether the PTE page that the specified
+PMD entry points at is 'present' - i.e. whether it is currently resident in
+memory and not swapped out or otherwise unavailable.
+
+The function uses [pmd_flags()][pmd_flags] to retrieve the PMD entry's flags
+then tests whether `_PAGE_PRESENT`, `_PAGE_PROTNONE` or `_PAGE_PSE` are set.
+
+Looking at each flag:
+
+* `_PAGE_PRESENT` indicates whether the pointed at PTE page is actually resident
+  or not.
+
+* `_PAGE_PROTNONE` indicates that the PTE page is resident, but not
+  accessible. This is used by NUMA balancing (irrelevant for our assumed
+  architecture, UMA x86-64) or the [mprotect][mprotect] `PROT_NONE` flag having
+  been set by the user.
+
+* `_PAGE_PSE` indicates that huge pages are in use, and needs to be checked here
+  because (according to the comment for the [pmd_present()][pmd_present]
+  function) the [split_huge_page()][split_huge_page] function will temporarily
+  clear the present bit, so we need a means of determining whether the page is
+  still actually present when this happens.
+
+The `_PAGE_PROTNONE` and `_PAGE_PSE` flags seem only to be meaningful at the PMD
+level when the PTE is a huge page (i.e. 2MiB in x86-64), which seems only to be
+the case when either [transparent huge pages][transhuge] or the
+[device mapper][device-mapper] are in use.
+
+#### Arguments
+
+* `pmd` - PMD entry pointing at the PTE page which we want to determine is
+  present or not.
+
+#### Returns
+
+Truthy (non-zero) if the PTE page is present, 0 if not.
+
+---
+
+### pte_present()
+
+`int pte_present(pte_t pte)`
+
+[pte_present()][pte_present] determines whether the physical page that the
+specified PTE entry points at is 'present' - i.e. whether it is currently
+resident in memory and not swapped out or otherwise unavailable.
+
+The function uses [pte_flags()][pte_flags] to retrieve PTE flags then tests
+whether `_PAGE_PRESENT` or `_PAGE_PROTNONE` are set.
+
+Looking at each flag:
+
+* `_PAGE_PRESENT` is the flag that indicates whether the physical page is
+  actually resident or not.
+
+* `_PAGE_PROTNONE` indicates that the page is resident, but not accessible. This
+  is used by NUMA balancing (irrelevant for our assumed architecture, UMA
+  x86-64) or the [mprotect][mprotect] `PROT_NONE` flag having been set by the
+  user.
+
+#### Arguments
+
+* `pte` - PTE entry pointing at the physical page which we want to determine is
+  present or not.
+
+#### Returns
+
+Truthy (non-zero) if the physical page is present, 0 if not.
 
 ---
 
