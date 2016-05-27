@@ -122,13 +122,13 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pmd_bad()](#pmd_bad) - Determines if the specified PMD entry or its
   descendants are not in a safe state to be modified.
 * [pmd_young()](#pmd_young) - Determines if the PTE page pointed at by the
-  specified PMD entry is marked accessed.
+  specified PMD entry has been accessed.
 * [pte_young()](#pte_young) - Determines if the physical page pointed at by the
-  specified PTE entry is marked accessed.
+  specified PTE entry has been accessed.
 * [pmd_dirty()](#pmd_dirty) - Determines if the PTE page pointed at by the
-  specified PMD entry is marked dirty.
+  specified PMD entry has been modified.
 * [pte_dirty()](#pte_dirty) - Determines if the physical page pointed at by the
-  specified PTE entry is marked dirty.
+  specified PTE entry has been modified.
 
 ##### Huge Pages
 
@@ -146,7 +146,6 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
   (without context.)
 * [pmd_large()](#pmd_large) - Determines if the pointed at PTE page is huge
   (without context.)
-
 
 ## Address Translation
 
@@ -1172,7 +1171,7 @@ Truthy (non-zero) if the physical page is present, 0 if not.
 a state where it, or descendent tables, can be safely modified.
 
 __NOTE:__ It seems to me that it also determines whether a page table entry is
-in a consistent state _at all_, since page tables that are marked empty/swapped
+in a consistent state _at all_, since page tables that are empty/swapped
 out/read-only make no sense for the purposes of page table traversal (discussed
 below), but based on the definition from
 [Understanding the Linux Virtual Memory Manager][amazon-gorman] and what I've
