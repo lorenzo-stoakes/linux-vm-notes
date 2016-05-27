@@ -1087,8 +1087,7 @@ PMD entry points at is 'present' - i.e. whether it is currently resident in
 memory and not swapped out or otherwise unavailable.
 
 The function uses [pmd_flags()][pmd_flags] to retrieve the PMD entry's flags
-then tests whether [_PAGE_PRESENT][_PAGE_PRESENT],
-[_PAGE_PROTNONE][_PAGE_PROTNONE] or [_PAGE_PSE][_PAGE_PSE] are set.
+then tests whether `_PAGE_PRESENT`, `_PAGE_PROTNONE` or `_PAGE_PSE` are set.
 
 Looking at each flag:
 
@@ -1538,13 +1537,10 @@ Pages scheme.
 [pmd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L550
 [pte_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L480
 [pgd_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L662
-[_PAGE_PRESENT]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L40
 [pud_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L621
 [pmd_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L521
-[_PAGE_PROTNONE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L116
 [mprotect]:http://man7.org/linux/man-pages/man2/mprotect.2.html
 [split_huge_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/huge_mm.h#L92
-[_PAGE_PSE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L47
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
 [pte_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L491
 [pgd_bad]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L689
