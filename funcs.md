@@ -166,7 +166,6 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 
 * [pfn_to_page()](#pfn_to_page) - Converts a Page Frame Number (PFN) to its
   corresponding [struct page][page].
-
 * [page_to_pfn()](#page_to_pfn) - Converts a [struct page][page] to its
   corresponding Page Frame Number (PFN.)
 
