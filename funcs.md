@@ -162,6 +162,14 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pmd_large()](#pmd_large) - Determines if the pointed at PTE page is huge
   (without context.)
 
+#### Utility Functions
+
+* [pfn_to_page()](#pfn_to_page) - Converts a Page Frame Number (PFN) to its
+  corresponding [struct page][page].
+
+* [page_to_pfn()](#page_to_pfn) - Converts a [struct page][page] to its
+  corresponding Page Frame Number (PFN.)
+
 ## Address Translation
 
 ### phys_to_virt()
@@ -1659,6 +1667,72 @@ Truthy (non-zero) if the PMD entry is marked huge.
 
 ---
 
+### pfn_to_page()
+
+`struct page *pfn_to_page(unsigned long pfn)`
+
+[pfn_to_page()][pfn_to_page] returns the [struct page][page] that is associated
+with the specified Page Frame Number (PFN.)
+
+The PFN of a physical address is simply the (masked) address's value shifted
+right by the number of bits of the page size, so in a standard x86-64
+configuration, 12 bits (equivalent to the default 4KiB page size), and `pfn =
+masked_phys_addr >> 12`.
+
+How the [struct page][page] is located varies depending on the memory model, in
+x86-64 UMA this is [__pfn_to_page()][__pfn_to_page] under
+`CONFIG_SPARSEMEM_VMEMMAP` - the memory map is virtually contiguous at
+`vmemmap`, (`0xffffea0000000000`, see [x86-64 memory map][x86-64-mm].)
+
+This makes the implementation of the function straightforward - simply offset
+the PFN by `vmemmap` (being careful with typing to have pointer arithmetic take
+into account `sizeof(struct page)` for you.)
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `pfn` - The Page Frame Number (PFN) whose corresponding [struct page][page] is
+  desired.
+
+#### Returns
+
+The [struct page][page] that describes the physical page with specified PFN.
+
+---
+
+### page_to_pfn()
+
+`unsigned long page_to_pfn(struct page *page)`
+
+[page_to_pfn()][page_to_pfn] returns the Page Frame Number (PFN) that is
+associated with the specified [struct page][page].
+
+The PFN of a physical address is simply the (masked) address's value shifted
+right by the number of bits of the page size, so in a standard x86-64
+configuration, 12 bits (equivalent to the default 4KiB page size), and `pfn =
+masked_phys_addr >> 12`.
+
+How the PFN is determined varies depending on the memory model, in x86-64 UMA
+this is [__page_to_pfn()][__page_to_pfn] under `CONFIG_SPARSEMEM_VMEMMAP` - the
+memory map is virtually contiguous at `vmemmap`, (`0xffffea0000000000`, see
+[x86-64 memory map][x86-64-mm].)
+
+This makes the implementation of the function straightforward - simply subtract
+`vmemmap` from the page pointer (being careful with typing to have pointer
+arithmetic take into account `sizeof(struct page)` for you.)
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `page` - The [struct page][page] whose corresponding Page Frame Number (PFN)
+  is desired.
+
+#### Returns
+
+The PFN of the specified [struct page][page].
+
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [pgdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
@@ -1761,3 +1835,8 @@ Truthy (non-zero) if the PMD entry is marked huge.
 [__flush_tlb_global]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L63
 [invpcid_flush_all]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L48
 [pte_special]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L151
+[pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L81
+[__pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L53
+[x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
+[page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L80
+[__page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L54
