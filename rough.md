@@ -5,8 +5,8 @@ be full of errors, swearing and Trump quotes.
 
 ## General
 
-* `pfn_to_page()`, `pte_pfn()` seem to be useful. `pfn_to_page()` ultimately
-  calls `__pfn_to_page()` which varies depending on memory model - COVER.
+* `pXX_pfn_mask()`, `__phys_to_pfn`, `__pfn_to_phys` / [PHYS_PFN()][PFN_PHYS],
+  etc. - cover.
 
 * `pXX_large()` seems to duplicate `pXX_huge()`, though the latter seems to be
   in hugetlb context, and there are some variations, for example:
@@ -320,7 +320,7 @@ struct mm_struct {
 #endif
 ```
 
-[pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L81
+[PFN_PHYS]:https://github.com/torvalds/linux/blob/v4.6/include/linux/pfn.h#L20
 
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
