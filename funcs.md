@@ -156,6 +156,11 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pte_pgprot()](#pte_pgprot) - Retrieves bitfield containing the specified PTE
   entry's flags wrapped in a [pgprot_t][pgprot_t].
 
+##### Creating Flag Bitfields
+
+* [__pgprot()](#__pgprot) - Converts the specified [pgprotval_t][pgprotval_t]
+  into a [pgprot_t][pgprot_t].
+
 ##### Retrieving Individual Flags
 
 * [pgd_present()](#pgd_present) - Determines if the pointed at PUD page is
@@ -1654,6 +1659,31 @@ A [pgprot_t][pgprot_t] containing the specified PTE entry's flags.
 
 ---
 
+### __pgprot()
+
+`pgprot_t __pgprot(pgprotval_t val)`
+
+[__pgprot()][pgprot] wraps the specified [pgprotval_t][pgprotval_t] (`unsigned
+long` in x86-64) into a [pgprot_t][pgprot_t] structure.
+
+As with `pXX_t` the reason this has to exist is that `pgprot_t` is a `typedef
+struct` used to enforce type safety - `typedef struct { pgprotval_t pgprot; }
+pgprot_t;`.
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `val` - The [pgprotval_t][pgprotval_t] value which we want to translate into a
+  [pgprot_t][pgprot_t].
+
+#### Returns
+
+A [pgprot_t][pgprot_t] containing the specified [pgprotval_t][pgprotval_t]
+value.
+
+---
+
 ### pgd_present()
 
 `int pgd_present(pgd_t pgd)`
@@ -2237,6 +2267,7 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [pud_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L429
 [pmd_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L428
 [pte_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L427
+[__pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L363
 [pgd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L694
 [pud_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L616
 [pmd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L550
