@@ -9,7 +9,7 @@
    referencing any actual code or making assumptions about prior knowledge.
 
 2. [Page Tables](page-tables.md) - Discussion about how
-   [page table][page-table]s are implemented in linux.
+   [page tables][page-table] are implemented in linux.
 
 3. [Physical Pages](physical.md) - Discussion about how physical pages are
    managed in linux.
