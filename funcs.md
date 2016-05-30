@@ -16,8 +16,6 @@ specified. [Linux 4.6][linux-4.6] is always targeted.
   one.
 * [virt_to_page()](#virt_to_page) - Retrieves the [struct page][page] that
   describes the page containing the specified virtual address.
-* [virt_to_pfn()](#virt_to_pfn) - Converts a virtual address to the
-  corresponding physical Page Frame Number (PFN.)
 * [page_to_pfn()](#page_to_pfn) - Converts a [struct page][page] to its
   corresponding Page Frame Number (PFN.)
 * [page_to_phys()](#page_to_phys) - Retrieve the physical address of the page
@@ -307,32 +305,6 @@ __NOTE:__ Macro, inferring function signature.
 #### Returns
 
 The [struct page][page] describing the physical page the specified virtual
-address resides in.
-
----
-
-### virt_to_pfn()
-
-`unsigned long virt_to_pfn(unsigned long kaddr)`
-
-[virt_to_pfn()][virt_to_pfn] determines the physical address of the specified
-kernel virtual address, then returns the Page Frame Number (PFN) of its
-containing physical page.
-
-The PFN of a physical address is simply the (masked) address's value shifted
-right by the number of bits of the page size, so in a standard x86-64
-configuration, 12 bits (equivalent to the default 4KiB page size), and `pfn =
-masked_phys_addr >> 12`.
-
-__NOTE:__ Macro, inferring function signature.
-
-#### Arguments
-
-* `kaddr` - The virtual _kernel_ address whose PFN we desire.
-
-#### Returns
-
-The PFN of the physical page containing the physical page the specified virtual
 address resides in.
 
 ---
@@ -2098,7 +2070,6 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [__phys_addr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L26
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
 [virt_to_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L63
-[virt_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/page.h#L80
 [page_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L144
 [dma_addr_t]:https://github.com/torvalds/linux/blob/v4.6/include/linux/types.h#L152
 [phys_addr_t]:https://github.com/torvalds/linux/blob/v4.6/include/linux/types.h#L162
