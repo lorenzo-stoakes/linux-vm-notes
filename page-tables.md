@@ -359,6 +359,16 @@ out:
 }
 ```
 
+* The [functions](./funcs.md) page contains detailed descriptions of each of the
+  functions used here. Note that the `_offset()` functions are confusingly
+  named - they actually provide the virtual address of the required page table
+  entry which contains the physical address of either the page table or the
+  final physical page the entry refers to.
+
+* Note that we have to check in each case for the entry being empty (`_none()`
+  functions), unsuitable for use (`_bad()` functions) and the final PTE being
+  swapped out or otherwise unavailable (`pte_present()`.)
+
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [virtual-memory]:https://en.wikipedia.org/wiki/Virtual_memory
