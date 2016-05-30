@@ -33,8 +33,7 @@ __NOTE:__ Confusingly, the `_offset` functions actually return a virtual address
 for the page table entry associated with the specified virtual address.
 
 * [pgd_offset()](#pgd_offset) - Gets the virtual address of the specified
-  virtual address's PGD entry in the specified [struct mm_struct][mm_struct]'s
-  PGD.
+  virtual address's entry in the specified [struct mm_struct][mm_struct]'s PGD.
 * [pud_offset()](#pud_offset) - Gets the virtual address of specified virtual
   address's PUD entry.
 * [pmd_offset()](#pmd_offset) - Gets the virtual address of specified virtual
