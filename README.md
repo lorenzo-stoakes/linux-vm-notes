@@ -11,6 +11,9 @@
 2. [Page Tables](page-tables.md) - Discussion about how
    [page table][page-table]s are implemented in linux.
 
+3. [Physical Pages](physical.md) - Discussion about how physical pages are
+   managed in linux.
+
 ## Assumptions
 
 * I target [4.6][linux-4.6].
