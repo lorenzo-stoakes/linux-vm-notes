@@ -14,6 +14,8 @@ specified. [Linux 4.6][linux-4.6] is always targeted.
 * [virt_to_phys()](#virt_to_phys) - Translates virtual to physical address.
 * [__va()](#__va) - Translates physical to virtual address.
 * [__pa()](#__pa) - Translates virtual to physical address.
+* [virt_to_page()](#virt_to_page) - Retrieves the [struct page][page] that
+  describes the page containing the specified virtual address.
 
 ### Page Tables
 
@@ -255,6 +257,34 @@ kernel to be loaded in a different physical location e.g. when
 [kdump][kdump]ing.
 
 __NOTE:__ Macro, inferring function signature.
+
+---
+
+### virt_to_page()
+
+`struct page *virt_to_page(unsigned long kaddr)`
+
+[virt_to_page()][virt_to_page] determines the physical address of the specified
+kernel virtual address, then the Page Frame Number (PFN) of the physical page
+that contains it, and finally passes this to [pfn_to_page()][pfn_to_page] to
+retrieve the [struct page][page] which describes the physical page.
+
+__Important:__ As per the code comment above the function, the returned pointer
+is valid if and only if [virt_addr_valid(kaddr)][virt_addr_valid] returns
+`true`.
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `kaddr` - The virtual _kernel_ address whose [struct page][page] we desire.
+
+#### Returns
+
+The [struct page][page] describing the physical page the specified virtual
+address resides in.
+
+---
 
 ## Page Tables
 
@@ -1805,6 +1835,8 @@ __NOTE:__ Macro, inferring function signature.
 
 Truthy (non-zero) if the PFN is valid, 0 if not.
 
+---
+
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [pgdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
@@ -1823,6 +1855,7 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [__pa]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L40
 [__phys_addr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L26
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
+[virt_to_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L63
 
 [pgd_offset]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L714
 [mm_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
