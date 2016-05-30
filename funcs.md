@@ -22,6 +22,8 @@ specified. [Linux 4.6][linux-4.6] is always targeted.
   corresponding Page Frame Number (PFN.)
 * [page_to_phys()](#page_to_phys) - Retrieve the physical address of the page
   described by the specified [struct page][page].
+* [pfn_to_page()](#pfn_to_page) - Converts a Page Frame Number (PFN) to its
+  corresponding [struct page][page].
 * [__va()](#__va) - Translates a physical address to a virtual one.
 * [__pa()](#__pa) - Translates a virtual address to a physical one.
 
@@ -193,8 +195,6 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 
 #### Utility Functions
 
-* [pfn_to_page()](#pfn_to_page) - Converts a Page Frame Number (PFN) to its
-  corresponding [struct page][page].
 * [virt_addr_valid()](#virt_addr_valid) - Determines if a specified virtual
   address is a valid _kernel_ virtual address.
 * [pfn_valid()](#pfn_valid) - Determines if a specified Page Frame Number (PFN)
@@ -393,6 +393,40 @@ __NOTE:__ Macro, inferring function signature.
 
 The physical address of the start of the page which the specified
 [struct page][page] describes.
+
+---
+
+### pfn_to_page()
+
+`struct page *pfn_to_page(unsigned long pfn)`
+
+[pfn_to_page()][pfn_to_page] returns the [struct page][page] that is associated
+with the specified Page Frame Number (PFN.)
+
+The PFN of a physical address is simply the (masked) address's value shifted
+right by the number of bits of the page size, so in a standard x86-64
+configuration, 12 bits (equivalent to the default 4KiB page size), and `pfn =
+masked_phys_addr >> 12`.
+
+How the [struct page][page] is located varies depending on the memory model, in
+x86-64 UMA this is [__pfn_to_page()][__pfn_to_page] under
+`CONFIG_SPARSEMEM_VMEMMAP` - the memory map is virtually contiguous at
+`vmemmap`, (`0xffffea0000000000`, see [x86-64 memory map][x86-64-mm].)
+
+This makes the implementation of the function straightforward - simply offset
+the PFN by `vmemmap` (being careful with typing to have pointer arithmetic take
+into account `sizeof(struct page)` for you.)
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `pfn` - The Page Frame Number (PFN) whose corresponding [struct page][page] is
+  desired.
+
+#### Returns
+
+The [struct page][page] that describes the physical page with specified PFN.
 
 ## Page Tables
 
@@ -1998,40 +2032,6 @@ check for the present flag, an odd inconsistency.
 #### Returns
 
 Truthy (non-zero) if the PMD entry is marked huge.
-
----
-
-### pfn_to_page()
-
-`struct page *pfn_to_page(unsigned long pfn)`
-
-[pfn_to_page()][pfn_to_page] returns the [struct page][page] that is associated
-with the specified Page Frame Number (PFN.)
-
-The PFN of a physical address is simply the (masked) address's value shifted
-right by the number of bits of the page size, so in a standard x86-64
-configuration, 12 bits (equivalent to the default 4KiB page size), and `pfn =
-masked_phys_addr >> 12`.
-
-How the [struct page][page] is located varies depending on the memory model, in
-x86-64 UMA this is [__pfn_to_page()][__pfn_to_page] under
-`CONFIG_SPARSEMEM_VMEMMAP` - the memory map is virtually contiguous at
-`vmemmap`, (`0xffffea0000000000`, see [x86-64 memory map][x86-64-mm].)
-
-This makes the implementation of the function straightforward - simply offset
-the PFN by `vmemmap` (being careful with typing to have pointer arithmetic take
-into account `sizeof(struct page)` for you.)
-
-__NOTE:__ Macro, inferring function signature.
-
-#### Arguments
-
-* `pfn` - The Page Frame Number (PFN) whose corresponding [struct page][page] is
-  desired.
-
-#### Returns
-
-The [struct page][page] that describes the physical page with specified PFN.
 
 ---
 
