@@ -1663,7 +1663,7 @@ A [pgprot_t][pgprot_t] containing the specified PTE entry's flags.
 
 `pgprot_t __pgprot(pgprotval_t val)`
 
-[__pgprot()][pgprot] wraps the specified [pgprotval_t][pgprotval_t] (`unsigned
+[__pgprot()][__pgprot] wraps the specified [pgprotval_t][pgprotval_t] (`unsigned
 long` in x86-64) into a [pgprot_t][pgprot_t] structure.
 
 As with `pXX_t` the reason this has to exist is that `pgprot_t` is a `typedef
