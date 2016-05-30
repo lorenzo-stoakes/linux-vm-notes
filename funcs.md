@@ -62,6 +62,25 @@ for the page table entry associated with the specified virtual address.
 * [pte_pfn()](#pte_pfn) - Gets the Page Frame Number (PFN) of the physical page
   contained in the specified PTE entry.
 
+#### Creating Page Table Entries
+
+* [native_make_pgd()](#native_make_pgd) - Converts the specified
+  [pgdval_t][pgdval_t] into a [pgd_t][pgd_t].
+* [native_make_pud()](#native_make_pud) - Converts the specified
+  [pudval_t][pudval_t] into a [pud_t][pud_t].
+* [native_make_pmd()](#native_make_pmd) - Converts the specified
+  [pmdval_t][pmdval_t] into a [pmd_t][pmd_t].
+* [native_make_pte()](#native_make_pte) - Converts the specified
+  [pteval_t][pteval_t] into a [pte_t][pte_t].
+* [__pgd()](#__pgd) - Converts the specified [pgdval_t][pgdval_t] into a
+  [pgd_t][pgd_t], possibly paravirtualised.
+* [__pud()](#__pud) - Converts the specified [pudval_t][pudval_t] into a
+  [pud_t][pud_t], possibly paravirtualised.
+* [__pmd()](#__pmd) - Converts the specified [pmdval_t][pmdval_t] into a
+  [pmd_t][pmd_t], possibly paravirtualised.
+* [__pte()](#__pte) - Converts the specified [pteval_t][pteval_t] into a
+  [pte_t][pte_t], possibly paravirtualised.
+
 #### Retrieving Page Table Entry Indexes
 
 * [pgd_index()](#pgd_index) - Gets the index of the specified virtual address's
@@ -717,6 +736,174 @@ index of the page within that array.
 #### Returns
 
 The PFN of the physical address contained in the PTE entry.
+
+---
+
+### native_make_pgd()
+
+`pgd_t native_make_pgd(pgdval_t val)`
+
+[native_make_pgd()][native_make_pgd] converts the specified [pgdval_t][pgdval_t]
+into a [pgd_t][pgd_t].
+
+The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
+enforce type safety - `typedef struct { pgdval_t pgd; } pgd_t;`.
+
+On x86-64 [pgdval_t][pgdval_t] is just an `unsigned long`.
+
+#### Arguments
+
+* `val` - The [pgdval_t][pgdval_t] which is to be wrapped into a [pgd_t][pgd_t].
+
+#### Returns
+
+A [pgd_t][pgd_t] containing the specified [pgdval_t][pgdval_t].
+
+---
+
+### native_make_pud()
+
+`pud_t native_make_pud(pudval_t val)`
+
+[native_make_pud()][native_make_pud] converts the specified [pudval_t][pudval_t]
+into a [pud_t][pud_t].
+
+The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
+enforce type safety - `typedef struct { pudval_t pud; } pud_t;`.
+
+On x86-64 [pudval_t][pudval_t] is just an `unsigned long`.
+
+#### Arguments
+
+* `val` - The [pudval_t][pudval_t] which is to be wrapped into a [pud_t][pud_t].
+
+#### Returns
+
+A [pud_t][pud_t] containing the specified [pudval_t][pudval_t].
+
+---
+
+### native_make_pmd()
+
+`pmd_t native_make_pmd(pmdval_t val)`
+
+[native_make_pmd()][native_make_pmd] converts the specified [pmdval_t][pmdval_t]
+into a [pmd_t][pmd_t].
+
+The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
+enforce type safety - `typedef struct { pmdval_t pmd; } pmd_t;`.
+
+On x86-64 [pmdval_t][pmdval_t] is just an `unsigned long`.
+
+#### Arguments
+
+* `val` - The [pmdval_t][pmdval_t] which is to be wrapped into a [pmd_t][pmd_t].
+
+#### Returns
+
+A [pmd_t][pmd_t] containing the specified [pmdval_t][pmdval_t].
+
+---
+
+### native_make_pte()
+
+`pte_t native_make_pte(pteval_t val)`
+
+[native_make_pte()][native_make_pte] converts the specified [pteval_t][pteval_t]
+into a [pte_t][pte_t].
+
+The reason this has to exist is that each `pXX_t` is a `typedef struct` used to
+enforce type safety - `typedef struct { pteval_t pte; } pte_t;`.
+
+On x86-64 [pteval_t][pteval_t] is just an `unsigned long`.
+
+#### Arguments
+
+* `val` - The [pteval_t][pteval_t] which is to be wrapped into a [pte_t][pte_t].
+
+#### Returns
+
+A [pte_t][pte_t] containing the specified [pteval_t][pteval_t].
+
+---
+
+### __pgd()
+
+`pgd_t __pgd(pgdval_t val)`
+
+[__pgd()][__pgd] is a wrapper around [native_make_pgd()][native_make_pgd]
+unless the system is [paravirtualised][paravirtualisation] in which case a
+different [__pgd()][__pgd/para] is used.
+
+See `native_make_pgd()` entry above for more details on returned value.
+
+#### Arguments
+
+* `val` - The [pgdval_t][pgdval_t] which is to be wrapped into a [pgd_t][pgd_t].
+
+#### Returns
+
+A [pgd_t][pgd_t] containing the specified [pgdval_t][pgdval_t].
+
+---
+
+### __pud()
+
+`pud_t __pud(pudval_t val)`
+
+[__pud()][__pud] is a wrapper around [native_make_pud()][native_make_pud]
+unless the system is [paravirtualised][paravirtualisation] in which case a
+different [__pud()][__pud/para] is used.
+
+See `native_make_pud()` entry above for more details on returned value.
+
+#### Arguments
+
+* `val` - The [pudval_t][pudval_t] which is to be wrapped into a [pud_t][pud_t].
+
+#### Returns
+
+A [pud_t][pud_t] containing the specified [pudval_t][pudval_t].
+
+---
+
+### __pmd()
+
+`pmd_t __pmd(pmdval_t val)`
+
+[__pmd()][__pmd] is a wrapper around [native_make_pmd()][native_make_pmd]
+unless the system is [paravirtualised][paravirtualisation] in which case a
+different [__pmd()][__pmd/para] is used.
+
+See `native_make_pmd()` entry above for more details on returned value.
+
+#### Arguments
+
+* `val` - The [pmdval_t][pmdval_t] which is to be wrapped into a [pmd_t][pmd_t].
+
+#### Returns
+
+A [pmd_t][pmd_t] containing the specified [pmdval_t][pmdval_t].
+
+---
+
+### __pte()
+
+`pte_t __pte(pteval_t val)`
+
+[__pte()][__pte] is a wrapper around [native_make_pte()][native_make_pte]
+unless the system is [paravirtualised][paravirtualisation] in which case a
+different [__pte()][__pte/para] is used.
+
+See `native_make_pte()` entry above for more details on returned value.
+
+#### Arguments
+
+* `val` - The [pteval_t][pteval_t] which is to be wrapped into a [pte_t][pte_t].
+
+#### Returns
+
+A [pte_t][pte_t] containing the specified [pteval_t][pteval_t].
 
 ---
 
@@ -1890,6 +2077,18 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [pud_pfn]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L166
 [pmd_pfn]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L161
 [pte_pfn]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L156
+[native_make_pgd]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L254
+[native_make_pud]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L272
+[native_make_pmd]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L293
+[native_make_pte]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L347
+[__pgd]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L74
+[__pgd/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L407
+[__pud]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L78
+[__pud/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L540
+[__pmd]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L83
+[__pmd/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L500
+[__pte]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L87
+[__pte/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L377
 [pgd_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L708
 [PTRS_PER_PGD]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L28
 [pud_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L679
