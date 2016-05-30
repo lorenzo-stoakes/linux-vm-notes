@@ -16,6 +16,8 @@ specified. [Linux 4.6][linux-4.6] is always targeted.
   one.
 * [virt_to_page()](#virt_to_page) - Retrieves the [struct page][page] that
   describes the page containing the specified virtual address.
+* [virt_to_pfn()](#virt_to_pfn) - Converts a virtual address to the
+  corresponding physical Page Frame Number (PFN.)
 * [__va()](#__va) - Translates a physical address to a virtual one.
 * [__pa()](#__pa) - Translates a virtual address to a physical one.
 
@@ -306,6 +308,30 @@ The [struct page][page] describing the physical page the specified virtual
 address resides in.
 
 ---
+
+### virt_to_pfn()
+
+`unsigned long virt_to_pfn(unsigned long kaddr)`
+
+[virt_to_pfn()][virt_to_pfn] determines the physical address of the specified
+kernel virtual address, then returns the Page Frame Number (PFN) of its
+containing physical page.
+
+The PFN of a physical address is simply the (masked) address's value shifted
+right by the number of bits of the page size, so in a standard x86-64
+configuration, 12 bits (equivalent to the default 4KiB page size), and `pfn =
+masked_phys_addr >> 12`.
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `kaddr` - The virtual _kernel_ address whose PFN we desire.
+
+#### Returns
+
+The PFN of the physical page containing the physical page the specified virtual
+address resides in.
 
 ## Page Tables
 
@@ -2045,6 +2071,7 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [__phys_addr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L26
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
 [virt_to_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L63
+[virt_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/page.h#L80
 
 [pgd_offset]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L714
 [mm_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
