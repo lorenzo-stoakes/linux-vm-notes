@@ -122,12 +122,6 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 
 #### Page Table Entry State
 
-__NOTE:__ Confusingly, the `pXX_<flag>()` functions retrieve flags from the
-specified `pXX` entry, however they refer to the pointed at page,
-e.g. `pgd_present()` determines if the pointed at PUD page is present.
-
-##### State
-
 * [pgd_none()](#pgd_none) - Determines if the specified PGD entry is empty.
 * [pud_none()](#pud_none) - Determines if the specified PUD entry is empty.
 * [pmd_none()](#pmd_none) - Determines if the specified PMD entry is empty.
@@ -139,7 +133,7 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pmd_bad()](#pmd_bad) - Determines if the specified PMD entry or its
   descendants are not in a safe state to be modified.
 
-##### Retrieving Flag Bitfields
+#### Retrieving Flag Bitfields
 
 * [pgd_flags()](#pgd_flags) - Retrieves bitfield containing the specified PGD
   entry's flags.
@@ -156,12 +150,16 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pte_pgprot()](#pte_pgprot) - Retrieves bitfield containing the specified PTE
   entry's flags wrapped in a [pgprot_t][pgprot_t].
 
-##### Creating Flag Bitfields
+#### Creating Flag Bitfields
 
 * [__pgprot()](#__pgprot) - Converts the specified [pgprotval_t][pgprotval_t]
   into a [pgprot_t][pgprot_t].
 
-##### Retrieving Individual Flags
+#### Retrieving Individual Flags
+
+__NOTE:__ Confusingly, the `pXX_<flag>()` functions retrieve flags from the
+specified `pXX` entry, however they refer to the pointed at page,
+e.g. `pgd_present()` determines if the pointed at PUD page is present.
 
 * [pgd_present()](#pgd_present) - Determines if the pointed at PUD page is
   present, i.e. resident in memory rather than swapped out.
