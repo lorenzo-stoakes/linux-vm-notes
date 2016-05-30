@@ -18,6 +18,8 @@ specified. [Linux 4.6][linux-4.6] is always targeted.
   describes the page containing the specified virtual address.
 * [virt_to_pfn()](#virt_to_pfn) - Converts a virtual address to the
   corresponding physical Page Frame Number (PFN.)
+* [page_to_phys()](#page_to_phys) - Retrieve the physical address of the page
+  described by the specified [struct page][page].
 * [__va()](#__va) - Translates a physical address to a virtual one.
 * [__pa()](#__pa) - Translates a virtual address to a physical one.
 
@@ -332,6 +334,31 @@ __NOTE:__ Macro, inferring function signature.
 
 The PFN of the physical page containing the physical page the specified virtual
 address resides in.
+
+---
+
+### page_to_phys()
+
+`dma_addr_t page_to_phys(struct page *page)`
+
+[page_to_phys()][page_to_phys] returns a physical address for the page described
+by the specified [struct page][page].
+
+Oddly it seems to return a [dma_addr_t][dma_addr_t], possibly due to use for
+device I/O (it is declared in `arch/x86/include/asm/io.h`), however in x86-64 it
+makes no difference as `dma_addr_t` and [phys_addr_t][phys_addr_t] are the
+same - unsigned long (64-bit.)
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `page` - The [struct page][page] whose physical start address we desire.
+
+#### Returns
+
+The physical address of the start of the page which the specified
+[struct page][page] describes.
 
 ## Page Tables
 
@@ -2072,6 +2099,9 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
 [virt_to_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L63
 [virt_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/page.h#L80
+[page_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L144
+[dma_addr_t]:https://github.com/torvalds/linux/blob/v4.6/include/linux/types.h#L152
+[phys_addr_t]:https://github.com/torvalds/linux/blob/v4.6/include/linux/types.h#L162
 
 [pgd_offset]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L714
 [mm_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
