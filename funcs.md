@@ -213,7 +213,18 @@ Physical address associated with specified virtual address.
 
 `void *__va(phys_addr_t address)`
 
-[__va()][__va] does the heavy lifting for `phys_to_virt()`, see above.
+[__va()][__va] does the heavy lifting for `phys_to_virt()`, converting a
+physical memory address to a kernel-valid virtual one.
+
+This function simply adds the kernel memory offset `PAGE_OFFSET`,
+`0xffff880000000000` for x86-64. Looking at the [x86-64 memory map][x86-64-mm],
+you can see this simply provides a virtual address that is part of the kernel's
+_complete_ direct mapping of all physical memory between `0xffff880000000000`
+and `0xffffc7ffffffffff`.
+
+The function performs no checks and assumes the supplied physical memory address
+is valid and in the 64TiB of allowed memory in current x86-64 linux kernel
+implementations.
 
 __NOTE:__ Macro, inferring function signature.
 
@@ -1747,6 +1758,7 @@ The PFN of the specified [struct page][page].
 [__va]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L54
 [virt_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L118
 [__pa]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L40
+[x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
 
 [pgd_offset]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L714
 [mm_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
@@ -1836,6 +1848,5 @@ The PFN of the specified [struct page][page].
 [pte_special]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L151
 [pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L81
 [__pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L53
-[x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
 [page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L80
 [__page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L54
