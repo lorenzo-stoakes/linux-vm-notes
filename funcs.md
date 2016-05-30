@@ -134,6 +134,12 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
   entry's flags.
 * [pte_flags()](#pte_flags) - Retrieves bitfield containing the specified PTE
   entry's flags.
+* [pud_pgprot()](#pud_pgprot) - Retrieves bitfield containing the specified PUD
+  entry's flags wrapped in a [pgprot_t][pgprot_t].
+* [pmd_pgprot()](#pmd_pgprot) - Retrieves bitfield containing the specified PMD
+  entry's flags wrapped in a [pgprot_t][pgprot_t].
+* [pte_pgprot()](#pte_pgprot) - Retrieves bitfield containing the specified PTE
+  entry's flags wrapped in a [pgprot_t][pgprot_t].
 * [pgd_none()](#pgd_none) - Determines if the specified PGD entry is empty.
 * [pud_none()](#pud_none) - Determines if the specified PUD entry is empty.
 * [pmd_none()](#pmd_none) - Determines if the specified PMD entry is empty.
@@ -1342,6 +1348,66 @@ A bitfield containing the PTE entry's flags.
 
 ---
 
+### pud_pgprot
+
+`pgprot_t pud_pgprot(pud_t pud)`
+
+[pud_pgprot()][pud_pgprot] retrieves the flags for the specified PUD entry via
+[pud_flags][pud_flags] and converts them to a [pgprot_t][pgprot_t] via
+[__pgprot()][__pgprot].
+
+As with `pXX_t` the reason this has to exist is that `pgprot_t` is a `typedef
+struct` used to enforce type safety - `typedef struct { pgprotval_t pgprot; }
+pgprot_t;`.
+
+#### Arguments
+
+#### Returns
+
+A [pgprot_t][pgprot_t] containing the specified PUD entry's flags.
+
+---
+
+### pmd_pgprot
+
+`pgprot_t pmd_pgprot(pmd_t pmd)`
+
+[pmd_pgprot()][pmd_pgprot] retrieves the flags for the specified PMD entry via
+[pmd_flags][pmd_flags] and converts them to a [pgprot_t][pgprot_t] via
+[__pgprot()][__pgprot].
+
+As with `pXX_t` the reason this has to exist is that `pgprot_t` is a `typedef
+struct` used to enforce type safety - `typedef struct { pgprotval_t pgprot; }
+pgprot_t;`.
+
+#### Arguments
+
+#### Returns
+
+A [pgprot_t][pgprot_t] containing the specified PMD entry's flags.
+
+---
+
+### pte_pgprot
+
+`pgprot_t pte_pgprot(pte_t pte)`
+
+[pte_pgprot()][pte_pgprot] retrieves the flags for the specified PTE entry via
+[pte_flags][pte_flags] and converts them to a [pgprot_t][pgprot_t] via
+[__pgprot()][__pgprot].
+
+As with `pXX_t` the reason this has to exist is that `pgprot_t` is a `typedef
+struct` used to enforce type safety - `typedef struct { pgprotval_t pgprot; }
+pgprot_t;`.
+
+#### Arguments
+
+#### Returns
+
+A [pgprot_t][pgprot_t] containing the specified PTE entry's flags.
+
+---
+
 ### pgd_none()
 
 `int pgd_none(pgd_t pgd)`
@@ -2057,6 +2123,7 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [pudval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L14
 [pmdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L13
 [pteval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L12
+[pgprot_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L250
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [hugetlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/hugetlbpage.txt
@@ -2136,6 +2203,9 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [pud_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L324
 [pmd_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L342
 [pte_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L357
+[pud_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L429
+[pmd_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L428
+[pte_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L427
 [pgd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L694
 [pud_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L616
 [pmd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L550
