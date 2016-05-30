@@ -159,7 +159,9 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 * [__pgprot()](#__pgprot) - Converts the specified [pgprotval_t][pgprotval_t]
   into a [pgprot_t][pgprot_t].
 * [massage_pgprot()](#massage_pgprot) - Masks the specified [pgprot_t][pgprot_t]
-  fields against all possible flags.
+  fields against all possible flags, returns [pgprotval_t][pgprotval_t].
+* [canon_pgprot()](#canon_pgprot) -  Masks the specified [pgprot_t][pgprot_t]
+  fields against all possible flags, returns [pgprot_t][pgprot_t].
 
 #### Retrieving Individual Flags
 
@@ -1753,7 +1755,6 @@ If the page is not present, then no masking takes place. As the code comment
 says, those flags can be used for other purposes when the page is not present so
 it is not appropriate to modify them in that case.
 
-
 #### Arguments
 
 * `pgprot` - The [pgprot_t][pgprot_t] value which needs to be masked against
@@ -1763,6 +1764,32 @@ it is not appropriate to modify them in that case.
 
 A [pgprotval_t][pgprotval_t] containing the specified flag bitfield masked
 against all valid flags.
+
+---
+
+### canon_pgprot()
+
+`pgprot_t canon_pgprot(pgprot_t pgprot)`
+
+[canon_pgprot()][canon_pgprot] does the same task as
+[massage_pgprot()][massage_pgprot], however it uses [__pgprot()][__pgprot] to
+wrap the [pgprotval_t][pgprotval_t] returned by `massage_pgprot()` into a new
+[pgprot_t][pgprot_t].
+
+See the `massage_pgprot()` definition above for more details on what it
+achieves.
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `pgprot` - The [pgprot_t][pgprot_t] value which needs to be masked against
+  possible flag values.
+
+#### Returns
+
+A [pgprot_t][pgprot_t] containing the specified flag bitfield masked against all
+valid flags.
 
 ---
 
@@ -2353,6 +2380,7 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [pmd_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L428
 [pte_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L427
 [__pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L363
+[canon_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L431
 [pgd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L694
 [pud_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L616
 [pmd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L550

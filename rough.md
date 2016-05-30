@@ -32,8 +32,6 @@ pmd_large -> pse         pmd_huge -> pse/not present
   be in 128MiB blocks on x86-64) is actually backed by RAM or not :]. Also, go
   into detail about the sparse memory model for x86-64.
 
-* Add discussion of `massage_pgprot()` and `canon_pgprot()`.
-
 * `pte_mkspecial()`?
 
 ```c
