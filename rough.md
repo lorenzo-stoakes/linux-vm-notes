@@ -38,6 +38,11 @@ pmd_large -> pse         pmd_huge -> pse/not present
   be in 128MiB blocks on x86-64) is actually backed by RAM or not :]. Also, go
   into detail about the sparse memory model for x86-64.
 
+* Add discussion of `massage_pgprot()` and `canon_pgprot()`:
+
+```c
+#define canon_pgprot(p) __pgprot(massage_pgprot(p))
+```
 
 [PFN_PHYS]:https://github.com/torvalds/linux/blob/v4.6/include/linux/pfn.h#L20
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
