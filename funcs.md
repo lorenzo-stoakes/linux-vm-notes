@@ -10,10 +10,12 @@ specified. [Linux 4.6][linux-4.6] is always targeted.
 
 ### Address Translation
 
-* [phys_to_virt()](#phys_to_virt) - Translates physical to virtual address.
-* [virt_to_phys()](#virt_to_phys) - Translates virtual to physical address.
-* [__va()](#__va) - Translates physical to virtual address.
-* [__pa()](#__pa) - Translates virtual to physical address.
+* [phys_to_virt()](#phys_to_virt) - Translates a physical address to a virtual
+  one.
+* [virt_to_phys()](#virt_to_phys) - Translates a virtual address to a physical
+  one.
+* [__va()](#__va) - Translates a physical address to a virtual one.
+* [__pa()](#__pa) - Translates a virtual address to a physical one.
 * [virt_to_page()](#virt_to_page) - Retrieves the [struct page][page] that
   describes the page containing the specified virtual address.
 
