@@ -16,7 +16,7 @@
 
 ## Assumptions
 
-* I target [4.6][linux-4.6].
+* I target [linux 4.6][linux-4.6].
 
 * To begin with I'm going to focus on bog-standard x86-64 UMA
   (i.e. non-[NUMA][numa]) - the notes will, without necessarily saying so,
