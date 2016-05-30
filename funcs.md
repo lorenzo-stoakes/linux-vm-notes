@@ -61,6 +61,8 @@ for the page table entry associated with the specified virtual address.
   specified PMD entry, possibly paravirtualised.
 * [pte_val()](#pte_val) - Gets the [pteval_t][pteval_t] associated with the
   specified PTE entry, possibly paravirtualised.
+* [pgprot_val()](#pgprot_val) - Gets the [pgprotval_t][pgprotval_t] associated
+  with the specified [pgprot_t][pgprot_t] flag bitfield.
 * [pud_pfn()](#pud_pfn) - Gets the Page Frame Number (PFN) of the PMD physical
   page contained in the specified PUD entry.
 * [pmd_pfn()](#pmd_pfn) - Gets the Page Frame Number (PFN) of the PTE physical
@@ -751,6 +753,30 @@ __NOTE:__ Macro, inferring function signature.
 
 The [pteval_t][pteval_t] (i.e. `unsigned long` on x86-64) associated with the
 specified PTE entry.
+
+---
+
+### pgprot_val()
+
+`pgprotval_t pgprot_val(pgprot_t val)`
+
+[pgprot_val()][pgprot_val] retrieves the native [pgprotval_t][pgprotval_t] value
+associated with the specified [pgprot_t][pgprot_t] protection flags bit field.
+
+As with `pXX_t` the reason this has to exist is that `pgprot_t` is a `typedef
+struct` used to enforce type safety - `typedef struct { pgprotval_t pgprot; }
+pgprot_t;`.
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `val` - The page protection flags whose [pgprotval_t][pgprotval_t] native
+  value we desire.
+
+#### Returns
+
+The [pgprotval_t][pgprotval_t] containing the native bitfield.
 
 ---
 
@@ -2126,6 +2152,7 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [pudval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L14
 [pmdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L13
 [pteval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L12
+[pgprotval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L16
 [pgprot_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L250
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
@@ -2172,6 +2199,7 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [pmd_val/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L514
 [pte_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L86
 [pte_val/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L393
+[pgprot_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L362
 [pud_pfn]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L166
 [pmd_pfn]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L161
 [pte_pfn]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L156
