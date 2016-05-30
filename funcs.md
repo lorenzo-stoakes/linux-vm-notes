@@ -802,8 +802,9 @@ specified PTE entry.
 
 `pgprotval_t pgprot_val(pgprot_t val)`
 
-[pgprot_val()][pgprot_val] retrieves the native [pgprotval_t][pgprotval_t] value
-associated with the specified [pgprot_t][pgprot_t] protection flags bit field.
+[pgprot_val()][pgprot_val] retrieves the native [pgprotval_t][pgprotval_t]
+(`unsigned long` in x86-64) value associated with the specified
+[pgprot_t][pgprot_t] protection flags bit field.
 
 As with `pXX_t` the reason this has to exist is that `pgprot_t` is a `typedef
 struct` used to enforce type safety - `typedef struct { pgprotval_t pgprot; }
