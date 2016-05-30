@@ -158,6 +158,8 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 
 * [__pgprot()](#__pgprot) - Converts the specified [pgprotval_t][pgprotval_t]
   into a [pgprot_t][pgprot_t].
+* [massage_pgprot()](#massage_pgprot) - Masks the specified [pgprot_t][pgprot_t]
+  fields against all possible flags.
 
 #### Retrieving Individual Flags
 
@@ -1734,6 +1736,33 @@ __NOTE:__ Macro, inferring function signature.
 
 A [pgprot_t][pgprot_t] containing the specified [pgprotval_t][pgprotval_t]
 value.
+
+---
+
+### massage_pgprot()
+
+`pgprotval_t massage_pgprot(pgprot_t pgprot)`
+
+[massage_pgprot()][massage_pgprot] determines the value of the specified
+[pgprot_t][pgprot_t] argument via [pgprot_val()][pgprot_val] and checks whether
+the page is present (i.e. has the `_PAGE_PRESENT` flag set) - if so, it returns
+the [pgprotval_t][pgprotval_t] of the flags masked against all possible flag
+values.
+
+If the page is not present, then no masking takes place. As the code comment
+says, those flags can be used for other purposes when the page is not present so
+it is not appropriate to modify them in that case.
+
+
+#### Arguments
+
+* `pgprot` - The [pgprot_t][pgprot_t] value which needs to be masked against
+  possible flag values.
+
+#### Returns
+
+A [pgprotval_t][pgprotval_t] containing the specified flag bitfield masked
+against all valid flags.
 
 ---
 
