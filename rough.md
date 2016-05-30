@@ -28,7 +28,9 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 ## TODO
 
-## Big Blocks of Code
+* Fixup link to vmalloc in [functions](./funcs.md) page from being a link to
+  http://www.makelinux.net/books/lkd2/ch11lev1sec5 to a local description once
+  it's written.
 
 [PFN_PHYS]:https://github.com/torvalds/linux/blob/v4.6/include/linux/pfn.h#L20
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
