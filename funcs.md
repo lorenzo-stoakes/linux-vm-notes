@@ -88,6 +88,10 @@ for the page table entry associated with the specified virtual address.
   [pmd_t][pmd_t], possibly paravirtualised.
 * [__pte()](#__pte) - Converts the specified [pteval_t][pteval_t] into a
   [pte_t][pte_t], possibly paravirtualised.
+* [pfn_pmd()](#pfn_pmd) - Creates a PMD entry pointing at the specified PFN with
+  the specified flags.
+* [pfn_pte()](#pfn_pte) - Creates a PTE entry pointing at the specified PFN with
+  the specified flags.
 
 #### Retrieving Page Table Entry Indexes
 
@@ -1035,6 +1039,57 @@ See `native_make_pte()` entry above for more details on returned value.
 #### Returns
 
 A [pte_t][pte_t] containing the specified [pteval_t][pteval_t].
+
+---
+
+### pfn_pmd()
+
+`pmd_t pfn_pmd(unsigned long page_nr, pgprot_t pgprot)`
+
+[pfn_pmd()][pfn_pmd] takes the specified `page_nr` Page Frame Number (PFN) of
+the PTE this PMD will point at and the page flags `pgprot` and bitwise combines
+them together before wrapping in a [pmd_t][pmd_t] via [__pmd()][__pmd].
+
+The function uses [massage_pgprot()][massage_pgprot] to mask the `pgprot` value
+against all possible flag to avoid setting the flag bitfield to something
+invalid.
+
+#### Arguments
+
+* `page_nr` - The PFN of the PTE page which we want the PMD entry to point at.
+
+* `pgprot` - The flags we want the PMD entry to contain.
+
+#### Returns
+
+A [pmd_t][pmd_t] PMD entry pointing at the specified PTE page with the specified
+flags.
+
+---
+
+### pfn_pte()
+
+`pte_t pfn_pte(unsigned long page_nr, pgprot_t pgprot)`
+
+[pfn_pte()][pfn_pte] takes the specified `page_nr` Page Frame Number (PFN) of
+the physical page this PTE will point at and the page flags `pgprot` and bitwise
+combines them together before wrapping in a [pte_t][pte_t] via [__pte()][__pte].
+
+The function uses [massage_pgprot()][massage_pgprot] to mask the `pgprot` value
+against all possible flag to avoid setting the flag bitfield to something
+invalid.
+
+#### Arguments
+
+* `page_nr` - The PFN of the physical page which we want the PTE entry to point
+  at.
+
+* `pgprot` - The flags we want the PTE entry to contain.
+
+#### Returns
+
+A [pte_t][pte_t] PTE entry pointing at the specified physical page with the
+specified flags.
 
 ---
 
@@ -2243,6 +2298,9 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [__pmd/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L500
 [__pte]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L87
 [__pte/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L377
+[pfn_pmd]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L388
+[massage_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L372
+[pfn_pte]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L382
 [pgd_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L708
 [PTRS_PER_PGD]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L28
 [pud_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L679
