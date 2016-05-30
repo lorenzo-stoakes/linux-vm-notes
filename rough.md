@@ -5,9 +5,6 @@ be full of errors, swearing and bullshit.
 
 ## General
 
-* `pXX_pfn_mask()`, `__phys_to_pfn`, `__pfn_to_phys` / [PHYS_PFN()][PFN_PHYS],
-  etc. - cover.
-
 * `pXX_large()` seems to duplicate `pXX_huge()`, though the latter seems to be
   in hugetlb context, and there are some variations, for example:
 
