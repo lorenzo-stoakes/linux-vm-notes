@@ -126,6 +126,19 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 
 ##### State
 
+* [pgd_none()](#pgd_none) - Determines if the specified PGD entry is empty.
+* [pud_none()](#pud_none) - Determines if the specified PUD entry is empty.
+* [pmd_none()](#pmd_none) - Determines if the specified PMD entry is empty.
+* [pte_none()](#pte_none) - Determines if the specified PTE entry is empty.
+* [pgd_bad()](#pgd_bad) - Determines if the specified PGD entry or its
+  descendants are not in a safe state to be modified.
+* [pud_bad()](#pud_bad) - Determines if the specified PUD entry or its
+  descendants are not in a safe state to be modified.
+* [pmd_bad()](#pmd_bad) - Determines if the specified PMD entry or its
+  descendants are not in a safe state to be modified.
+
+##### Retrieving Flag Bitfields
+
 * [pgd_flags()](#pgd_flags) - Retrieves bitfield containing the specified PGD
   entry's flags.
 * [pud_flags()](#pud_flags) - Retrieves bitfield containing the specified PUD
@@ -140,18 +153,8 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
   entry's flags wrapped in a [pgprot_t][pgprot_t].
 * [pte_pgprot()](#pte_pgprot) - Retrieves bitfield containing the specified PTE
   entry's flags wrapped in a [pgprot_t][pgprot_t].
-* [pgd_none()](#pgd_none) - Determines if the specified PGD entry is empty.
-* [pud_none()](#pud_none) - Determines if the specified PUD entry is empty.
-* [pmd_none()](#pmd_none) - Determines if the specified PMD entry is empty.
-* [pte_none()](#pte_none) - Determines if the specified PTE entry is empty.
-* [pgd_bad()](#pgd_bad) - Determines if the specified PGD entry or its
-  descendants are not in a safe state to be modified.
-* [pud_bad()](#pud_bad) - Determines if the specified PUD entry or its
-  descendants are not in a safe state to be modified.
-* [pmd_bad()](#pmd_bad) - Determines if the specified PMD entry or its
-  descendants are not in a safe state to be modified.
 
-##### Flags
+##### Retrieving Individual Flags
 
 * [pgd_present()](#pgd_present) - Determines if the pointed at PUD page is
   present, i.e. resident in memory rather than swapped out.
@@ -1263,151 +1266,6 @@ pointed at physical page.
 
 ---
 
-### pgd_flags()
-
-`pgdval_t pgd_flags(pgd_t pgd)`
-
-[pgd_flags()][pgd_flags] retrieves a bitfield containing the flags associated
-with the specified PGD entry which, if the entry is non-empty, relate to the PUD
-whose physical address (or swap metadata) is contained within the entry.
-
-Typically this won't be accessed directly, rather a function wrapper for a
-specific flag will be used.
-
-#### Arguments
-
-* `pgd` - PGD entry whose flags we desire.
-
-#### Returns
-
-A bitfield containing the PGD entry's flags.
-
----
-
-### pud_flags()
-
-`pudval_t pud_flags(pud_t pud)`
-
-[pud_flags()][pud_flags] retrieves a bitfield containing the flags associated
-with the specified PUD entry which, if the entry is non-empty, relate to the PMD
-whose physical address (or swap metadata) is contained within the entry.
-
-Typically this won't be accessed directly, rather a function wrapper for a
-specific flag will be used.
-
-#### Arguments
-
-* `pud` - PUD entry whose flags we desire.
-
-#### Returns
-
-A bitfield containing the PUD entry's flags.
-
----
-
-### pmd_flags()
-
-`pmdval_t pmd_flags(pmd_t pmd)`
-
-[pmd_flags()][pmd_flags] retrieves a bitfield containing the flags associated
-with the specified PMD entry which, if the entry is non-empty, relate to the PTE
-whose physical address (or swap metadata) is contained within the entry.
-
-Typically this won't be accessed directly, rather a function wrapper for a
-specific flag will be used.
-
-#### Arguments
-
-* `pmd` - PMD entry whose flags we desire.
-
-#### Returns
-
-A bitfield containing the PMD entry's flags.
-
----
-
-### pte_flags()
-
-`pteval_t pte_flags(pte_t pte)`
-
-[pte_flags()][pte_flags] retrieves a bitfield containing the flags associated
-with the specified PTE entry which, if the entry is non-empty, relate to the
-physical page whose physical address (or swap metadata) is contained within the
-entry.
-
-Typically this won't be accessed directly, rather a function wrapper for a
-specific flag will be used.
-
-#### Arguments
-
-* `pte` - PTE entry whose flags we desire.
-
-#### Returns
-
-A bitfield containing the PTE entry's flags.
-
----
-
-### pud_pgprot
-
-`pgprot_t pud_pgprot(pud_t pud)`
-
-[pud_pgprot()][pud_pgprot] retrieves the flags for the specified PUD entry via
-[pud_flags][pud_flags] and converts them to a [pgprot_t][pgprot_t] via
-[__pgprot()][__pgprot].
-
-As with `pXX_t` the reason this has to exist is that `pgprot_t` is a `typedef
-struct` used to enforce type safety - `typedef struct { pgprotval_t pgprot; }
-pgprot_t;`.
-
-#### Arguments
-
-#### Returns
-
-A [pgprot_t][pgprot_t] containing the specified PUD entry's flags.
-
----
-
-### pmd_pgprot
-
-`pgprot_t pmd_pgprot(pmd_t pmd)`
-
-[pmd_pgprot()][pmd_pgprot] retrieves the flags for the specified PMD entry via
-[pmd_flags][pmd_flags] and converts them to a [pgprot_t][pgprot_t] via
-[__pgprot()][__pgprot].
-
-As with `pXX_t` the reason this has to exist is that `pgprot_t` is a `typedef
-struct` used to enforce type safety - `typedef struct { pgprotval_t pgprot; }
-pgprot_t;`.
-
-#### Arguments
-
-#### Returns
-
-A [pgprot_t][pgprot_t] containing the specified PMD entry's flags.
-
----
-
-### pte_pgprot
-
-`pgprot_t pte_pgprot(pte_t pte)`
-
-[pte_pgprot()][pte_pgprot] retrieves the flags for the specified PTE entry via
-[pte_flags][pte_flags] and converts them to a [pgprot_t][pgprot_t] via
-[__pgprot()][__pgprot].
-
-As with `pXX_t` the reason this has to exist is that `pgprot_t` is a `typedef
-struct` used to enforce type safety - `typedef struct { pgprotval_t pgprot; }
-pgprot_t;`.
-
-#### Arguments
-
-#### Returns
-
-A [pgprot_t][pgprot_t] containing the specified PTE entry's flags.
-
----
-
 ### pgd_none()
 
 `int pgd_none(pgd_t pgd)`
@@ -1622,6 +1480,151 @@ check.)
 #### Returns
 
 Truthy (non-zero) if the PMD entry or its descendants are unsafe to modify.
+
+---
+
+### pgd_flags()
+
+`pgdval_t pgd_flags(pgd_t pgd)`
+
+[pgd_flags()][pgd_flags] retrieves a bitfield containing the flags associated
+with the specified PGD entry which, if the entry is non-empty, relate to the PUD
+whose physical address (or swap metadata) is contained within the entry.
+
+Typically this won't be accessed directly, rather a function wrapper for a
+specific flag will be used.
+
+#### Arguments
+
+* `pgd` - PGD entry whose flags we desire.
+
+#### Returns
+
+A bitfield containing the PGD entry's flags.
+
+---
+
+### pud_flags()
+
+`pudval_t pud_flags(pud_t pud)`
+
+[pud_flags()][pud_flags] retrieves a bitfield containing the flags associated
+with the specified PUD entry which, if the entry is non-empty, relate to the PMD
+whose physical address (or swap metadata) is contained within the entry.
+
+Typically this won't be accessed directly, rather a function wrapper for a
+specific flag will be used.
+
+#### Arguments
+
+* `pud` - PUD entry whose flags we desire.
+
+#### Returns
+
+A bitfield containing the PUD entry's flags.
+
+---
+
+### pmd_flags()
+
+`pmdval_t pmd_flags(pmd_t pmd)`
+
+[pmd_flags()][pmd_flags] retrieves a bitfield containing the flags associated
+with the specified PMD entry which, if the entry is non-empty, relate to the PTE
+whose physical address (or swap metadata) is contained within the entry.
+
+Typically this won't be accessed directly, rather a function wrapper for a
+specific flag will be used.
+
+#### Arguments
+
+* `pmd` - PMD entry whose flags we desire.
+
+#### Returns
+
+A bitfield containing the PMD entry's flags.
+
+---
+
+### pte_flags()
+
+`pteval_t pte_flags(pte_t pte)`
+
+[pte_flags()][pte_flags] retrieves a bitfield containing the flags associated
+with the specified PTE entry which, if the entry is non-empty, relate to the
+physical page whose physical address (or swap metadata) is contained within the
+entry.
+
+Typically this won't be accessed directly, rather a function wrapper for a
+specific flag will be used.
+
+#### Arguments
+
+* `pte` - PTE entry whose flags we desire.
+
+#### Returns
+
+A bitfield containing the PTE entry's flags.
+
+---
+
+### pud_pgprot
+
+`pgprot_t pud_pgprot(pud_t pud)`
+
+[pud_pgprot()][pud_pgprot] retrieves the flags for the specified PUD entry via
+[pud_flags][pud_flags] and converts them to a [pgprot_t][pgprot_t] via
+[__pgprot()][__pgprot].
+
+As with `pXX_t` the reason this has to exist is that `pgprot_t` is a `typedef
+struct` used to enforce type safety - `typedef struct { pgprotval_t pgprot; }
+pgprot_t;`.
+
+#### Arguments
+
+#### Returns
+
+A [pgprot_t][pgprot_t] containing the specified PUD entry's flags.
+
+---
+
+### pmd_pgprot
+
+`pgprot_t pmd_pgprot(pmd_t pmd)`
+
+[pmd_pgprot()][pmd_pgprot] retrieves the flags for the specified PMD entry via
+[pmd_flags][pmd_flags] and converts them to a [pgprot_t][pgprot_t] via
+[__pgprot()][__pgprot].
+
+As with `pXX_t` the reason this has to exist is that `pgprot_t` is a `typedef
+struct` used to enforce type safety - `typedef struct { pgprotval_t pgprot; }
+pgprot_t;`.
+
+#### Arguments
+
+#### Returns
+
+A [pgprot_t][pgprot_t] containing the specified PMD entry's flags.
+
+---
+
+### pte_pgprot
+
+`pgprot_t pte_pgprot(pte_t pte)`
+
+[pte_pgprot()][pte_pgprot] retrieves the flags for the specified PTE entry via
+[pte_flags][pte_flags] and converts them to a [pgprot_t][pgprot_t] via
+[__pgprot()][__pgprot].
+
+As with `pXX_t` the reason this has to exist is that `pgprot_t` is a `typedef
+struct` used to enforce type safety - `typedef struct { pgprotval_t pgprot; }
+pgprot_t;`.
+
+#### Arguments
+
+#### Returns
+
+A [pgprot_t][pgprot_t] containing the specified PTE entry's flags.
 
 ---
 
