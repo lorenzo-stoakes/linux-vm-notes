@@ -32,16 +32,17 @@ specified. [Linux 4.6][linux-4.6] is always targeted.
 __NOTE:__ Confusingly, the `_offset` functions actually return a virtual address
 for the page table entry associated with the specified virtual address.
 
-* [pgd_offset()](#pgd_offset) - Gets virtual address of specified virtual
-  address's PGD entry.
-* [pud_offset()](#pud_offset) - Gets virtual address of specified virtual
+* [pgd_offset()](#pgd_offset) - Gets the virtual address of the specified
+  virtual address's PGD entry in the specified [struct mm_struct][mm_struct]'s
+  PGD.
+* [pud_offset()](#pud_offset) - Gets the virtual address of specified virtual
   address's PUD entry.
-* [pmd_offset()](#pmd_offset) - Gets virtual address of specified virtual
+* [pmd_offset()](#pmd_offset) - Gets the virtual address of specified virtual
   address's PMD entry.
-* [pte_offset_map()](#pte_offset_map) - Gets virtual address of specified
-  virtual address's PTE entry (always mapped in x86-64.)
-* [pte_offset_map_lock()](#pte_offset_map_lock) - Gets virtual address of
-  specified virtual address's PTE entry then acquires PTE lock.
+* [pte_offset_map()](#pte_offset_map) - Gets the virtual address of the
+  specified virtual address's PTE entry (always mapped in x86-64.)
+* [pte_offset_map_lock()](#pte_offset_map_lock) - Gets the virtual address of
+  the specified virtual address's PTE entry then acquires a PTE lock.
 
 #### Retrieving Page Table Entry Values
 
