@@ -234,7 +234,21 @@ __NOTE:__ Macro, inferring function signature.
 
 `phys_addr_t __pa(volatile void *address)`
 
-[__pa()][__pa] does the heavy lifting for `virt_to_phys()`, see above.
+[__pa()][__pa] does the heavy lifting for `virt_to_phys()`, converting a
+_kernel_ virtual memory address to a physical one. The function is a wrapper
+around [__phys_addr()][__phys_addr].
+
+The function isn't quite as simple as [__va()][__va] as it has to determine
+whether the supplied virtual address is part of the kernel's direct mapping of
+_all_ of the physical memory between `0xffff880000000000` and
+`0xffffc7ffffffffff`, or whether it's part of the kernel's 'text' from
+`__START_KERNEL_map` on (`0xffffffff80000000` for [x86-64][x86-64-mm]), and
+offsets the supplied virtual address accordingly.
+
+In the case of the address originating from the kernel's 'text', the physical
+offset of the kernel, `phys_base` is taken into account, which allows for the
+kernel to be loaded in a different physical location e.g. when
+[kdump][kdump]ing.
 
 __NOTE:__ Macro, inferring function signature.
 
@@ -1757,8 +1771,10 @@ The PFN of the specified [struct page][page].
 [phys_to_virt]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L136
 [__va]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L54
 [virt_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L118
-[__pa]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L40
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
+[__pa]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L40
+[__phys_addr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L26
+[kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
 
 [pgd_offset]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L714
 [mm_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
