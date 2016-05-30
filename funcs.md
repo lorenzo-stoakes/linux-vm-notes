@@ -37,7 +37,7 @@ for the page table entry associated with the specified virtual address.
 * [pte_offset_map_lock()](#pte_offset_map_lock) - Gets virtual address of
   specified virtual address's PTE entry then acquires PTE lock.
 
-#### Retrieving Native Page Table Values
+#### Retrieving Page Table Entry Values
 
 * [native_pgd_val()](#native_pgd_val) - Gets the native [pgdval_t][pgdval_t]
   associated with the specified PGD entry.
