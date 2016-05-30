@@ -32,8 +32,6 @@ pmd_large -> pse         pmd_huge -> pse/not present
   http://www.makelinux.net/books/lkd2/ch11lev1sec5 to a local description once
   it's written.
 
-* Add `__pmd()` etc. and corresponding `native_make_pmd()` etc.
-
 * !! http://lxr.free-electrons.com/source/include/linux/mmzone.h#L1030 - cover
   mem_section/memory sections. Seems like the _physical_ memory map is divided
   into these 'sections' which determine whether a given block of memory (seem to
