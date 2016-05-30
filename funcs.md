@@ -34,6 +34,8 @@ for the page table entry associated with the specified virtual address.
 
 * [pgd_offset()](#pgd_offset) - Gets the virtual address of the specified
   virtual address's entry in the specified [struct mm_struct][mm_struct]'s PGD.
+* [pgd_offset_k()](#pgd_offset_k) - Gets the virtual address of the specified
+  virtual address's entry in the kernel's PGD.
 * [pud_offset()](#pud_offset) - Gets the virtual address of specified virtual
   address's PUD entry.
 * [pmd_offset()](#pmd_offset) - Gets the virtual address of specified virtual
@@ -429,8 +431,9 @@ The [struct page][page] that describes the physical page with specified PFN.
 `pgd_t *pgd_offset(struct mm_struct *mm, unsigned long address)`
 
 [pgd_offset()][pgd_offset] has a confusing name - it returns a virtual address,
-NOT an offset/index. The function locates the PGD _entry_ for the specified
-_virtual_ address and returns a _virtual_ address to it.
+NOT an offset/index. The function locates the _entry_ for the specified
+_virtual_ address in the PGD taken from the specified
+[struct mm_struct][mm_struct] and returns a _virtual_ address to it.
 
 __NOTE:__ Macro, inferring function signature.
 
@@ -439,7 +442,35 @@ __NOTE:__ Macro, inferring function signature.
 * `mm` - The [struct mm_struct][mm_struct] associated with the process whose PGD
   we seek.
 
-* `address` - The _virtual_ address whose PGD we seek.
+* `address` - The _virtual_ address whose PGD entry we seek.
+
+#### Returns
+
+A pointer to (hence virtual address of) a [pgd_t][pgd_t] entry which itself
+contains the physical address for the corresponding PUD with associated flags.
+
+---
+
+### pgd_offset_k()
+
+`pgd_t *pgd_offset_k(unsigned long address)`
+
+[pgd_offset_k()][pgd_offset_k] has a confusing name - it returns a virtual
+address, NOT an offset/index. The function locates the _entry_ for the specified
+_virtual_ address inside the kernel's PGD, and returns a _virtual_ address to
+it.
+
+The macro is simply defined as:
+
+```c
+#define pgd_offset_k(address) pgd_offset(&init_mm, (address))
+```
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `address` - The _virtual_ address whose PGD entry we seek.
 
 #### Returns
 
@@ -461,7 +492,7 @@ _virtual_ address to the PUD entry.
 
 * `pgd` - A pointer to the PGD entry belonging to the virtual `address`.
 
-* `address` - The _virtual_ address whose PUD we seek.
+* `address` - The _virtual_ address whose PUD entry we seek.
 
 #### Returns
 
@@ -483,7 +514,7 @@ _virtual_ address to the PMD entry.
 
 * `pud` - A pointer to the PUD entry belonging to the virtual `address`.
 
-* `address` - The _virtual_ address whose PMD we seek.
+* `address` - The _virtual_ address whose PMD entry we seek.
 
 #### Returns
 
