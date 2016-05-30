@@ -168,6 +168,10 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
   corresponding [struct page][page].
 * [page_to_pfn()](#page_to_pfn) - Converts a [struct page][page] to its
   corresponding Page Frame Number (PFN.)
+* [virt_addr_valid()](#virt_addr_valid) - Determines if a specified virtual
+  address is a valid _kernel_ virtual address.
+* [pfn_valid()](#pfn_valid) - Determines if a specified Page Frame Number (PFN)
+  represents a valid physical address.
 
 ## Address Translation
 
@@ -1757,6 +1761,50 @@ __NOTE:__ Macro, inferring function signature.
 
 The PFN of the specified [struct page][page].
 
+---
+
+### virt_addr_valid()
+
+`bool virt_addr_valid(unsigned long kaddr)`
+
+[virt_addr_valid()][virt_addr_valid] determines if the specified virtual address
+`kaddr` is actually a valid, non-[vmalloc][vmalloc]'d kernel address.
+
+The function is a wrapper for [__virt_addr_valid()][__virt_addr_valid], which,
+once its checked the virtual address is in a valid range, checks it has a valid
+corresponding physical PFN via [pfn_valid()][pfn_valid].
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `kaddr` - Virtual address which we want to determine is a valid non-vmalloc'd
+  kernel address or not.
+
+#### Returns
+
+`true` if the address is valid, `false` if not.
+
+---
+
+### pfn_valid()
+
+`int pfn_valid(unsigned long pfn)`
+
+[pfn_valid()][pfn_valid] determine whether the specified Page Frame Number (PFN)
+is valid, i.e. in x86-64 whether it refers to a valid 46-bit address, and
+whether there is actually physical memory mapped to that physical location.
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `pfn` - PFN whose validity we wish to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PFN is valid, 0 if not.
+
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [pgdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
@@ -1866,3 +1914,7 @@ The PFN of the specified [struct page][page].
 [__pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L53
 [page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L80
 [__page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L54
+[virt_addr_valid]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L66
+[vmalloc]:http://www.makelinux.net/books/lkd2/ch11lev1sec5
+[__virt_addr_valid]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/physaddr.c#L86
+[pfn_valid]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1140
