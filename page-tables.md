@@ -351,26 +351,19 @@ PTE_FLAGS_MASK = ~PTE_PFN_MASK =
 7. `_PAGE_GLOBAL` - Prevents ordinary [TLB][tlb] flushes from evicting this
    page's mapping from the TLB.
 
-## Traversing Page Tables
+## Process PGDs and Context Switches
 
-* Each process has an associated [struct mm_struct][mm_struct]:
+* Each process has an associated [struct mm_struct][mm_struct] which describes
+  its general memory state including a pointer to its PGD page, which gives us
+  the means to traverse page tables starting with this.
 
-```c
-struct mm_struct {
-        ...
-
-        pgd_t * pgd;
-
-        ...
-};
-```
-
-__NOTE:__ The struct is pretty huge, so limiting to what we care about here -
-the PGD for the process :)
-
-* The [struct mm_struct][mm_struct] describes a process's general memory state,
-  including a pointer to its PGD page, which gives us the means to traverse page
-  tables starting with this.
+* The PGD pointer is interesting - it's stored as a `pgd_t *pgd` field in the
+  [struct mm_struct][mm_struct], and rather than being a pointer to a separate
+  PGD entry somewhere, this field actually contains the _virtual_ address of the
+  process's PGD page, i.e. it's being treated like a pointer to the start of an
+  array. Its physical address can be obtained using [__pa()][__pa] if being set
+  in the CPU, or if the kernel needs to traverse the page tables manually the
+  virtual address can be used directly.
 
 * On x86-64, each time the kernel context switches to a process it does this by
   writing the process's PGD, i.e. `*current->mm->pgd` to the `cr3`
@@ -383,6 +376,8 @@ the PGD for the process :)
   between kernel and user mode is a lot less costly - no need for TLB flushes
   and PGD switching. The mappings are protected from unauthorised userland usage
   by simply clearing the `_PAGE_USER` flag.
+
+## Traversing Page Tables
 
 * A number of functions are provided to make it easier to traverse page
   tables. It's instructive to have a look at a utility function that performs
