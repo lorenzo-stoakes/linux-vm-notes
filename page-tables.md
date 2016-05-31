@@ -334,7 +334,7 @@ PTE_FLAGS_MASK = ~PTE_PFN_MASK =
   used.
 
 * Examining the more commonly used page flags (all taken from
-  [arch/x86/include/asm/pgtable_types.h][pgtables_types.h]):
+  [arch/x86/include/asm/pgtable_types.h][pgtable_types.h]):
 
 1. `_PAGE_PRESENT` - Determines whether the page is available in memory rather
    than swapped out or otherwise unavailable.
@@ -452,7 +452,6 @@ out:
 [PAGE_SHIFT]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L8
 [PTE_PFN_MASK]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L242
 [PTE_FLAGS_MASK]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L248
-[pgtable_types.h]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h
 
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
