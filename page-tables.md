@@ -289,16 +289,38 @@ ffffffffffe00000 - ffffffffffffffff (=2 MB) unused hole
 
 * Since each of the directory tables are page-aligned, [PAGE_SHIFT][PAGE_SHIFT]
   bits will always be 0 for every page table address. This is exploited to allow
-  the placing of flags in the lower bits of each entry.
+  the placing of flags in the lower bits of each entry, and in x86-64, where
+  there are only 46 addressable bits, flags are also placed in the higher bits.
 
 * A consequence of this is that the physical pages read from page tables have to
-  be masked to avoid these flags being interpreted as offsets. This can be
-  achieved via `&`'ing with [PAGE_MASK][PAGE_MASK], which is simply defined as
-  `~(`[PAGE_SIZE][PAGE_SIZE]`-1)` - subtracting 1 from a power of 2 results in a
-  mask for that number of possible values, in this case `1000000000000` becomes
-  `111111111111`, the `~` complement translates that to
-  `1111111111111111111111111111111111111111111111111111000000000000` - masking
-  out any flags.
+  be masked to avoid these flags being interpreted as offsets. In the case of
+  4KiB pages, this is achieved via [PTE_PFN_MASK][PTE_PFN_MASK] and
+  [PTE_FLAGS_MASK][PTE_FLAGS_MASK]. Larger page sizes needed some special
+  handling, however we won't go into that here.
+
+* [PTE_FLAGS_MASK][PTE_FLAGS_MASK] is simply the bitwise complement of
+  [PTE_PFN_MASK][PTE_PFN_MASK], so we need only consider how the latter
+  functions to understand both:
+
+```
+PAGE_MASK = ~((1UL << 12)-1) =
+1111111111111111111111111111111111111111111111111111000000000000
+
+__PHYSICAL_MASK = ((1UL << 46)-1) =
+0000000000000000001111111111111111111111111111111111111111111111
+
+PTE_PFN_MASK = PAGE_MASK & __PHYSICAL_MASK =
+1111111111111111111111111111111111111111111111111111000000000000 &
+0000000000000000001111111111111111111111111111111111111111111111 =
+0000000000000000001111111111111111111111111111111111000000000000
+
+PTE_FLAGS_MASK = ~PTE_PFN_MASK =
+1111111111111111110000000000000000000000000000000000111111111111
+```
+
+* As discussed above, we can see here that clearly we are masking out/in the
+  lower [PAGE_SHIFT][PAGE_SHIFT] (12) bits, as well as the unaddressable higher
+  bits.
 
 * Each process has an associated [struct mm_struct][mm_struct]:
 
@@ -394,6 +416,8 @@ out:
 [PUD_SHIFT]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L33
 [PMD_SHIFT]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L40
 [PAGE_SHIFT]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L8
+[PTE_PFN_MASK]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L242
+[PTE_FLAGS_MASK]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L248
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 
