@@ -372,6 +372,18 @@ the PGD for the process :)
   including a pointer to its PGD page, which gives us the means to traverse page
   tables starting with this.
 
+* On x86-64, each time the kernel context switches to a process it does this by
+  writing the process's PGD, i.e. `*current->mm->pgd` to the `cr3`
+  register. Doing this flushes the [TLB][tlb] by default as of course one
+  process's cached mappings aren't useful for another's, unless those pages are
+  marked `_PAGE_GLOBAL` in which case the mappings are not flushed.
+
+* On each context switch the kernel's own static mappings are preserved as each
+  process has its PGD configured with these included - this way switching
+  between kernel and user mode is a lot less costly - no need for TLB flushes
+  and PGD switching. The mappings are protected from unauthorised userland usage
+  by simply clearing the `_PAGE_USER` flag.
+
 * A number of functions are provided to make it easier to traverse page
   tables. It's instructive to have a look at a utility function that performs
   this task, [__follow_pte()][__follow_pte] is useful for this task:
