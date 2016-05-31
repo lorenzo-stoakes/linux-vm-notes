@@ -359,7 +359,7 @@ out:
 }
 ```
 
-* The [functions](./funcs.md) page contains detailed descriptions of each of the
+* The [functions][funcs] page contains detailed descriptions of each of the
   functions used here. Note that the `_offset()` functions are confusingly
   named - they actually provide the virtual address of the required page table
   entry which contains the physical address of either the page table or the
@@ -416,3 +416,5 @@ out:
 [PAGE_MASK]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L10
 [PAGE_SIZE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L9
 [__follow_pte]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3594
+
+[funcs]:./funcs.md
