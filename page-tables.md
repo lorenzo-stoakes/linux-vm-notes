@@ -205,7 +205,7 @@ phy offset = 000000010000 = 16
   nice separation between kernel and user address space for free - keep kernel
   addresses in the upper portion and user addresses in the lower portion.
 
-* Taking a quick look at the memory map:
+* Taking another quick look at the [memory map][x86-64-mm]:
 
 ```
 ...
