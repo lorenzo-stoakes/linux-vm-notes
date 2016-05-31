@@ -827,8 +827,8 @@ The [pgprotval_t][pgprotval_t] containing the native bitfield.
 
 `unsigned long pud_pfn(pud_t pud)`
 
-[pud_pfn()][pud_pfn] determines the Page Frame Number (PFN) of the PMD physical
-address contained within the specified PUD entry.
+[pud_pfn()][pud_pfn] determines the Page Frame Number (PFN) of the PMD page's
+physical address contained within the specified PUD entry.
 
 The PFN of a physical address is simply the (masked) address's value shifted
 right by the number of bits of the page size, so in a standard x86-64
@@ -843,12 +843,12 @@ index of the page within that array.
 
 #### Arguments
 
-* `pud` - The [pud_t][pud_t] which contains the PMD physical address whose PFN
-  we desire.
+* `pud` - The [pud_t][pud_t] which contains the PMD page's physical address
+  whose PFN we desire.
 
 #### Returns
 
-The PFN of the PMD physical address contained in the PUD entry.
+The PFN of the PMD page pointed at by the specified PUD entry.
 
 ---
 
@@ -856,8 +856,8 @@ The PFN of the PMD physical address contained in the PUD entry.
 
 `unsigned long pmd_pfn(pmd_t pmd)`
 
-[pmd_pfn()][pmd_pfn] determines the Page Frame Number (PFN) of the PTE physical
-address contained within the specified PMD entry.
+[pmd_pfn()][pmd_pfn] determines the Page Frame Number (PFN) of the PTE page's
+physical address contained within the specified PMD entry.
 
 The PFN of a physical address is simply the (masked) address's value shifted
 right by the number of bits of the page size, so in a standard x86-64
@@ -872,12 +872,12 @@ index of the page within that array.
 
 #### Arguments
 
-* `pmd` - The [pmd_t][pmd_t] which contains the PTE physical address whose PFN
-  we desire.
+* `pmd` - The [pmd_t][pmd_t] which contains the PTE page's physical address
+  whose PFN we desire.
 
 #### Returns
 
-The PFN of the PTE physical address contained in the PMD entry.
+The PFN of the PTE page pointed at by the specified PMD entry.
 
 ---
 
