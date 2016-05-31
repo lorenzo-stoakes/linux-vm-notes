@@ -23,7 +23,7 @@ specified. [Linux 4.6][linux-4.6] is always targeted.
   provide an abstraction layer and to isolate processes for each other, however
   this means that each process must store its own set of mappings. If the entire
   address space were mapped an x86-64 system would require 256GiB per process
-  consisting overwhelming of null mappings.
+  consisting overwhelmingly of null mappings.
 
 * To avoid such egregious space requirements, mappings are subdivided into a
   'sparse' arrangement of [page table][page-table]s and the virtual address
