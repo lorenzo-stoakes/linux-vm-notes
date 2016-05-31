@@ -233,7 +233,7 @@ ffff880000000000 - ffffc7ffffffffff (=64 TB) direct mapping of all phys. memory
 * Give that we have `PAGE_OFFSET` [__va()][__va] is simple:
 
 ```c
-#define __va(x)                 ((void *)((unsigned long)(x)+PAGE_OFFSET))
+#define __va(x) ((void *)((unsigned long)(x)+PAGE_OFFSET))
 ```
 
 * [__pa()][__pa] is a little more complicated - It invokes
@@ -242,7 +242,7 @@ ffff880000000000 - ffffc7ffffffffff (=64 TB) direct mapping of all phys. memory
   [__phys_addr_nodebug()][__phys_addr_nodebug]:
 
 ```c
-#define __pa(x)        __phys_addr((unsigned long)(x))
+#define __pa(x) __phys_addr((unsigned long)(x))
 
 ...
 
