@@ -31,6 +31,11 @@ pmd_large -> pse         pmd_huge -> pse/not present
   block of memory (seem to be in 128MiB blocks on x86-64) is actually backed by
   RAM or not :]. Also, go into detail about the sparse memory model for x86-64.
 
+* [Page Attribute Table (PAT)][pat]? [Memory type range register (MTRR)][mtrr]?
+  Some fine-grained caching stuff going on there, cover.
+
 [PFN_PHYS]:https://github.com/torvalds/linux/blob/v4.6/include/linux/pfn.h#L20
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
 [mem_section]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1040
+[pat]:https://en.wikipedia.org/wiki/Page_attribute_table
+[mtrr]:https://en.wikipedia.org/wiki/Memory_type_range_register
