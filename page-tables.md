@@ -369,7 +369,7 @@ __NOTE:__ The struct is pretty huge, so limiting to what we care about here -
 the PGD for the process :)
 
 * The [struct mm_struct][mm_struct] describes a process's general memory state,
-  including a pointer to its PGD, which gives us the means to traverse page
+  including a pointer to its PGD page, which gives us the means to traverse page
   tables starting with this.
 
 * A number of functions are provided to make it easier to traverse page
