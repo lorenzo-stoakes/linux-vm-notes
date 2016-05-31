@@ -285,7 +285,7 @@ ffffffffffe00000 - ffffffffffffffff (=2 MB) unused hole
   [Kdump: Smarter, Easier, Trustier (PDF)][kdump-paper], a paper on the
   subject.)
 
-### Traversing Page Tables
+## Traversing Page Tables
 
 * Since each of the directory tables are page-aligned, [PAGE_SHIFT][PAGE_SHIFT]
   bits will always be 0 for every page table address. This is exploited to allow
