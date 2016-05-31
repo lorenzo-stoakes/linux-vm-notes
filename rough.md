@@ -32,7 +32,23 @@ pmd_large -> pse         pmd_huge -> pse/not present
   RAM or not :]. Also, go into detail about the sparse memory model for x86-64.
 
 * [Page Attribute Table (PAT)][pat]? [Memory type range register (MTRR)][mtrr]?
-  Some fine-grained caching stuff going on there, cover.
+  Some fine-grained caching stuff going on there, cover. Also PCD (Page-level
+  Cache Disable) and PWT (Page-level Write-Through) flags.
+
+* Carefully check whether the `_PAGE_PSE` flag in a PUD or PMD means that the
+  entry refers to the final physical page, or whether it indicates the next
+  level page table page is larger. I very strongly believe the former is the
+  case, but need to investigate to be sure.
+
+* Confirm that, by default, accessed and dirty flags are cleared in memory
+  pages.
+
+* Expand page flags list to be more exhaustive.
+
+* Stupid question - does the global page flag cause a page mapping to remain in
+  the TLB at _all_ times, not even being evicted due to not being used? I
+  strongly suspect not, I suspect it just prevents flushes but not 'aging out'
+  of the cache. But worth checking.
 
 [PFN_PHYS]:https://github.com/torvalds/linux/blob/v4.6/include/linux/pfn.h#L20
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
