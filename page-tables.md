@@ -81,11 +81,12 @@ much as possible between 32 and 64-bit x86.
   [PMD_SHIFT][PMD_SHIFT] for PMD and [PAGE_SHIFT][PAGE_SHIFT] for PTE (since at
   that point you just want to 'shift out' the physical page offset.)
 
-* I'll go into the helper functions around this later, but once you've shifted
-  an address, you can then simply mask it with `PTRS_PER_Pxx - 1` - this takes
-  advantage of the fact that all values less than a power of 2 will be masked by
-  the power minus 1 (e.g. `0b1000 - 1 = 0b0111`), so the `_SHIFT` and
-  `PTRS_PER_` values are all you need to determine these indexes.
+* Once you've shifted an address, you can then simply mask it with
+  `PTRS_PER_Pxx - 1` - this takes advantage of the fact that all values less
+  than a power of 2 will be masked by the power minus 1 (e.g. `0b1000 - 1 =
+  0b0111`), so the `_SHIFT` and `PTRS_PER_` values are all you need to determine
+  these indexes. Typically this kind of operation is performed using helper
+  [functions][funcs] however.
 
 * Gathering all these values together for the typical 4KiB page size case:
 
