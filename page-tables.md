@@ -285,7 +285,7 @@ ffffffffffe00000 - ffffffffffffffff (=2 MB) unused hole
   [Kdump: Smarter, Easier, Trustier (PDF)][kdump-paper], a paper on the
   subject.)
 
-## Traversing Page Tables
+## Page Table Entry Flags
 
 * Since each of the directory tables are page-aligned, [PAGE_SHIFT][PAGE_SHIFT]
   bits will always be 0 for every page table address. This is exploited to allow
@@ -322,6 +322,8 @@ PTE_FLAGS_MASK = ~PTE_PFN_MASK =
   lower [PAGE_SHIFT][PAGE_SHIFT] (12) bits, as well as the unaddressable higher
   bits.
 
+## Traversing Page Tables
+
 * Each process has an associated [struct mm_struct][mm_struct]:
 
 ```c
@@ -336,6 +338,10 @@ struct mm_struct {
 
 __NOTE:__ The struct is pretty huge, so limiting to what we care about here -
 the PGD for the process :)
+
+* The [struct mm_struct][mm_struct] describes a process's general memory state,
+  including a pointer to its PGD, which gives us the means to traverse page
+  tables starting with this.
 
 * A number of functions are provided to make it easier to traverse page
   tables. It's instructive to have a look at a utility function that performs
