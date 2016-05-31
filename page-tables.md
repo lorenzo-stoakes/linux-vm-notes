@@ -339,15 +339,16 @@ PTE_FLAGS_MASK = ~PTE_PFN_MASK =
 1. `_PAGE_PRESENT` - Determines whether the page is available in memory rather
    than swapped out or otherwise unavailable.
 2. `_PAGE_RW` - If cleared, the memory page is read-only.
-3. `_PAGE_ACCESSED` - The page has been accessed - this is a 'sticky bit', and
+3. `_PAGE_USER` - If cleared, the memory can only be accessed by the kernel.
+4. `_PAGE_ACCESSED` - The page has been accessed - this is a 'sticky bit', and
    if left cleared when a page is created, the first access to the page will set
    the flag and it will remain set until manually cleared.
-4. `_PAGE_DIRTY` - The page has been modified - this is a 'sticky bit', and if
+5. `_PAGE_DIRTY` - The page has been modified - this is a 'sticky bit', and if
    left cleared when a page is created, the first write to the page will set the
    flag and it will remain set until manually cleared.
-5. `_PAGE_PSE` - Indicates the page is a huge page, i.e. either 1GiB or 2MiB
+6. `_PAGE_PSE` - Indicates the page is a huge page, i.e. either 1GiB or 2MiB
    rather than 4KiB.
-6. `_PAGE_GLOBAL` - Prevents ordinary [TLB][tlb] flushes from evicting this
+7. `_PAGE_GLOBAL` - Prevents ordinary [TLB][tlb] flushes from evicting this
    page's mapping from the TLB.
 
 ## Traversing Page Tables
