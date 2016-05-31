@@ -20,7 +20,15 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * `CONFIG_PGTABLE_LEVELS` is used to determine number of pg table levels now.
 
-## TODO
+## TODO next
+
+### Page Tables
+
+* Add page table allocation, modification, freeing functions, description.
+
+* Add boot time description.
+
+## TODO general
 
 * Fixup link to vmalloc in [functions](./funcs.md) page from being a link to
   http://www.makelinux.net/books/lkd2/ch11lev1sec5 to a local description once
