@@ -26,11 +26,11 @@ pmd_large -> pse         pmd_huge -> pse/not present
   http://www.makelinux.net/books/lkd2/ch11lev1sec5 to a local description once
   it's written.
 
-* !! http://lxr.free-electrons.com/source/include/linux/mmzone.h#L1030 - cover
-  mem_section/memory sections. Seems like the _physical_ memory map is divided
-  into these 'sections' which determine whether a given block of memory (seem to
-  be in 128MiB blocks on x86-64) is actually backed by RAM or not :]. Also, go
-  into detail about the sparse memory model for x86-64.
+* Cover [mem_section][mem_section]/memory sections. Seems like the _physical_
+  memory map is divided into these 'sections' which determine whether a given
+  block of memory (seem to be in 128MiB blocks on x86-64) is actually backed by
+  RAM or not :]. Also, go into detail about the sparse memory model for x86-64.
 
 [PFN_PHYS]:https://github.com/torvalds/linux/blob/v4.6/include/linux/pfn.h#L20
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
+[mem_section]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1040
