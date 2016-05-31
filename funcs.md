@@ -72,6 +72,21 @@ for the page table entry associated with the specified virtual address.
 * [pte_pfn()](#pte_pfn) - Gets the Page Frame Number (PFN) of the physical page
   contained in the specified PTE entry.
 
+#### Masking Page Table Entry Values
+
+__NOTE:__ There are no `pgd` or `pte` versions of these functions, as the masks
+for a PGD or PTE are simply `PTE_PFN_MASK` and `PTE_FLAGS_MASK` for the PFN and
+flags masks respectively.
+
+* [pud_pfn_mask()](#pud_pfn_mask) - Returns a [bitmask][bitmask] for obtaining
+  the PMD physical address from a PUD entry.
+* [pmd_pfn_mask()](#pmd_pfn_mask) - Returns a [bitmask][bitmask] for obtaining
+  the PTE physical address from a PMD entry.
+* [pud_flags_mask()](#pud_flags_mask) - Returns a [bitmask][bitmask] for
+  obtaining a PUD entry's flags.
+* [pmd_flags_mask()](#pmd_flags_mask) - Returns a [bitmask][bitmask] for
+  obtaining a PMD entry's flags.
+
 #### Creating Page Table Entries
 
 * [native_make_pgd()](#native_make_pgd) - Converts the specified
@@ -907,6 +922,96 @@ index of the page within that array.
 #### Returns
 
 The PFN of the physical address contained in the PTE entry.
+
+---
+
+### pud_pfn_mask()
+
+`pudval_t pud_pfn_mask(pud_t pud)`
+
+[pud_pfn_mask()][pud_pfn_mask] returns a [bitmask][bitmask] for a PUD entry to
+obtain the PMD page's physical address it points at.
+
+Note that neither PGD or PTE entries require a bitmask function, rather they use
+`PTE_PFN_MASK` and `PTE_FLAGS_MASK`. PUD and PMD entries need special treatment
+in case they refer to huge/gigantic pages.
+
+If the PUD entry indicates it refers to a gigantic page (i.e. `_PAGE_PSE` is
+set), `PHYSICAL_PUD_PAGE_MASK` is returned, otherwise `PTE_PFN_MASK` is
+returned. `PHYSICAL_PUD_PAGE_MASK` masks out the lower `PUD_SHIFT` bits, i.e. 30
+bits on x86-64, meaning the PUD page table entry refers to a 1GiB physical page.
+
+#### Arguments
+
+* `pud` - The PUD entry whose PMD page physical address mask we desire.
+
+#### Returns
+
+A mask for a PUD entry to obtain the physical address of the PMD page it points
+at.
+
+---
+
+### pmd_pfn_mask()
+
+`pmdval_t pmd_pfn_mask(pmd_t pmd)`
+
+[pmd_pfn_mask()][pmd_pfn_mask] returns a [bitmask][bitmask] for a PMD entry to
+obtain the PTE page's physical address it points at.
+
+Note that neither PGD or PTE entries require a bitmask function, rather they use
+`PTE_PFN_MASK` and `PTE_FLAGS_MASK`. PMD and PMD entries need special treatment
+in case they refer to huge/gigantic pages.
+
+If the PMD entry indicates it refers to a huge page (i.e. `_PAGE_PSE` is set),
+`PHYSICAL_PMD_PAGE_MASK` is returned, otherwise `PTE_PFN_MASK` is
+returned. `PHYSICAL_PMD_PAGE_MASK` masks out the lower `PMD_SHIFT` bits, i.e. 21
+bits on x86-64, meaning the PMD page table entry refers to a 2MiB physical page.
+
+#### Arguments
+
+* `pmd` - The PMD entry whose PTE page physical address mask we desire.
+
+#### Returns
+
+A mask for a PMD entry to obtain the physical address of the PTE page it points
+at.
+
+---
+
+### pud_flags_mask()
+
+`pudval_t pud_flags_mask(pud_t pud)`
+
+[pud_flags_mask()][pud_flags_mask] returns a [bitmask][bitmask] for a PUD entry
+to obtain its flags. It is simply the bitwise complement of
+[pud_pfn_mask()][pud_pfn_mask], see the entry above for this for more details.
+
+#### Arguments
+
+* `pud` - The PUD entry whose flags we desire.
+
+#### Returns
+
+A mask for a PUD entry to obtain its flags.
+
+---
+
+### pmd_flags_mask()
+
+`pmdval_t pmd_flags_mask(pmd_t pmd)`
+
+[pmd_flags_mask()][pmd_flags_mask] returns a [bitmask][bitmask] for a PMD entry
+to obtain its flags. It is simply the bitwise complement of
+[pmd_pfn_mask()][pmd_pfn_mask], see the entry above for this for more details.
+
+#### Arguments
+
+* `pmd` - The PMD entry whose flags we desire.
+
+#### Returns
+
+A mask for a PMD entry to obtain its flags.
 
 ---
 
@@ -2325,6 +2430,7 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [pteval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L12
 [pgprotval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L16
 [pgprot_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L250
+[bitmask]:https://en.wikipedia.org/wiki/Mask_(computing)
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [hugetlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/hugetlbpage.txt
@@ -2374,6 +2480,10 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [pud_pfn]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L166
 [pmd_pfn]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L161
 [pte_pfn]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L156
+[pud_pfn_mask]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L311
+[pmd_pfn_mask]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L329
+[pud_flags_mask]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L319
+[pmd_flags_mask]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L337
 [native_make_pgd]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L254
 [native_make_pud]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L272
 [native_make_pmd]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L293
