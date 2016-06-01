@@ -58,6 +58,16 @@ pmd_large -> pse         pmd_huge -> pse/not present
   strongly suspect not, I suspect it just prevents flushes but not 'aging out'
   of the cache. But worth checking.
 
+* Examine the wonders of `include/linux/pfn_t.h` - Seems to be a specific PFN
+  type with flag bitfields added in.
+
+* Check out the devmap stuff more thoroughly - descriptions like 'Determines if
+  the PTE page pointed at by the specified PMD entry is part of a device
+  mapping.' might not be valid. Surely a part of the
+  [device mapper][device-mapper] functionality?
+
+* Maybe add `_PAGE_HIDDEN` stuff - used by kmemcheck.
+
 ## Concerns
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
@@ -72,3 +82,4 @@ pmd_large -> pse         pmd_huge -> pse/not present
 [mem_section]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1040
 [pat]:https://en.wikipedia.org/wiki/Page_attribute_table
 [mtrr]:https://en.wikipedia.org/wiki/Memory_type_range_register
+[device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
