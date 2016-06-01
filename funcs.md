@@ -1958,8 +1958,8 @@ valid flags.
 `pmd_t pmd_set_flags(pmd_t pmd, pmdval_t set)`
 
 [pmd_set_flags()][pmd_set_flags] returns a new [pmd_t][pmd_t] which is identical
-to the specified PMD except for the specified `set` field which is 'appended'
-(i.e. bitwise-or'd) to the input PMD's flag bitfield.
+to the specified PMD entry except for the specified `set` field which is
+'appended' (i.e. bitwise-or'd) to the input PMD entry's flag bitfield.
 
 No checks are performed to ensure `set` is valid and limited only to available
 flag bits, so incorrect use of this function could result in an invalid return
@@ -1967,13 +1967,13 @@ value.
 
 #### Arguments
 
-* `pmd` - The PMD which we want to copy/update.
+* `pmd` - The PMD entry which we want to copy/update.
 
-* `set` - The flag bitfield we want to append to the newly created PMD.
+* `set` - The flag bitfield we want to append to the newly created PMD entry.
 
 #### Returns
 
-A copy of the input PMD with `set` appended to its flag bitfield.
+A copy of the input PMD entry with `set` appended to its flag bitfield.
 
 ---
 
@@ -1982,8 +1982,8 @@ A copy of the input PMD with `set` appended to its flag bitfield.
 `pte_t pte_set_flags(pte_t pte, pteval_t set)`
 
 [pte_set_flags()][pte_set_flags] returns a new [pte_t][pte_t] which is identical
-to the specified PTE except for the specified `set` field which is 'appended'
-(i.e. bitwise-or'd) to the input PTE's flag bitfield.
+to the specified PTE entry except for the specified `set` field which is
+'appended' (i.e. bitwise-or'd) to the input PTE entry's flag bitfield.
 
 No checks are performed to ensure `set` is valid and limited only to available
 flag bits, so incorrect use of this function could result in an invalid return
@@ -1991,13 +1991,13 @@ value.
 
 #### Arguments
 
-* `pte` - The PTE which we want to copy/update.
+* `pte` - The PTE entry which we want to copy/update.
 
-* `set` - The flag bitfield we want to append to the newly created PTE.
+* `set` - The flag bitfield we want to append to the newly created PTE entry.
 
 #### Returns
 
-A copy of the input PTE with `set` appended to its flag bitfield.
+A copy of the input PTE entry with `set` appended to its flag bitfield.
 
 ---
 
@@ -2006,8 +2006,8 @@ A copy of the input PTE with `set` appended to its flag bitfield.
 `pmd_t pmd_clear_flags(pmd_t pmd, pmdval_t clear)`
 
 [pmd_clear_flags()][pmd_clear_flags] returns a new [pmd_t][pmd_t] which is
-identical to the specified PMD except for the specified `clear` field whose
-bitfield is cleared in the returned PMD's flag bitfield.
+identical to the specified PMD entry except for the specified `clear` field
+whose bitfield is cleared in the returned PMD entry's flag bitfield.
 
 No checks are performed to ensure `clear` is valid and limited only to available
 flag bits, so incorrect use of this function could result in an invalid return
@@ -2015,13 +2015,13 @@ value.
 
 #### Arguments
 
-* `pmd` - The PMD which we want to copy/update.
+* `pmd` - The PMD entry which we want to copy/update.
 
-* `clear` - The flag bitfield we want to clear from the newly created PMD.
+* `clear` - The flag bitfield we want to clear from the newly created PMD entry.
 
 #### Returns
 
-A copy of the input PMD with `clear` flags cleared in its flag bitfield.
+A copy of the input PMD entry with `clear` flags cleared in its flag bitfield.
 
 ---
 
@@ -2030,8 +2030,8 @@ A copy of the input PMD with `clear` flags cleared in its flag bitfield.
 `pte_t pte_clear_flags(pte_t pte, pteval_t clear)`
 
 [pte_clear_flags()][pte_clear_flags] returns a new [pte_t][pte_t] which is
-identical to the specified PTE except for the specified `clear` field whose
-bitfield is cleared in the returned PTE's flag bitfield.
+identical to the specified PTE entry except for the specified `clear` field
+whose bitfield is cleared in the returned PTE entry's flag bitfield.
 
 No checks are performed to ensure `clear` is valid and limited only to available
 flag bits, so incorrect use of this function could result in an invalid return
@@ -2039,13 +2039,13 @@ value.
 
 #### Arguments
 
-* `pte` - The PTE which we want to copy/update.
+* `pte` - The PTE entry which we want to copy/update.
 
-* `clear` - The flag bitfield we want to clear from the newly created PTE.
+* `clear` - The flag bitfield we want to clear from the newly created PTE entry.
 
 #### Returns
 
-A copy of the input PTE with `clear` flags cleared in its flag bitfield.
+A copy of the input PTE entry with `clear` flags cleared in its flag bitfield.
 
 ---
 
