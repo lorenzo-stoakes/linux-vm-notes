@@ -3169,19 +3169,19 @@ A copy of the input PTE entry with the no-execute flag cleared.
 
 ### pte_mkspecial()
 
-`pmd_t pmd_mkspecial(pmd_t pmd)`
+`pte_t pte_mkspecial(pte_t pte)`
 
-[pmd_mkspecial()][pmd_mkspecial] returns a new [pmd_t][pmd_t] which is identical to
-the specified PMD entry except that the `_PAGE_SPECIAL` flag is set, indicating
-that the underlying PTE page has been marked spcial.
+[pte_mkspecial()][pte_mkspecial] returns a new [pte_t][pte_t] which is identical to
+the specified PTE entry except that the `_PAGE_SPECIAL` flag is set, indicating
+that the underlying physical page is special.
 
 #### Arguments
 
-* `pmd` - The PMD entry which we want a copy of with the special flag set.
+* `pte` - The PTE entry which we want a copy of with the special flag set.
 
 #### Returns
 
-A copy of the input PMD entry with the special flag set.
+A copy of the input PTE entry with the special flag set.
 
 ---
 
