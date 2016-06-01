@@ -84,6 +84,9 @@ pmd_large -> pse         pmd_huge -> pse/not present
 * Look into why `pmd_mkclean()` and `pte_mkclean()` do not also clear the
   soft-dirty flag.
 
+* Be consistent with discussion of 'user-defined' flags in `mk/clr` functions
+  too.
+
 ## Concerns
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
