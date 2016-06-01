@@ -253,6 +253,8 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 
 #### Setting/Clearing Individual Flags
 
+##### Accessed Flag
+
 * [pmd_mkyoung()](#pmd_mkyoung) - Returns a new copy of the specified PMD entry
   with the accessed flag set.
 * [pmd_mkold()](#pmd_mkold) - Returns a new copy of the specified PMD entry with
@@ -261,6 +263,8 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
   with the accessed flag set.
 * [pte_mkold()](#pte_mkold) - Returns a new copy of the specified PTE entry with
   the accessed flag cleared.
+
+##### Dirty Flag
 
 * [pmd_mkdirty()](#pmd_mkdirty) - Returns a new copy of the specified PMD entry
   with the dirty (modified) flag set.
@@ -271,6 +275,8 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pte_mkclean()](#pte_mkclean) - Returns a new copy of the specified PTE entry
   with the dirty (modified) flag cleared.
 
+##### Read/Write Flag
+
 * [pmd_mkwrite()](#pmd_mkwrite) - Returns a new copy of the specified PMD entry
   with the read/write flag set.
 * [pmd_wrprotect()](#pmd_wrprotect) - Returns a new copy of the specified PMD
@@ -279,6 +285,8 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
   with the read/write flag set.
 * [pte_wrprotect()](#pte_wrprotect) - Returns a new copy of the specified PTE
   entry with the read/write flag cleared.
+
+##### Soft-Dirty Flag
 
 * [pmd_mksoft_dirty()](#pmd_mksoft_dirty) - Returns a new copy of the specified
   PMD entry with the [soft-dirty][soft-dirty] flag set.
@@ -289,22 +297,32 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pte_clear_soft_dirty()](#pte_clear_soft_dirty) - Returns a new copy of the
   specified PTE entry with the [soft-dirty][soft-dirty] flag cleared.
 
+##### dev-map Flag
+
 * [pmd_mkdevmap()](#pmd_mkdevmap) - Returns a new copy of the specified PMD
   entry with the [devmap][device-mapper] flag set.
 * [pte_mkdevmap()](#pte_mkdevmap) - Returns a new copy of the specified PTE
   entry with the [devmap][device-mapper] flag cleared.
 
+##### Present Flag
+
 * [pmd_mknotpresent()](#pmd_mknotpresent) - Returns a new copy of the specified
   PMD entry with the present flag cleared, i.e. indicating the underlying PTE
   page is not resident.
+
+##### Global Flag
 
 * [pte_mkglobal()](#pte_mkglobal) - Returns a new copy of the specified PTE
   entry with the global flag set, avoiding [TLB][tlb] flushes.
 * [pte_clrglobal()](#pte_clrglobal) - Returns a new copy of the specified PTE
   entry with the global flag cleared.
 
+##### No-Execute (NX) flag
+
 * [pte_mkexec()](#pte_mkexec) - Returns a new copy of the specified PTE entry
   with the NX flag cleared, marking the underlying physical page executable.
+
+##### Special Flag
 
 * [pte_mkspecial()](#pte_mkspecial) - Returns a new copy of the specified PTE
   entry with the special flag set.
@@ -313,7 +331,6 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 
 * [pmd_mkhuge()](#pmd_mkhuge) - Returns a new copy of the specified PMD entry
   with the huge page flag set.
-
 * [pte_mkhuge()](#pte_mkhuge) - Returns a new copy of the specified PTE entry
   with the huge page flag set.
 * [pte_clrhuge()](#pte_clrhuge) - Returns a new copy of the specified PTE entry
