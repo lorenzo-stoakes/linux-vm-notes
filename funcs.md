@@ -2307,7 +2307,8 @@ Truthy (non-zero) if the PTE entry is marked executable.
 [pte_global()][pte_global] determines whether the specified PTE entry has the
 `_PAGE_GLOBAL` flag set, i.e. whether the [TLB][tlb] cache entry mapping the
 PTE's corresponding virtual address to the physical page it points at ought to
-be cleared when the TLB is flushed, either manually or by a context switch.
+_not_ to be cleared when the TLB is flushed, either manually or by a context
+switch.
 
 This flag is useful for pages which are shared across all processes and are
 regularly accessed.
