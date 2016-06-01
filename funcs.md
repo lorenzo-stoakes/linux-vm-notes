@@ -198,13 +198,13 @@ specified `pXX` entry, however they refer to the pointed at page,
 e.g. `pgd_present()` determines if the pointed at PUD page is present.
 
 * [pgd_present()](#pgd_present) - Determines if the pointed at PUD page is
-  present, i.e. resident in memory rather than swapped out.
+  present, i.e. resident in memory.
 * [pud_present()](#pud_present) - Determines if the pointed at PMD page is
-  present, i.e. resident in memory rather than swapped out.
+  present, i.e. resident in memory.
 * [pmd_present()](#pmd_present) - Determines if the pointed at PTE page is
-  present, i.e. resident in memory rather than swapped out.
+  present, i.e. resident in memory.
 * [pte_present()](#pte_present) - Determines if the pointed at physical page is
-  present, i.e. resident in memory rather than swapped out.
+  present, i.e. resident in memory.
 * [pmd_young()](#pmd_young) - Determines if the PTE page pointed at by the
   specified PMD entry has been accessed.
 * [pte_young()](#pte_young) - Determines if the physical page pointed at by the
