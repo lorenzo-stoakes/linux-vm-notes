@@ -1,7 +1,10 @@
 # VM Functions
 
-__Certainty Level:__ Moderate, am trying to check functions as best I can, but
-might be making mistakes.
+__Certainty Level:__ Low: Am trying to check functions as best I can, but might
+be making mistakes. I need to clear up some details about PMD and PUD page table
+entries in huge/gigantic page scenarios to be certain that a number of claims
+I've made here are correct. Also I'm finding a number of mistakes, so until I've
+done some checking passes treat the contents as suspect.
 
 __Architecture:__ These notes assume an x86-64 UMA system unless otherwise
 specified. [Linux 4.6][linux-4.6] is always targeted.
