@@ -81,6 +81,9 @@ pmd_large -> pse         pmd_huge -> pse/not present
   should probably be added to these flag functions (and possibly just all of
   them.)
 
+* Look into why `pmd_mkclean()` and `pte_mkclean()` do not also clear the
+  soft-dirty flag.
+
 ## Concerns
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
