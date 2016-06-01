@@ -226,6 +226,10 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
   [soft-dirty][soft-dirty].
 * [pte_soft_dirty()](#pte_soft_dirty) - Determines if the PTE entry is marked
   [soft-dirty][soft-dirty].
+* [pmd_devmap()](#pmd_devmap) - Determines if the PTE page pointed at by the
+  specified PMD entry is part of a [device mapping][device-mapper].
+* [pte_devmap()](#pte_devmap) - Determines if the physical page pointed at by
+  the specified PTE entry is part of a [device mapping][device-mapper].
 
 ##### Huge Pages
 
@@ -2416,6 +2420,56 @@ Truthy (non-zero) if the PTE entry is marked soft-dirty.
 
 ---
 
+### pmd_devmap()
+
+`int pmd_devmap(pmd_t pmd)`
+
+[pmd_devmap()][pmd_devmap] determines whether the specified PMD entry has the
+`_PAGE_DEVMAP` flag set, i.e. whether the 'user-defined' devmap flag is set.
+
+I put 'user-defined' in quotes to avoid confusion between user and kernel - here
+user is in the sense of the software rather than the CPU. The `_PAGE_BIT_DEVMAP`
+constant (`_PAGE_DEVMAP = 1UL << _PAGE_BIT_DEVMAP`) is an alias for
+`_PAGE_BIT_SOFTW4` - bit 58 (base-0), which the CPU simply ignores.
+
+It seems like this flag forms part of the [device mapper][device-mapper]
+functionality but I haven't yet looked into this deeply.
+
+#### Arguments
+
+* `pmd` - The PMD entry whose devmap flag state we want to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PMD entry is marked as a devmap entry.
+
+---
+
+### pte_devmap()
+
+`int pte_devmap(pte_t pte)`
+
+[pte_devmap()][pte_devmap] determines whether the specified PTE entry has the
+`_PAGE_DEVMAP` flag set, i.e. whether the 'user-defined' devmap flag is set.
+
+I put 'user-defined' in quotes to avoid confusion between user and kernel - here
+user is in the sense of the software rather than the CPU. The `_PAGE_BIT_DEVMAP`
+constant (`_PAGE_DEVMAP = 1UL << _PAGE_BIT_DEVMAP`) is an alias for
+`_PAGE_BIT_SOFTW4` - bit 58 (base-0), which the CPU simply ignores.
+
+It seems like this flag forms part of the [device mapper][device-mapper]
+functionality but I haven't yet looked into this deeply.
+
+#### Arguments
+
+* `pte` - The PTE entry whose devmap flag state we want to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PTE entry is marked as a devmap entry.
+
+---
+
 ### pud_huge()
 
 `int pud_huge(pud_t pud)`
@@ -2749,6 +2803,8 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [pte_special]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L151
 [pmd_soft_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L341
 [pte_soft_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L336
+[pmd_devmap]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L190
+[pte_devmap]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L497
 [pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L81
 [__pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L53
 [page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L80
