@@ -221,8 +221,7 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
   specified PTE entry is executable.
 * [pte_global()](#pte_global) - Determines whether ordinary [TLB][tlb] flushes
   do not clear the specified PTE entry mapping.
-* [pte_special()](#pte_special) - Determines whether the 'user-defined' special
-  flag is set for the specified PTE entry.
+* [pte_special()](#pte_special) - Determines if the PTE entry is marked special.
 * [pmd_soft_dirty()](#pmd_soft_dirty) - Determines if the PMD entry is marked
   [soft-dirty][soft-dirty].
 * [pte_soft_dirty()](#pte_soft_dirty) - Determines if the PTE entry is marked
