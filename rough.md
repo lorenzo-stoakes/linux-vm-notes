@@ -58,6 +58,15 @@ pmd_large -> pse         pmd_huge -> pse/not present
   strongly suspect not, I suspect it just prevents flushes but not 'aging out'
   of the cache. But worth checking.
 
+## Concerns
+
+* When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
+  always referring to an underlying lower-level page table page, am I always
+  correct in doing so? Since in huge page mode I _think_ a PMD with the PSE bit
+  set actually refers to the final physical page, but perhaps I'm wrong. If a
+  PMD does refer to a page this way, I will need to modify the function
+  descriptions accordingly.
+
 [PFN_PHYS]:https://github.com/torvalds/linux/blob/v4.6/include/linux/pfn.h#L20
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
 [mem_section]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1040
