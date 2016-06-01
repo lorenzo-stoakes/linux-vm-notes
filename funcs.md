@@ -1997,7 +1997,7 @@ value.
 
 #### Returns
 
-A copy of the input PMD with `set` appended to its flag bitfield.
+A copy of the input PTE with `set` appended to its flag bitfield.
 
 ---
 
