@@ -2329,9 +2329,10 @@ Truthy (non-zero) if the PTE entry is marked global.
 `_PAGE_SPECIAL` flag set, i.e. whether the 'user-defined' special flag is set.
 
 I put 'user-defined' in quotes to avoid confusion between user and kernel - here
-user is in the sense of the software rather than the CPU. The `_PAGE_SPECIAL`
-flag is an alias for `_PAGE_BIT_SOFTW1` - bit 9 (base-0), first of the 3 bits
-between 9 and 11 which the CPU simply ignores.
+user is in the sense of the software rather than the CPU. The
+`_PAGE_BIT_SPECIAL` constant (`_PAGE_SPECIAL = 1UL << _PAGE_BIT_SPECIAL`) is an
+alias for `_PAGE_BIT_SOFTW1` - bit 9 (base-0), first of the 3 bits between 9 and
+11 which the CPU simply ignores.
 
 #### Arguments
 
@@ -2352,9 +2353,10 @@ has the `_PAGE_SOFT_DIRTY` flag set, i.e. whether the 'user-defined' soft-dirty
 flag is set.
 
 I put 'user-defined' in quotes to avoid confusion between user and kernel - here
-user is in the sense of the software rather than the CPU. The `_PAGE_SOFT_DIRTY`
-flag is an alias for `_PAGE_BIT_SOFTW3` - bit 11 (base-0), third of the 3 bits
-between 9 and 11 which the CPU simply ignores.
+user is in the sense of the software rather than the CPU. The
+`_PAGE_BIT_SOFT_DIRTY` constant (`_PAGE_SOFT_DIRTY = 1UL <<
+_PAGE_BIT_SOFT_DIRTY`) is an alias for `_PAGE_BIT_SOFTW3` - bit 11 (base-0),
+third of the 3 bits between 9 and 11 which the CPU simply ignores.
 
 The [soft-dirty][soft-dirty] mechanism is a means by which userland processes
 can determine which pages have been modified since these bits were last cleared
@@ -2387,9 +2389,10 @@ has the `_PAGE_SOFT_DIRTY` flag set, i.e. whether the 'user-defined' soft-dirty
 flag is set.
 
 I put 'user-defined' in quotes to avoid confusion between user and kernel - here
-user is in the sense of the software rather than the CPU. The `_PAGE_SOFT_DIRTY`
-flag is an alias for `_PAGE_BIT_SOFTW3` - bit 11 (base-0), third of the 3 bits
-between 9 and 11 which the CPU simply ignores.
+user is in the sense of the software rather than the CPU. The
+`_PAGE_BIT_SOFT_DIRTY` constant (`_PAGE_SOFT_DIRTY = 1UL <<
+_PAGE_BIT_SOFT_DIRTY`) is an alias for `_PAGE_BIT_SOFTW3` - bit 11 (base-0),
+third of the 3 bits between 9 and 11 which the CPU simply ignores.
 
 The [soft-dirty][soft-dirty] mechanism is a means by which userland processes
 can determine which pages have been modified since these bits were last cleared
