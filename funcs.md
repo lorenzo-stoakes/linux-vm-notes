@@ -180,6 +180,17 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 * [canon_pgprot()](#canon_pgprot) -  Masks the specified [pgprot_t][pgprot_t]
   fields against all possible flags, returns [pgprot_t][pgprot_t].
 
+#### Setting/Clearing Flag Bitfields
+
+* [pmd_set_flags()](#pmd_set_flags) - Returns a new copy of a PMD with the
+  specified bitfield appended to its flag bitfield.
+* [pte_set_flags()](#pte_set_flags) - Returns a new copy of a PTE with the
+  specified bitfield appended to its flag bitfield.
+* [pmd_clear_flags()](#pmd_clear_flags) - Returns a new copy of a PMD with the
+  specified bitfield cleared from its flag bitfield.
+* [pte_clear_flags()](#pte_clear_flags) - Returns a new copy of a PTE with the
+  specified bitfield cleared from its flag bitfield.
+
 #### Retrieving Individual Flags
 
 __NOTE:__ Confusingly, the `pXX_<flag>()` functions retrieve flags from the
@@ -1930,6 +1941,102 @@ valid flags.
 
 ---
 
+### pmd_set_flags()
+
+`pmd_t pmd_set_flags(pmd_t pmd, pmdval_t set)`
+
+[pmd_set_flags()][pmd_set_flags] returns a new [pmd_t][pmd_t] which is identical
+to the specified PMD except for the specified `set` field which is 'appended'
+(i.e. bitwise-or'd) to the input PMD's flag bitfield.
+
+No checks are performed to ensure `set` is valid and limited only to available
+flag bits, so incorrect use of this function could result in an invalid return
+value.
+
+#### Arguments
+
+* `pmd` - The PMD which we want to copy/update.
+
+* `set` - The flag bitfield we want to append to the newly created PMD.
+
+#### Returns
+
+A copy of the input PMD with `set` appended to its flag bitfield.
+
+---
+
+### pte_set_flags()
+
+`pte_t pte_set_flags(pte_t pte, pteval_t set)`
+
+[pte_set_flags()][pte_set_flags] returns a new [pte_t][pte_t] which is identical
+to the specified PTE except for the specified `set` field which is 'appended'
+(i.e. bitwise-or'd) to the input PTE's flag bitfield.
+
+No checks are performed to ensure `set` is valid and limited only to available
+flag bits, so incorrect use of this function could result in an invalid return
+value.
+
+#### Arguments
+
+* `pte` - The PTE which we want to copy/update.
+
+* `set` - The flag bitfield we want to append to the newly created PTE.
+
+#### Returns
+
+A copy of the input PMD with `set` appended to its flag bitfield.
+
+---
+
+### pmd_clear_flags()
+
+`pmd_t pmd_clear_flags(pmd_t pmd, pmdval_t clear)`
+
+[pmd_clear_flags()][pmd_clear_flags] returns a new [pmd_t][pmd_t] which is
+identical to the specified PMD except for the specified `clear` field whose
+bitfield is cleared in the returned PMD's flag bitfield.
+
+No checks are performed to ensure `clear` is valid and limited only to available
+flag bits, so incorrect use of this function could result in an invalid return
+value.
+
+#### Arguments
+
+* `pmd` - The PMD which we want to copy/update.
+
+* `clear` - The flag bitfield we want to clear from the newly created PMD.
+
+#### Returns
+
+A copy of the input PMD with `clear` flags cleared in its flag bitfield.
+
+---
+
+### pte_clear_flags()
+
+`pte_t pte_clear_flags(pte_t pte, pteval_t clear)`
+
+[pte_clear_flags()][pte_clear_flags] returns a new [pte_t][pte_t] which is
+identical to the specified PTE except for the specified `clear` field whose
+bitfield is cleared in the returned PTE's flag bitfield.
+
+No checks are performed to ensure `clear` is valid and limited only to available
+flag bits, so incorrect use of this function could result in an invalid return
+value.
+
+#### Arguments
+
+* `pte` - The PTE which we want to copy/update.
+
+* `clear` - The flag bitfield we want to clear from the newly created PTE.
+
+#### Returns
+
+A copy of the input PTE with `clear` flags cleared in its flag bitfield.
+
+---
+
 ### pgd_present()
 
 `int pgd_present(pgd_t pgd)`
@@ -2523,6 +2630,10 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [pte_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L427
 [__pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L363
 [canon_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L431
+[pmd_set_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L276
+[pmd_clear_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L283
+[pte_set_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L197
+[pte_clear_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L204
 [pgd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L694
 [pud_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L616
 [pmd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L550
