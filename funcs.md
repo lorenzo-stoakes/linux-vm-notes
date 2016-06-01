@@ -254,6 +254,8 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
   address is a valid _kernel_ virtual address.
 * [pfn_valid()](#pfn_valid) - Determines if a specified Page Frame Number (PFN)
   represents a valid physical address.
+* [pte_same()](#pte_same) - Determines whether the two specified PTE entries
+  refer to the same physical page and flags.
 
 ## Address Translation
 
@@ -2659,6 +2661,29 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 
 ---
 
+### pte_same()
+
+`int pte_same(pte_t a, pte_t b)`
+
+[pte_same()][pte_same] determines whether the two specified PTE entries refer to
+the same physical page AND share the same flags.
+
+On x86-64 it's as simple as `a.pte == b.pte`.
+
+#### Arguments
+
+* `a` - The first PTE entry whose physical page address and flags we want to
+  compare.
+
+* `b` - The second PTE entry whose physical page address and flags we want to
+  compare.
+
+#### Returns
+
+1 if the PTE entries' physical address and flags are the same, 0 if not.
+
+---
+
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [pgdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
@@ -2813,3 +2838,4 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [vmalloc]:http://www.makelinux.net/books/lkd2/ch11lev1sec5
 [__virt_addr_valid]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/physaddr.c#L86
 [pfn_valid]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1140
+[pte_same]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L486
