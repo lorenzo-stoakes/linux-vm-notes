@@ -223,6 +223,10 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
   do not clear the specified PTE entry mapping.
 * [pte_special()](#pte_special) - Determines whether the 'user-defined' special
   flag is set for the specified PTE entry.
+* [pmd_soft_dirty()](#pmd_soft_dirty) - Determines if the PMD entry is marked
+  [soft-dirty][soft-dirty].
+* [pte_soft_dirty()](#pte_soft_dirty) - Determines if the PTE entry is marked
+  [soft-dirty][soft-dirty].
 
 ##### Huge Pages
 
@@ -2340,6 +2344,76 @@ Truthy (non-zero) if the PTE entry is marked special.
 
 ---
 
+### pmd_soft_dirty()
+
+`int pmd_soft_dirty(pmd_t pmd)`
+
+[pmd_soft_dirty()][pmd_soft_dirty] determines whether the specified PMD entry
+has the `_PAGE_SOFT_DIRTY` flag set, i.e. whether the 'user-defined' soft-dirty
+flag is set.
+
+I put 'user-defined' in quotes to avoid confusion between user and kernel - here
+user is in the sense of the software rather than the CPU. The `_PAGE_SOFT_DIRTY`
+flag is an alias for `_PAGE_BIT_SOFTW3` - bit 11 (base-0), third of the 3 bits
+between 9 and 11 which the CPU simply ignores.
+
+The [soft-dirty][soft-dirty] mechanism is a means by which userland processes
+can determine which pages have been modified since these bits were last cleared
+for a specified task via the `/proc/<pid>/clear_refs` and `/proc/<pid>/pagemap`
+files.
+
+It differs from the actual dirty flag as that is used by the kernel for its own
+modified state tracking, rendering it unsuitable for use by userland.
+
+Since the flags field describes the underlying PTE page, this function
+determines whether the _PTE page_ has been modified since last use, despite the
+'PMD' in its name.
+
+#### Arguments
+
+* `pmd` - The PMD entry whose soft-dirty flag state we want to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PMD entry is marked soft-dirty.
+
+---
+
+### pte_soft_dirty()
+
+`int pte_soft_dirty(pte_t pte)`
+
+[pte_soft_dirty()][pte_soft_dirty] determines whether the specified PTE entry
+has the `_PAGE_SOFT_DIRTY` flag set, i.e. whether the 'user-defined' soft-dirty
+flag is set.
+
+I put 'user-defined' in quotes to avoid confusion between user and kernel - here
+user is in the sense of the software rather than the CPU. The `_PAGE_SOFT_DIRTY`
+flag is an alias for `_PAGE_BIT_SOFTW3` - bit 11 (base-0), third of the 3 bits
+between 9 and 11 which the CPU simply ignores.
+
+The [soft-dirty][soft-dirty] mechanism is a means by which userland processes
+can determine which pages have been modified since these bits were last cleared
+for a specified task via the `/proc/<pid>/clear_refs` and `/proc/<pid>/pagemap`
+files.
+
+It differs from the actual dirty flag as that is used by the kernel for its own
+modified state tracking, rendering it unsuitable for use by userland.
+
+Since the flags field describes the underlying physical page page, this function
+determines whether the referred to _physical page_ has been modified since last
+use, despite the 'PTE' in its name.
+
+#### Arguments
+
+* `pte` - The PTE entry whose soft-dirty flag state we want to determine.
+
+#### Returns
+
+Truthy (non-zero) if the PTE entry is marked soft-dirty.
+
+---
+
 ### pud_huge()
 
 `int pud_huge(pud_t pud)`
@@ -2540,6 +2614,7 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [bitmask]:https://en.wikipedia.org/wiki/Mask_(computing)
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
+[soft-dirty]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/soft-dirty.txt
 [hugetlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/hugetlbpage.txt
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
 
@@ -2670,6 +2745,8 @@ Truthy (non-zero) if the PFN is valid, 0 if not.
 [__flush_tlb_global]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L63
 [invpcid_flush_all]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L48
 [pte_special]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L151
+[pmd_soft_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L341
+[pte_soft_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L336
 [pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L81
 [__pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L53
 [page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L80
