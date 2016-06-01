@@ -251,6 +251,74 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pmd_large()](#pmd_large) - Determines if the pointed at PTE page is huge
   (without context.)
 
+#### Setting/Clearing Individual Flags
+
+* [pmd_mkyoung()](#pmd_mkyoung) - Returns a new copy of the specified PMD entry
+  with the accessed flag set.
+* [pmd_mkold()](#pmd_mkold) - Returns a new copy of the specified PMD entry with
+  the accessed flag cleared.
+* [pte_mkyoung()](#pte_mkyoung) - Returns a new copy of the specified PTE entry
+  with the accessed flag set.
+* [pte_mkold()](#pte_mkold) - Returns a new copy of the specified PTE entry with
+  the accessed flag cleared.
+
+* [pmd_mkdirty()](#pmd_mkdirty) - Returns a new copy of the specified PMD entry
+  with the dirty (modified) flag set.
+* [pmd_mkclean()](#pmd_mkclean) - Returns a new copy of the specified PMD entry
+  with the dirty (modified) flag cleared.
+* [pte_mkdirty()](#pte_mkdirty) - Returns a new copy of the specified PTE entry
+  with the dirty (modified) flag set.
+* [pte_mkclean()](#pte_mkclean) - Returns a new copy of the specified PTE entry
+  with the dirty (modified) flag cleared.
+
+* [pmd_mkwrite()](#pmd_mkwrite) - Returns a new copy of the specified PMD entry
+  with the read/write flag set.
+* [pmd_wrprotect()](#pmd_wrprotect) - Returns a new copy of the specified PMD
+  entry with the read/write flag cleared.
+* [pte_mkwrite()](#pte_mkwrite) - Returns a new copy of the specified PTE entry
+  with the read/write flag set.
+* [pte_wrprotect()](#pte_wrprotect) - Returns a new copy of the specified PTE
+  entry with the read/write flag cleared.
+
+* [pmd_mksoft_dirty()](#pmd_mksoft_dirty) - Returns a new copy of the specified
+  PMD entry with the [soft-dirty][soft-dirty] flag set.
+* [pmd_clear_soft_dirty()](#pmd_clear_soft_dirty) - Returns a new copy of the
+  specified PMD entry with the [soft-dirty][soft-dirty] flag cleared.
+* [pte_mksoft_dirty()](#pte_mksoft_dirty) - Returns a new copy of the specified
+  PTE entry with the [soft-dirty][soft-dirty] flag set.
+* [pte_clear_soft_dirty()](#pte_clear_soft_dirty) - Returns a new copy of the
+  specified PTE entry with the [soft-dirty][soft-dirty] flag cleared.
+
+* [pmd_mkdevmap()](#pmd_mkdevmap) - Returns a new copy of the specified PMD
+  entry with the [devmap][device-mapper] flag set.
+* [pte_mkdevmap()](#pte_mkdevmap) - Returns a new copy of the specified PTE
+  entry with the [devmap][device-mapper] flag cleared.
+
+* [pmd_mknotpresent()](#pmd_mknotpresent) - Returns a new copy of the specified
+  PMD entry with the present flag cleared, i.e. indicating the underlying PTE
+  page is not resident.
+
+* [pte_mkglobal()](#pte_mkglobal) - Returns a new copy of the specified PTE
+  entry with the global flag set, avoiding [TLB][tlb] flushes.
+* [pte_clrglobal()](#pte_clrglobal) - Returns a new copy of the specified PTE
+  entry with the global flag cleared.
+
+* [pte_mkexec()](#pte_mkexec) - Returns a new copy of the specified PTE entry
+  with the NX flag cleared, marking the underlying physical page executable.
+
+* [pte_mkspecial()](#pte_mkspecial) - Returns a new copy of the specified PTE
+  entry with the special flag set.
+
+##### Huge Pages
+
+* [pmd_mkhuge()](#pmd_mkhuge) - Returns a new copy of the specified PMD entry
+  with the huge page flag set.
+
+* [pte_mkhuge()](#pte_mkhuge) - Returns a new copy of the specified PTE entry
+  with the huge page flag set.
+* [pte_clrhuge()](#pte_clrhuge) - Returns a new copy of the specified PTE entry
+  with the huge page flag cleared.
+
 #### Utility Functions
 
 * [virt_addr_valid()](#virt_addr_valid) - Determines if a specified virtual
@@ -2621,6 +2689,539 @@ Truthy (non-zero) if the PMD entry is marked huge.
 
 ---
 
+### pmd_mkyoung()
+
+`pmd_t pmd_mkyoung(pmd_t pmd)`
+
+[pmd_mkyoung()][pmd_mkyoung] returns a new [pmd_t][pmd_t] which is identical to
+the specified PMD entry except that the `_PAGE_ACCESSED` flag is set, indicating
+that the underlying PTE page has been accessed.
+
+#### Arguments
+
+* `pmd` - The PMD entry which we want a copy of with the accessed flag set.
+
+#### Returns
+
+A copy of the input PMD entry with the accessed flag set.
+
+---
+
+### pmd_mkold()
+
+`pmd_t pmd_mkold(pmd_t pmd)`
+
+[pmd_mkold()][pmd_mkold] returns a new [pmd_t][pmd_t] which is identical to the
+specified PMD entry except that the `_PAGE_ACCESSED` flag is cleared, indicating
+that the underlying PTE page has not been accessed yet.
+
+#### Arguments
+
+* `pmd` - The PMD entry which we want a copy of with the accessed flag cleared.
+
+#### Returns
+
+A copy of the input PMD entry with the accessed flag cleared.
+
+---
+
+### pte_mkyoung()
+
+`pte_t pte_mkyoung(pte_t pte)`
+
+[pte_mkyoung()][pte_mkyoung] returns a new [pte_t][pte_t] which is identical to
+the specified PTE entry except that the `_PAGE_ACCESSED` flag is set, indicating
+that the underlying physical page has been accessed.
+
+#### Arguments
+
+* `pte` - The PTE entry which we want a copy of with the accessed flag set.
+
+#### Returns
+
+A copy of the input PTE entry with the accessed flag set.
+
+---
+
+### pte_mkold()
+
+`pte_t pte_mkold(pte_t pte)`
+
+[pte_mkold()][pte_mkold] returns a new [pte_t][pte_t] which is identical to the
+specified PTE entry except that the `_PAGE_ACCESSED` flag is cleared, indicating
+that the underlying physical page has not been accessed yet.
+
+#### Arguments
+
+* `pte` - The PTE entry which we want a copy of with the accessed flag cleared.
+
+#### Returns
+
+A copy of the input PTE entry with the accessed flag cleared.
+
+---
+
+### pmd_mkdirty()
+
+`pmd_t pmd_mkdirty(pmd_t pmd)`
+
+[pmd_mkdirty()][pmd_mkdirty] returns a new [pmd_t][pmd_t] which is identical to
+the specified PMD entry except that the `_PAGE_DIRTY` and `_PAGE_SOFT_DIRTY`
+flags are set, indicating that the underlying PTE page has been modified.
+
+The `_PAGE_SOFT_DIRTY` flag being set synchronises the [soft-dirty][soft-dirty]
+state with the kernel page ageing logic.
+
+#### Arguments
+
+* `pmd` - The PMD entry which we want a copy of with the dirty flags set.
+
+#### Returns
+
+A copy of the input PMD entry with the dirty flags set.
+
+---
+
+### pmd_mkclean()
+
+`pmd_t pmd_mkclean(pmd_t pmd)`
+
+[pmd_mkclean()][pmd_mkclean] returns a new [pmd_t][pmd_t] which is identical to
+the specified PMD entry except that the `_PAGE_DIRTY` flag is cleared,
+indicating that the underlying PTE page has not been modified yet.
+
+Curiously, the `_PAGE_SOFT_DIRTY` flag is not cleared (it's curious because this
+flag _is_ set in [pmd_mkdirty()][pmd_mkdirty].)
+
+#### Arguments
+
+* `pmd` - The PMD entry which we want a copy of with the dirty flag cleared.
+
+#### Returns
+
+A copy of the input PMD entry with the dirty flag cleared.
+
+---
+
+### pte_mkdirty()
+
+`pte_t pte_mkdirty(pte_t pte)`
+
+[pte_mkdirty()][pte_mkdirty] returns a new [pte_t][pte_t] which is identical to
+the specified PTE entry except that the `_PAGE_DIRTY` and `_PAGE_SOFT_DIRTY`
+flags are set, indicating that the underlying physical page has been modified.
+
+The `_PAGE_SOFT_DIRTY` flag being set synchronises the [soft-dirty][soft-dirty]
+state with the kernel page ageing logic.
+
+#### Arguments
+
+* `pte` - The PTE entry which we want a copy of with the dirty flags set.
+
+#### Returns
+
+A copy of the input PTE entry with the dirty flags set.
+
+---
+
+### pte_mkclean()
+
+`pte_t pte_mkclean(pte_t pte)`
+
+[pte_mkclean()][pte_mkclean] returns a new [pte_t][pte_t] which is identical to
+the specified PTE entry except that the `_PAGE_DIRTY` flag is cleared,
+indicating that the underlying physical page has not been dirty yet.
+
+Curiously, the `_PAGE_SOFT_DIRTY` flag is not cleared (it's curious because this
+flag _is_ set in [pte_mkdirty()][pte_mkdirty].)
+
+#### Arguments
+
+* `pte` - The PTE entry which we want a copy of with the dirty flag cleared.
+
+#### Returns
+
+A copy of the input PTE entry with the dirty flag cleared.
+
+---
+
+### pmd_mkwrite()
+
+`pmd_t pmd_mkwrite(pmd_t pmd)`
+
+[pmd_mkwrite()][pmd_mkwrite] returns a new [pmd_t][pmd_t] which is identical to
+the specified PMD entry except that the `_PAGE_RW` flag is set, indicating that
+the underlying PTE page can be read from and written to.
+
+#### Arguments
+
+* `pmd` - The PMD entry which we want a copy of with the R/W flag set.
+
+#### Returns
+
+A copy of the input PMD entry with the R/W flag set.
+
+---
+
+### pmd_wrprotect()
+
+`pmd_t pmd_wrprotect(pmd_t pmd)`
+
+[pmd_wrprotect()][pmd_wrprotect] returns a new [pmd_t][pmd_t] which is identical
+to the specified PMD entry except that the `_PAGE_RW` flag is cleared,
+indicating that the underlying PTE page is read-only.
+
+#### Arguments
+
+* `pmd` - The PMD entry which we want a copy of with the R/W flag cleared.
+
+#### Returns
+
+A copy of the input PMD entry with the R/W flag cleared.
+
+---
+
+### pte_mkwrite()
+
+`pte_t pte_mkwrite(pte_t pte)`
+
+[pte_mkwrite()][pte_mkwrite] returns a new [pte_t][pte_t] which is identical to
+the specified PTE entry except that the `_PAGE_RW` flag is set, indicating that
+the underlying physical page can be read from and written to.
+
+#### Arguments
+
+* `pte` - The PTE entry which we want a copy of with the R/W flag set.
+
+#### Returns
+
+A copy of the input PTE entry with the R/W flag set.
+
+---
+
+### pte_wrprotect()
+
+`pte_t pte_wrprotect(pte_t pte)`
+
+[pte_wrprotect()][pte_wrprotect] returns a new [pte_t][pte_t] which is identical to the
+specified PTE entry except that the `_PAGE_RW` flag is cleared, indicating that
+the underlying physical page is read-only.
+
+#### Arguments
+
+* `pte` - The PTE entry which we want a copy of with the R/W flag cleared.
+
+#### Returns
+
+A copy of the input PTE entry with the R/W flag cleared.
+
+---
+
+### pmd_mksoft_dirty()
+
+`pmd_t pmd_mksoft_dirty(pmd_t pmd)`
+
+[pmd_mksoft_dirty()][pmd_mksoft_dirty] returns a new [pmd_t][pmd_t] which is
+identical to the specified PMD entry except that the `_PAGE_SOFT_DIRTY` flag is
+set, indicating that the underlying PTE page has been modified since the
+soft-dirty flag was last set.
+
+The [soft-dirty][soft-dirty] mechanism is a means by which userland processes
+can determine which pages have been modified since these bits were last cleared
+for a specified task via the `/proc/<pid>/clear_refs` and `/proc/<pid>/pagemap`
+files.
+
+It differs from the actual dirty flag as that is used by the kernel for its own
+modified state tracking, rendering it unsuitable for use by userland.
+
+#### Arguments
+
+* `pmd` - The PMD entry which we want a copy of with the soft-dirty flag set.
+
+#### Returns
+
+A copy of the input PMD entry with the soft-dirty flag set.
+
+---
+
+### pmd_clear_soft_dirty()
+
+`pmd_t pmd_clear_soft_dirty(pmd_t pmd)`
+
+[pmd_clear_soft_dirty()][pmd_clear_soft_dirty] returns a new [pmd_t][pmd_t]
+which is identical to the specified PMD entry except that the `_PAGE_SOFT_DIRTY`
+flag is cleared, indicating that the underlying PTE page has not been modified
+since the soft-dirty flag was last set.
+
+The [soft-dirty][soft-dirty] mechanism is a means by which userland processes
+can determine which pages have been modified since these bits were last cleared
+for a specified task via the `/proc/<pid>/clear_refs` and `/proc/<pid>/pagemap`
+files.
+
+It differs from the actual dirty flag as that is used by the kernel for its own
+modified state tracking, rendering it unsuitable for use by userland.
+
+#### Arguments
+
+* `pmd` - The PMD entry which we want a copy of with the soft-dirty flag
+  cleared.
+
+#### Returns
+
+A copy of the input PMD entry with the soft-dirty flag cleared.
+
+---
+
+### pte_mksoft_dirty()
+
+`pte_t pte_mksoft_dirty(pte_t pte)`
+
+[pte_mksoft_dirty()][pte_mksoft_dirty] returns a new [pte_t][pte_t] which is
+identical to the specified PTE entry except that the `_PAGE_SOFT_DIRTY` flag is
+set, indicating that the underlying physical page has been modified since the
+soft-dirty flag was last set.
+
+The [soft-dirty][soft-dirty] mechanism is a means by which userland processes
+can determine which pages have been modified since these bits were last cleared
+for a specified task via the `/proc/<pid>/clear_refs` and `/proc/<pid>/pagemap`
+files.
+
+It differs from the actual dirty flag as that is used by the kernel for its own
+modified state tracking, rendering it unsuitable for use by userland.
+
+#### Arguments
+
+* `pte` - The PTE entry which we want a copy of with the soft-dirty flag set.
+
+#### Returns
+
+A copy of the input PTE entry with the soft-dirty flag set.
+
+---
+
+### pte_clear_soft_dirty()
+
+`pte_t pte_clear_soft_dirty(pte_t pte)`
+
+[pte_clear_soft_dirty()][pte_clear_soft_dirty] returns a new [pte_t][pte_t]
+which is identical to the specified PTE entry except that the `_PAGE_SOFT_DIRTY`
+flag is cleared, indicating that the underlying physical page has not been
+modified since the soft-dirty flag was last set.
+
+The [soft-dirty][soft-dirty] mechanism is a means by which userland processes
+can determine which pages have been modified since these bits were last cleared
+for a specified task via the `/proc/<pid>/clear_refs` and `/proc/<pid>/pagemap`
+files.
+
+It differs from the actual dirty flag as that is used by the kernel for its own
+modified state tracking, rendering it unsuitable for use by userland.
+
+#### Arguments
+
+* `pte` - The PTE entry which we want a copy of with the soft-dirty flag cleared.
+
+#### Returns
+
+A copy of the input PTE entry with the soft-dirty flag cleared.
+
+---
+
+### pmd_mkdevmap()
+
+`pmd_t pmd_mkdevmap(pmd_t pmd)`
+
+[pmd_mkdevmap()][pmd_mkdevmap] returns a new [pmd_t][pmd_t] which is identical
+to the specified PMD entry except that the `_PAGE_DEVMAP` flag is set,
+indicating that the underlying PTE page is used by the
+[device mapping][device-mapper] functionality.
+
+#### Arguments
+
+* `pmd` - The PMD entry which we want a copy of with the dev-map flag set.
+
+#### Returns
+
+A copy of the input PMD entry with the dev-map flag set.
+
+---
+
+### pte_mkdevmap()
+
+`pte_t pte_mkdevmap(pte_t pte)`
+
+[pte_mkdevmap()][pte_mkdevmap] returns a new [pte_t][pte_t] which is identical
+to the specified PTE entry except that the `_PAGE_DEVMAP` flag is set,
+indicating that the underlying physical page is used by the
+[device mapping][device-mapper] functionality.
+
+#### Arguments
+
+* `pte` - The PTE entry which we want a copy of with the dev-map flag set.
+
+#### Returns
+
+A copy of the input PTE entry with the dev-map flag set.
+
+---
+
+### pmd_mknotpresent()
+
+`pmd_t pmd_mknotpresent(pmd_t pmd)`
+
+[pmd_mknotpresent()][pmd_mknotpresent] returns a new [pmd_t][pmd_t] which is
+identical to the specified PMD entry except that the `_PAGE_PRESENT` and
+`_PAGE_PROTNONE` flags are cleared, indicating that the underlying PTE page is
+not resident, not even as a non-readable page.
+
+#### Arguments
+
+* `pmd` - The PMD entry which we want a copy of with the present flags cleared.
+
+#### Returns
+
+A copy of the input PMD entry with the present flags cleared.
+
+---
+
+### pte_mkglobal()
+
+`pte_t pte_mkglobal(pte_t pte)`
+
+[pte_mkglobal()][pte_mkglobal] returns a new [pte_t][pte_t] which is identical
+to the specified PTE entry except that the `_PAGE_GLOBAL` flag is set,
+indicating that the [TLB][tlb] cache entry mapping the PTE's corresponding
+virtual address to the physical page it points at _won't_ be cleared when the
+TLB is flushed, either manually or by a context switch.
+
+This flag is useful for pages which are shared across all processes and are
+regularly accessed.
+
+Once set, TLB flushes caused by a task switch (i.e. assigning a new PGD to the
+`cr3` register) or a call to [__flush_tlb()][__flush_tlb] (which simply reads
+then writes back `cr3`) will not invalidate the global entry.
+
+
+#### Arguments
+
+* `pte` - The PTE entry which we want a copy of with the global flag set.
+
+#### Returns
+
+A copy of the input PTE entry with the global flag set.
+
+---
+
+### pte_clrglobal()
+
+`pte_t pte_clrglobal(pte_t pte)`
+
+[pte_clrglobal()][pte_clrglobal] returns a new [pte_t][pte_t] which is identical
+to the specified PTE entry except that the `_PAGE_GLOBAL` flag is cleared,
+indicating that the [TLB][tlb] cache entry mapping the PTE's corresponding
+virtual address to the physical page it points at ought to be cleared when the
+TLB is flushed, either manually or by a context switch (when the flag is set,
+this does _not_ happen.)
+
+#### Arguments
+
+* `pte` - The PTE entry which we want a copy of with the global flag cleared.
+
+#### Returns
+
+A copy of the input PTE entry with the global flag cleared.
+
+---
+
+### pte_mkexec()
+
+`pte_t pte_mkexec(pte_t pte)`
+
+[pte_mkexec()][pte_mkexec] returns a new [pte_t][pte_t] which is identical to
+the specified PTE entry except that the `_PAGE_NX` flag is cleared, indicating
+that the underlying physical page contains executable code.
+
+#### Arguments
+
+* `pte` - The PTE entry which we want a copy of with the no-execute flag cleared.
+
+#### Returns
+
+A copy of the input PTE entry with the no-execute flag cleared.
+
+---
+
+### pte_mkspecial()
+
+`pmd_t pmd_mkspecial(pmd_t pmd)`
+
+[pmd_mkspecial()][pmd_mkspecial] returns a new [pmd_t][pmd_t] which is identical to
+the specified PMD entry except that the `_PAGE_SPECIAL` flag is set, indicating
+that the underlying PTE page has been marked spcial.
+
+#### Arguments
+
+* `pmd` - The PMD entry which we want a copy of with the special flag set.
+
+#### Returns
+
+A copy of the input PMD entry with the special flag set.
+
+---
+
+### pmd_mkhuge()
+
+`pmd_t pmd_mkhuge(pmd_t pmd)`
+
+[pmd_mkhuge()][pmd_mkhuge] returns a new [pmd_t][pmd_t] which is identical to
+the specified PMD entry except that the `_PAGE_PSE` flag is set, indicating that
+the underlying PTE page is huge.
+
+#### Arguments
+
+* `pmd` - The PMD entry which we want a copy of with the huge flag set.
+
+#### Returns
+
+A copy of the input PMD entry with the huge flag set.
+
+---
+
+### pte_mkhuge()
+
+`pte_t pte_mkhuge(pte_t pte)`
+
+[pte_mkhuge()][pte_mkhuge] returns a new [pte_t][pte_t] which is identical to
+the specified PTE entry except that the `_PAGE_PSE` flag is set, indicating that
+the underlying physical page is huge (i.e. 2MiB in x86-64.)
+
+#### Arguments
+
+* `pte` - The PTE entry which we want a copy of with the huge flag set.
+
+#### Returns
+
+A copy of the input PTE entry with the huge flag set.
+
+---
+
+### pte_clrhuge()
+
+`pte_t pte_clrhuge(pte_t pte)`
+
+[pte_clrhuge()][pte_clrhuge] returns a new [pte_t][pte_t] which is identical to the
+specified PTE entry except that the `_PAGE_PSE` flag is cleared, indicating
+that the underlying physical page is not huge.
+
+#### Arguments
+
+* `pte` - The PTE entry which we want a copy of with the huge flag cleared.
+
+#### Returns
+
+A copy of the input PTE entry with the huge flag cleared.
+
+---
+
 ### virt_addr_valid()
 
 `bool virt_addr_valid(unsigned long kaddr)`
@@ -2834,6 +3435,32 @@ On x86-64 it's as simple as `a.pte == b.pte`.
 [pte_soft_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L336
 [pmd_devmap]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L190
 [pte_devmap]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L497
+[pmd_mkyoung]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L320
+[pmd_mkold]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L290
+[pte_mkyoung]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L236
+[pte_mkold]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L216
+[pmd_mkdirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L305
+[pmd_mkclean]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L295
+[pte_mkdirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L231
+[pte_mkclean]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L211
+[pmd_mkwrite]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L325
+[pmd_wrprotect]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L300
+[pte_mkwrite]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L241
+[pte_wrprotect]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L221
+[pmd_mksoft_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L351
+[pmd_clear_soft_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L361
+[pte_mksoft_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L346
+[pte_clear_soft_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L356
+[pmd_mkdevmap]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L310
+[pte_mkdevmap]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L271
+[pmd_mknotpresent]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L330
+[pte_mkglobal]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L256
+[pte_clrglobal]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L261
+[pte_mkexec]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L226
+[pte_mkspecial]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L266
+[pmd_mkhuge]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L315
+[pte_mkhuge]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L246
+[pte_clrhuge]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L251
 [pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L81
 [__pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L53
 [page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L80
