@@ -68,6 +68,19 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * Maybe add `_PAGE_HIDDEN` stuff - used by kmemcheck.
 
+* The comment at line 93 in `arch/x86/include/asm/pgtable.h` says:
+
+```c
+/*
+ * The following only work if pte_present() is true.
+ * Undefined behaviour if not..
+ */
+```
+
+* The 'following' suggests all functions below it, so the `pte_present()` caveat
+  should probably be added to these flag functions (and possibly just all of
+  them.)
+
 ## Concerns
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
