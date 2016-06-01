@@ -3336,6 +3336,7 @@ On x86-64 it's as simple as `a.pte == b.pte`.
 [pgd_offset]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L714
 [mm_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
 [pgd_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L252
+[pgd_offset_k]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L719
 [pud_offset]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L684
 [pud_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L270
 [pmd_offset]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L639
