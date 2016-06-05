@@ -92,8 +92,8 @@ much as possible between 32 and 64-bit x86.
 
 ```c
 #define PGDIR_SHIFT     39
-#define PMD_SHIFT       21
 #define PUD_SHIFT       30
+#define PMD_SHIFT       21
 
 #define PTRS_PER_PGD    512
 #define PTRS_PER_PUD    512
