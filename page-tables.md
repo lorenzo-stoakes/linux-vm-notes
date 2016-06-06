@@ -435,6 +435,40 @@ out:
   functions), unsuitable for use (`_bad()` functions) and the final PTE being
   swapped out or otherwise unavailable (`pte_present()`.)
 
+## Translating Between Page Table Entries and Physical Page Descriptors
+
+* Each physical page of memory in the system is described by a
+  [struct page][page]. See the [Physical Pages][physical] section for more
+  details on this.
+
+* A number of functions are available for translating between addresses, page
+  table entries and [struct page][page]s, listed over in the [functions][funcs]
+  section. A key one of these is [virt_to_page()][virt_to_page] which translates
+  a virtual kernel address to its corresponding [struct page][page].
+
+* Additionally, page table pages can be retrieved using the `pXX_page()` family
+  of functions - for example, [pgd_page()][pgd_page] retrieves the
+  [struct page][page] describing the PUD entry pointed at by the specified PGD
+  entry.
+
+* Note that as with many page table functions, there is a confusing relation
+  between its name and what is returned - each `pXX_page()` functions returns a
+  reference to the _underlying_ page the specified entry refers to, so
+  [pgd_page()][pgd_page] returns a [struct page][page] describing a PUD page,
+  [pud_page()][pud_page] returns a [struct page][page] describing a PMD page,
+  [pmd_page()][pmd_page] returns a [struct page][page] describing a PTE page,
+  and finally [pte_page()][pte_page] returns a [struct page][page] describing
+  the ultimate physical page the overall page table hierarchy refers to.
+
+* [struct page][page]s can be translated back to a physical address via
+  [page_to_phys()][page_to_phys], or via [page_to_pfn()][page_to_pfn], which
+  returns a Page Frame Number (PFN.) If you imagine a contiguous array of
+  [struct page][page]s, the PFN would be the index of a given page in that
+  array. We can therefore simply translate from a physical address to a PFN by
+  shifting right by [PAGE_SHIFT][PAGE_SHIFT], or vice-versa by shifting left.
+
+
+
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
 [virtual-memory]:https://en.wikipedia.org/wiki/Virtual_memory
@@ -486,4 +520,14 @@ out:
 [PAGE_SIZE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L9
 [__follow_pte]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3594
 
+[page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
+[virt_to_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L63
+[pgd_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L676
+[pud_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L635
+[pmd_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L566
+[pte_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L171
+[page_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L144
+[page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L80
+
 [funcs]:./funcs.md
+[physical]:./physical.md
