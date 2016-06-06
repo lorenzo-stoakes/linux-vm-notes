@@ -425,7 +425,7 @@ out:
 }
 ```
 
-* The [functions][funcs] page contains detailed descriptions of each of the
+* The [functions][funcs] section contains detailed descriptions of each of the
   functions used here. Note that the `_offset()` functions are confusingly
   named - they actually provide the virtual address of the required page table
   entry which contains the physical address of either the page table or the
