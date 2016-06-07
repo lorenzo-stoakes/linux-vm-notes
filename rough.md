@@ -53,11 +53,6 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * Expand page flags list to be more exhaustive.
 
-* Stupid question - does the global page flag cause a page mapping to remain in
-  the TLB at _all_ times, not even being evicted due to not being used? I
-  strongly suspect not, I suspect it just prevents flushes but not 'aging out'
-  of the cache. But worth checking.
-
 * Examine the wonders of `include/linux/pfn_t.h` - Seems to be a specific PFN
   type with flag bitfields added in.
 
