@@ -568,6 +568,7 @@ out:
 [context-switch]:https://en.wikipedia.org/wiki/Context_switch
 [flush_tlb_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L293
 [doc-tlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/tlb.txt
+[xen]:https://en.wikipedia.org/wiki/Xen
 
 [funcs]:./funcs.md
 [physical]:./physical.md
