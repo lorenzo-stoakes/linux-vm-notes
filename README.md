@@ -10,8 +10,10 @@
 
 ### Incomplete
 
-2. [Page Tables](page-tables.md) - Discussion about how
-   [page tables][page-table] are implemented in linux.
+2. [Page Tables](page-tables.md) - Discussion about what
+   [page tables][page-table] are, how they are used in linux, how they fit in
+   the 64-bit address space, how they are manually traversed, the TLB and
+   finally how page tables are allocated and freed.
 
 ### (Virtually-)Empty
 
