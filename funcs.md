@@ -2404,7 +2404,8 @@ then writes back `cr3`) will not invalidate the global entry.
 
 If you want to finally invalidate such an entry, a call to
 [__flush_tlb_global()][__flush_tlb_global] and subsequently
-[invpcid_flush_all()][invpcid_flush_all] is required.
+[invpcid_flush_all()][invpcid_flush_all] is required (this will most likely be
+via [flush_tlb_all()][flush_tlb_all].)
 
 #### Arguments
 
@@ -3488,3 +3489,13 @@ On x86-64 it's as simple as `a.pte == b.pte`.
 [__virt_addr_valid]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/physaddr.c#L86
 [pfn_valid]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1140
 [pte_same]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L486
+
+[flush_tlb]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L305
+[flush_tlb_current_task]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L163
+[flush_tlb_all]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L280
+[flush_tlb_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L293
+[flush_tlb_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L245
+[flush_tlb_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L295
+[flush_tlb_mm_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L192
+[flush_tlb_kernel_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L296
+[flush_tlb_others]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L323
