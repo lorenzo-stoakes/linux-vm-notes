@@ -2399,8 +2399,8 @@ This flag is useful for pages which are shared across all processes and are
 regularly accessed.
 
 Once set, TLB flushes caused by a task switch (i.e. assigning a new PGD to the
-`cr3` register) or a call to [__flush_tlb()][__flush_tlb] (which simply reads
-then writes back `cr3`) will not invalidate the global entry.
+`cr3` register) or a call to [flush_tlb()][flush_tlb] will not invalidate the
+global entry.
 
 If you want to finally invalidate such an entry, a call to
 [__flush_tlb_global()][__flush_tlb_global] and subsequently
