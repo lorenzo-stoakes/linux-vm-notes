@@ -468,6 +468,38 @@ out:
   array. We can therefore simply translate from a physical address to a PFN by
   shifting right by [PAGE_SHIFT][PAGE_SHIFT], or vice-versa by shifting left.
 
+## Translation Lookaside Buffer (TLB)
+
+* The traversal of the page table hierarchy described here is performed
+  automatically by the CPU each time a virtual address is referenced (and since,
+  when paging is enabled, _every_ address is virtual these really translates as
+  'an address is referenced') but only after the
+  [Translation Lookaside Buffer (TLB)][tlb] is consulted to see if the virtual
+  to physical address mapping isn't already cached there.
+
+* So, in essence, the TLB is simply a cache designed to avoid as much as
+  possible the expensive operation of walking the page tables to translate a
+  virtual address to a physical one.
+
+* As mentioned previously, every time a [context switch][context-switch] occurs,
+  which on x86 means the `cr3` register is written to to point at a different
+  PGD, the TLB is flushed except for pages marked `_PAGE_GLOBAL` (shared kernel
+  mappings are marked this way.) This makes sense, as the majority of different
+  processes' non-kernel mappings will be entirely different and maintaining a
+  TLB cache for this makes no sense.
+
+* The TLB can also be flushed manually via a number of [functions][funcs], for
+  example [flush_tlb_mm()][flush_tlb_mm] will flush the TLB entries for the
+  specified [struct mm_struct][mm_struct].
+
+* The finer grained `invlpg` instruction on 486+ x86 CPUs allows for the
+  invalidation of individual page mappings, which makes sense when a partial
+  flush is required, however if a full flush is needed, this can simply be
+  achieved by reading then writing the `cr3` register.
+
+* The trade-off between `invlpg` and a full flush is discussed in the
+  [Documentation/x86/tlb.txt][doc-tlb] file.
+
 
 
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
@@ -529,6 +561,10 @@ out:
 [pte_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L171
 [page_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L144
 [page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L80
+
+[context-switch]:https://en.wikipedia.org/wiki/Context_switch
+[flush_tlb_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L293
+[doc-tlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/tlb.txt
 
 [funcs]:./funcs.md
 [physical]:./physical.md
