@@ -377,7 +377,8 @@ PTE_FLAGS_MASK = ~PTE_PFN_MASK =
   process has its PGD configured with these included - this way switching
   between kernel and user mode is a lot less costly - no need for TLB flushes
   and PGD switching. The mappings are protected from unauthorised userland usage
-  by simply clearing the `_PAGE_USER` flag.
+  by simply clearing the `_PAGE_USER` flag. These mappings are marked with
+  `_PAGE_GLOBAL` so TLB flushes do not invalidate them.
 
 ## Traversing Page Tables
 
