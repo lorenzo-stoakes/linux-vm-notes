@@ -500,6 +500,9 @@ out:
 * The trade-off between `invlpg` and a full flush is discussed in the
   [Documentation/x86/tlb.txt][doc-tlb] file.
 
+* Where paravirtualisation is in effect, e.g. when running [xen][xen], TLB
+  flushing performs a hypervisor call rather than actually attempting to flush
+  the TLB natively.
 
 
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
