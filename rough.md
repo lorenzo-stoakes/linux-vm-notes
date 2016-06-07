@@ -43,11 +43,6 @@ pmd_large -> pse         pmd_huge -> pse/not present
   Some fine-grained caching stuff going on there, cover. Also PCD (Page-level
   Cache Disable) and PWT (Page-level Write-Through) flags.
 
-* Carefully check whether the `_PAGE_PSE` flag in a PUD or PMD means that the
-  entry refers to the final physical page, or whether it indicates the next
-  level page table page is larger. I very strongly believe the former is the
-  case, but need to investigate to be sure.
-
 * Confirm that, by default, accessed and dirty flags are cleared in memory
   pages.
 
