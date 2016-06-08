@@ -41,7 +41,7 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * [Page Attribute Table (PAT)][pat]? [Memory type range register (MTRR)][mtrr]?
   Some fine-grained caching stuff going on there, cover. Also PCD (Page-level
-  Cache Disable) and PWT (Page-level Write-Through) flags.
+  Cache Disable) and PWT (Page-level Write-Through) flags. PCID seems related?
 
 * Confirm that, by default, accessed and dirty flags are cleared in memory
   pages.
