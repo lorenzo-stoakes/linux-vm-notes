@@ -504,6 +504,12 @@ out:
   flushing performs a hypervisor call rather than actually attempting to flush
   the TLB natively.
 
+* Since each individual CPU can run a different process, the TLB is maintained
+  per-CPU. The manual TLB flush functions take this into account by flushing all
+  CPUs that use the specified [struct mm_struct][mm_struct], and in the case of
+  full flushes these are performed on all CPUs via
+  [Inter-Processor Interrupts (IPI)][ipi].
+
 * The cost of a TLB miss is between 10-100 clock cycles, with a miss rate of
   around 0.1-1% (ref: [wikipedia article][tlb].)
 
@@ -611,6 +617,7 @@ context_switch(struct rq *rq, struct task_struct *prev,
 [flush_tlb_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L293
 [doc-tlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/tlb.txt
 [xen]:https://en.wikipedia.org/wiki/Xen
+[ipi]:https://en.wikipedia.org/wiki/Inter-processor_interrupt
 [task_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L1394
 [context_switch-lazytlb]:https://github.com/torvalds/linux/blob/v4.6/kernel/sched/core.c#L2731
 [swapper_pg_dir]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64.h#L25
