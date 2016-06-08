@@ -515,14 +515,14 @@ out:
 
 ### Lazy TLB
 
-* Kernel processes do not have their own [struct mm_struct][mm_struct]
-  descriptor as they do not have their own set of address mappings (i.e. their
+* Kernel threads do not have their own [struct mm_struct][mm_struct] descriptor
+  as they do not have their own set of address mappings (i.e. their
   [struct task_struct][task_struct]`->mm` field is `NULL`.)
 
-* To efficiently gain access to kernel mappings when a kernel process is
-  switched to by the scheduler, the previous process's
-  [struct mm_struct][mm_struct] is assigned to the `active_mm` field, and the
-  PGD is _not_ swapped (from [kernel/sched/core.c][context_switch-lazytlb]:)
+* To efficiently gain access to kernel mappings when a kernel thread is switched
+  to by the scheduler, the previous process's [struct mm_struct][mm_struct] is
+  assigned to the `active_mm` field, and the PGD is _not_ swapped (from
+  [kernel/sched/core.c][context_switch-lazytlb]:)
 
 ```c
 static __always_inline struct rq *
@@ -545,7 +545,7 @@ context_switch(struct rq *rq, struct task_struct *prev,
 * Consequently, no TLB flush occurs. This is called 'lazy TLB' as we avoid an
   expensive TLB flush operation on this context switch. We need to have access
   to the [struct mm_struct][mm_struct] we're using, regardless of the kernel
-  process rightly not having its `->mm` task field set, so we use `active_mm` to
+  thread rightly not having its `->mm` task field set, so we use `active_mm` to
   keep a track of this.
 
 * Any attempt at a manual TLB flush results in [swapper_pg_dir][swapper_pg_dir],
