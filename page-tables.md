@@ -504,6 +504,48 @@ out:
   flushing performs a hypervisor call rather than actually attempting to flush
   the TLB natively.
 
+* The cost of a TLB miss is between 10-100 clock cycles, with a miss rate of
+  around 0.1-1% (ref: [wikipedia article][tlb].)
+
+### Lazy TLB
+
+* Kernel processes do not have their own [struct mm_struct][mm_struct]
+  descriptor as they do not have their own set of address mappings (i.e. their
+  [struct task_struct][task_struct]`->mm` field is `NULL`.)
+
+* To efficiently gain access to kernel mappings when a kernel process is
+  switched to by the scheduler, the previous process's
+  [struct mm_struct][mm_struct] is assigned to the `active_mm` field, and the
+  PGD is _not_ swapped (from [kernel/sched/core.c][context_switch-lazytlb]:)
+
+```c
+static __always_inline struct rq *
+context_switch(struct rq *rq, struct task_struct *prev,
+               struct task_struct *next)
+{
+        ...
+
+        if (!mm) {
+                next->active_mm = oldmm;
+                atomic_inc(&oldmm->mm_count);
+                enter_lazy_tlb(oldmm, next);
+        } else
+                switch_mm(oldmm, mm, next);
+
+        ...
+}
+```
+
+* Consequently, no TLB flush occurs. This is called 'lazy TLB' as we avoid an
+  expensive TLB flush operation on this context switch. We need to have access
+  to the [struct mm_struct][mm_struct] we're using, regardless of the kernel
+  process rightly not having its `->mm` task field set, so we use `active_mm` to
+  keep a track of this.
+
+* Any attempt at a manual TLB flush results in [swapper_pg_dir][swapper_pg_dir],
+  the static kernel mappings only PGD initialised at boot, being set as the
+  process's PGD via [leave_mm()][leave_mm]. At this point the 'lazy' TLB is
+  forced into action :)
 
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
 
@@ -569,6 +611,10 @@ out:
 [flush_tlb_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L293
 [doc-tlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/tlb.txt
 [xen]:https://en.wikipedia.org/wiki/Xen
+[task_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L1394
+[context_switch-lazytlb]:https://github.com/torvalds/linux/blob/v4.6/kernel/sched/core.c#L2731
+[swapper_pg_dir]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64.h#L25
+[leave_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L41
 
 [funcs]:./funcs.md
 [physical]:./physical.md
