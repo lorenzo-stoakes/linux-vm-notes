@@ -30,6 +30,8 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 ## TODO general
 
+* Cover `switch_mm()` etc.
+
 * Fixup link to vmalloc in [functions](./funcs.md) page from being a link to
   http://www.makelinux.net/books/lkd2/ch11lev1sec5 to a local description once
   it's written.
