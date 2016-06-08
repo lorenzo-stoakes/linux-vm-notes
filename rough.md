@@ -77,6 +77,14 @@ pmd_large -> pse         pmd_huge -> pse/not present
 * Be consistent with discussion of 'user-defined' flags in `mk/clr` functions
   too.
 
+* `preempt_disable/enable()` appears to simply call `barrier()` on x86 rather
+  than actually doing anything to prevent preemption, why?!
+
+* Weird that [flush_tlb_kernel_range()][flush_tlb_kernel_range] flushes
+  individual pages given kernel mappings are marked `_PAGE_GLOBAL` (and afaict
+  an `invlpg` instruction does not override this), seems mostly used by vmalloc
+  stuff, maybe those pages aren't marked global?
+
 ## Concerns
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
@@ -92,3 +100,4 @@ pmd_large -> pse         pmd_huge -> pse/not present
 [pat]:https://en.wikipedia.org/wiki/Page_attribute_table
 [mtrr]:https://en.wikipedia.org/wiki/Memory_type_range_register
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
+[flush_tlb_kernel_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L296
