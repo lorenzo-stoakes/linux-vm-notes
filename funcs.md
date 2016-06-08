@@ -3886,10 +3886,12 @@ N/A
 [leave_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L41
 [__flush_tlb_one]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L190
 [__flush_tlb_single]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L64
+[xen]:https://en.wikipedia.org/wiki/Xen
 [__native_flush_tlb_single]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L177
 [vm_area_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L294
 [flush_tlb_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L295
 [flush_tlb_mm_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L192
+[task_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L1394
 [tlb_single_page_flush_ceiling]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L190
 [tlb.txt]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/tlb.txt
 [flush_tlb_kernel_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L296
