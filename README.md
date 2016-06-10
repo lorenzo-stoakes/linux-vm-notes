@@ -91,13 +91,13 @@ do what you want with them as long as you:
 
 Take a look at the official Creative Commons site if you need more details.
 
-[linux-4.6]:https://github.com/torvalds/linux/tree/v4.6
-[page-table]:https://en.wikipedia.org/wiki/Page_table
-[numa]:https://en.wikipedia.org/wiki/Non-uniform_memory_access
-[linux-gorman]:https://github.com/lorenzo-stoakes/linux-gorman-book-notes
 [amazon-gorman]:http://www.amazon.co.uk/Understanding-Virtual-Memory-Manager-Perens/dp/0131453483
 [gorman]:http://www.csn.ul.ie/~mel/blog/
-[vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
-[memutils]:https://github.com/lorenzo-stoakes/memutils
 [kernel-scripts]:https://github.com/lorenzo-stoakes/kernel-scripts
 [license]:http://creativecommons.org/licenses/by-nc-sa/4.0/
+[linux-4.6]:https://github.com/torvalds/linux/tree/v4.6
+[linux-gorman]:https://github.com/lorenzo-stoakes/linux-gorman-book-notes
+[memutils]:https://github.com/lorenzo-stoakes/memutils
+[numa]:https://en.wikipedia.org/wiki/Non-uniform_memory_access
+[page-table]:https://en.wikipedia.org/wiki/Page_table
+[vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks

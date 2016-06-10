@@ -97,9 +97,9 @@ pmd_large -> pse         pmd_huge -> pse/not present
   descriptions accordingly.
 
 [PFN_PHYS]:https://github.com/torvalds/linux/blob/v4.6/include/linux/pfn.h#L20
-[pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
-[mem_section]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1040
-[pat]:https://en.wikipedia.org/wiki/Page_attribute_table
-[mtrr]:https://en.wikipedia.org/wiki/Memory_type_range_register
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
 [flush_tlb_kernel_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L296
+[mem_section]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1040
+[mtrr]:https://en.wikipedia.org/wiki/Memory_type_range_register
+[pat]:https://en.wikipedia.org/wiki/Page_attribute_table
+[pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
