@@ -41,8 +41,7 @@
   assume this is the only system in existence.
 
 * I am stupid and constantly make mistakes. Don't take what I say to be
-  correct - check everything. I'm keeping track of the 'certainty level' of each
-  document which should act as some kind of guide.
+  correct - check everything.
 
 * Arsenal will win the league at some point in the future.
 

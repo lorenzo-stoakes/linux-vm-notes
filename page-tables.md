@@ -1,11 +1,5 @@
 # Page Tables
 
-__Certainty Level:__ Moderate, very early in development, but this is pretty
-fundamental stuff.
-
-__Architecture:__ These notes assume an x86-64 UMA system unless otherwise
-specified. [Linux 4.6][linux-4.6] is always targeted.
-
 ## Introduction
 
 * [Virtual memory][virtual-memory], used by the majority of modern operating

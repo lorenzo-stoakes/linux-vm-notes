@@ -1,11 +1,5 @@
 # Fundamentals
 
-__Certainty Level:__ Moderate, very early in development but these are pretty,
-well, fundamental facts and I've checked them reasonably well.
-
-__Architecture:__ These notes assume an x86-64 UMA system unless otherwise
-specified.
-
 ## Basics
 
 * In this section I go over some fundamental principles without referencing any
