@@ -547,8 +547,6 @@ context_switch(struct rq *rq, struct task_struct *prev,
   process's PGD via [leave_mm()][leave_mm]. At this point the 'lazy' TLB is
   forced into action :)
 
-[linux-4.6]:https://github.com/torvalds/linux/tree/v4.6/
-
 [virtual-memory]:https://en.wikipedia.org/wiki/Virtual_memory
 [mmu]:https://en.wikipedia.org/wiki/Memory_management_unit
 [ring]:https://en.wikipedia.org/wiki/Protection_ring
