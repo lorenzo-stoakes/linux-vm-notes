@@ -50,11 +50,11 @@ excellent [Understanding the Linux Virtual Memory Manager][amazon-gorman] by
 2003.) The the obvious next stage of study was to take notes for a recent
 kernel, which is what these notes are!
 
-I am specifically targeting the 4.6 kernel since it is the (almost-)current
-mainline version at the time of writing and should remain a sane and stable
-basis for notes and hacks for the foreseeable future. I may update to newer
-kernel versions over time depending on whether it makes sense to do so (and if I
-succeed at this project of course!)
+I am specifically targeting the 4.6 kernel since it was the mainline version at
+the time of writing and should remain a sane and stable basis for notes and
+hacks for the foreseeable future. I may update to newer kernel versions over
+time depending on whether it makes sense to do so (and if I succeed at this
+project of course!)
 
 ## Hacks
 
