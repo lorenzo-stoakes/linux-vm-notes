@@ -58,7 +58,7 @@ project of course!)
 
 ## Hacks
 
-Talking of hacks, `linux-vm-notes`'s sister repo, [linux-vm-hacks][vm-hacks], is
+Speaking of hacks `linux-vm-notes`'s sister repo, [linux-vm-hacks][vm-hacks], is
 where I'm putting exploratory code and patches relating to my exploration of the
 VM subsystem.
 
