@@ -16,16 +16,16 @@
 4. [Process Address Space](process.md) - Discussion about virtual memory address
    space for processes - managing VMAs, process data structure
    construction/destruction, file/device-backed memory regions, page faulting,
-   demand allocation, COW pages, copying to/from userland. __INCOMPLETE__
+   demand allocation, COW pages, copying to/from userland. __EMPTY__
 
 5. [Buddy Allocator](buddy.md) - Discussion about the fundamental underlying
-   physical memory allocator. __INCOMPLETE__
+   physical memory allocator. __EMPTY__
 
 6. [SLUB Allocator](slub.md) - Discussion about the default object
-   allocator. __INCOMPLETE__
+   allocator. __EMPTY__
 
 7. [Out of Memory Killer](oom.md) - Discussion about the OOM
-   killer. __INCOMPLETE__
+   killer. __EMPTY__
 
 ### Functions
 
