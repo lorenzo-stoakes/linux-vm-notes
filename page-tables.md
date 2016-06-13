@@ -547,10 +547,8 @@ context_switch(struct rq *rq, struct task_struct *prev,
   process's PGD via [leave_mm()][leave_mm]. At this point the 'lazy' TLB is
   forced into action :)
 
-[PAGE_MASK]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L10
 [PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L35
 [PAGE_SHIFT]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L8
-[PAGE_SIZE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L9
 [PGDIR_SHIFT]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L27
 [PMD_SHIFT]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L40
 [PTE_FLAGS_MASK]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L248

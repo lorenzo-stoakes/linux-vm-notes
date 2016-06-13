@@ -713,7 +713,6 @@ N/A
 [leave_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L41
 [local_flush_tlb]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L291
 [mm_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
-[page-table]:https://en.wikipedia.org/wiki/Page_table
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
 [page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L80
 [page_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L144

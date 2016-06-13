@@ -96,7 +96,6 @@ pmd_large -> pse         pmd_huge -> pse/not present
   PMD does refer to a page this way, I will need to modify the function
   descriptions accordingly.
 
-[PFN_PHYS]:https://github.com/torvalds/linux/blob/v4.6/include/linux/pfn.h#L20
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
 [flush_tlb_kernel_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L296
 [mem_section]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1040
