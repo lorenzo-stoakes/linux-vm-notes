@@ -1,4 +1,4 @@
-# VM Functions
+# General Functions
 
 ## Contents
 
