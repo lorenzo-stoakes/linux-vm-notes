@@ -29,7 +29,7 @@ __NOTE:__ I target [linux 4.6][linux-4.6] and an x86-64 non-[NUMA][numa] system.
 7. [Out of Memory Killer](oom.md) - Discussion about the OOM
    killer. __EMPTY__
 
-### Functions
+### Function Cheat Sheets
 
 These pages list useful VM functions with a reasonably detailed description of
 each function, their arguments, return value and a link to the function
