@@ -1117,8 +1117,23 @@ specified flags.
 systems it is as simple as this, for other x86 variants there is additional
 complexity.
 
-Kernel mappings are copied into the PGD via [pgd_ctor()][pgd_ctor] once the page
-has been allocated.
+The allocation uses the [PGALLOC_GFP][PGALLOC_GFP] 'Get Free Page' (GFP)
+bitfield which uses the usual kernel `GFP_KERNEL` bitset, as well as:
+
+* `__GFP_NOTRACK` - Avoid tracking with kmemcheck.
+* `__GFP_REPEAT` - Try hard to allocate the memory.
+* `__GFP_ZERO` - Zero the page.
+
+Once the page is allocated, [pgd_ctor()][pgd_ctor] is called to perform a few
+tasks:
+
+1. kernel mappings are copied into the PGD via
+   [clone_pgd_range()][clone_pgd_range].
+2. The underlying [struct page][page] associated with the PGD has its `index`
+   field set to the [struct mm_struct][mm_struct]'s virtual address via
+   [pgd_set_mm()][pgd_set_mm].
+3. The [struct page][page] is added to the `pgd_list` list via
+   [pgd_list_add()][pgd_list_add].
 
 #### Arguments
 
@@ -3029,6 +3044,7 @@ A copy of the input PTE entry with the huge flag cleared.
 ---
 
 [CONFIG_HIGHPTE]:http://cateee.net/lkddb/web-lkddb/HIGHPTE.html
+[PGALLOC_GFP]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L9
 [PTRS_PER_PGD]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L28
 [PTRS_PER_PMD]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L41
 [PTRS_PER_PTE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L46
@@ -3045,10 +3061,12 @@ A copy of the input PTE entry with the huge flag cleared.
 [__pud/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L540
 [__pud]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L78
 [_pgd_alloc]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L343
+[_pgd_free]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L348
 [amazon-gorman]:http://www.amazon.co.uk/Understanding-Virtual-Memory-Manager-Perens/dp/0131453483
 [arm64-stackoverflow]:http://stackoverflow.com/a/37433195/6380063
 [bitmask]:https://en.wikipedia.org/wiki/Mask_(computing)
 [canon_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L431
+[clone_pgd_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L879
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
 [flush_tlb_all]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L280
 [high-memory]:https://en.wikipedia.org/wiki/High_memory
@@ -3074,14 +3092,18 @@ A copy of the input PTE entry with the huge flag cleared.
 [pgd_bad]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L689
 [pgd_ctor]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L116
 [pgd_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L264
+[pgd_free]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L394
 [pgd_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L708
 [pgd_large]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64.h#L130
+[pgd_list_add]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L87
+[pgd_list_del]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L94
 [pgd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L694
 [pgd_offset]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L714
 [pgd_offset_k]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L719
 [pgd_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L676
 [pgd_page_vaddr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L667
 [pgd_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L662
+[pgd_set_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L105
 [pgd_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L252
 [pgd_val/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L421
 [pgd_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L73
