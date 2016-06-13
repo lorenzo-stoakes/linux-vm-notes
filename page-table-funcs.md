@@ -308,7 +308,7 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pte_clrhuge()](#pte_clrhuge) - Returns a new copy of the specified PTE entry
   with the huge page flag cleared.
 
-## Page Tables
+---
 
 ### pgd_offset()
 
