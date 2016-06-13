@@ -3006,8 +3006,6 @@ A copy of the input PTE entry with the huge flag cleared.
 [PTRS_PER_PTE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L46
 [PTRS_PER_PUD]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L34
 [__flush_tlb_global]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L63
-[__page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L54
-[__pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L53
 [__pgd/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L407
 [__pgd]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L74
 [__pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L363
@@ -3017,12 +3015,12 @@ A copy of the input PTE entry with the huge flag cleared.
 [__pte]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L87
 [__pud/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L540
 [__pud]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L78
-[__virt_addr_valid]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/physaddr.c#L86
 [amazon-gorman]:http://www.amazon.co.uk/Understanding-Virtual-Memory-Manager-Perens/dp/0131453483
 [arm64-stackoverflow]:http://stackoverflow.com/a/37433195/6380063
 [bitmask]:https://en.wikipedia.org/wiki/Mask_(computing)
 [canon_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L431
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
+[flush_tlb_all]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L280
 [high-memory]:https://en.wikipedia.org/wiki/High_memory
 [hugetlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/hugetlbpage.txt
 [invpcid_flush_all]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L48
@@ -3039,12 +3037,9 @@ A copy of the input PTE entry with the huge flag cleared.
 [native_pud_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L277
 [nx-bit]:https://en.wikipedia.org/wiki/NX_bit
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
-[page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L80
 [paravirtualisation]:https://en.wikipedia.org/wiki/Paravirtualization
 [pfn_pmd]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L388
 [pfn_pte]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L382
-[pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L81
-[pfn_valid]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1140
 [pgd_bad]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L689
 [pgd_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L264
 [pgd_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L708
@@ -3130,7 +3125,6 @@ A copy of the input PTE entry with the huge flag cleared.
 [pte_pfn]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L156
 [pte_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L427
 [pte_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L491
-[pte_same]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L486
 [pte_set_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L197
 [pte_soft_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L336
 [pte_special]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L151
@@ -3164,5 +3158,3 @@ A copy of the input PTE entry with the huge flag cleared.
 [split_huge_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/huge_mm.h#L92
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
-[virt_addr_valid]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L66
-[vmalloc]:http://www.makelinux.net/books/lkd2/ch11lev1sec5
