@@ -41,27 +41,26 @@ code:
 
 ## Introduction
 
-This repo contains my notes on the linux 4.6 VM subsystem. I don't make any claim
-to their quality or usefulness :)
+This repo contains my notes on the linux 4.6 VM subsystem. I don't make any
+claim to their quality or usefulness.
 
 This work first originated from the [notes][linux-gorman] I took from the
 excellent [Understanding the Linux Virtual Memory Manager][amazon-gorman] by
-[Mel Gorman][gorman] which, while great, target the 2.4.22 kernel which was
-released in 2003, somewhat out of date, the obvious next stage of study was to
-do something similar for a recent kernel.
+[Mel Gorman][gorman] which, while great, targets the 2.4.22 kernel (released in
+2003.) The the obvious next stage of study was to take notes for a recent
+kernel, which is what these notes are!
 
 I am specifically targeting the 4.6 kernel since it is the (almost-)current
 mainline version at the time of writing and should remain a sane and stable
-basis for notes and hacks for the foreseeable future.
-
-I may update to newer kernel versions over time depending on whether it makes
-sense to do so (and if I succeed at this project of course!)
+basis for notes and hacks for the foreseeable future. I may update to newer
+kernel versions over time depending on whether it makes sense to do so (and if I
+succeed at this project of course!)
 
 ## Hacks
 
-Talking of hacks, the sister repo to this one - [linux-vm-hacks][vm-hacks] - is
-where I'm keeping code and patches intended to help me understand the VM
-subsystem.
+Talking of hacks, `linux-vm-notes`'s sister repo, [linux-vm-hacks][vm-hacks], is
+where I'm putting exploratory code and patches relating to my exploration of the
+VM subsystem.
 
 ## Utilities
 
