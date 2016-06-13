@@ -89,6 +89,8 @@ flags masks respectively.
 
 * [pgd_alloc()](#pgd_alloc) - Allocates a new PGD page for the specified
   [struct mm_struct][mm_struct].
+* [pgd_free()](#pgd_free) - Frees the specified [struct mm_struct][mm_struct]'s
+  specified PGD page.
 
 ### Retrieving Page Table Entry Indexes
 
@@ -1143,6 +1145,31 @@ tasks:
 
 A pointer to the physical page containing an array of `PTRS_PER_PGD`
 [pgd_t][pgd_t]s.
+
+---
+
+### pgd_free()
+
+`void pgd_free(struct mm_struct *mm, pgd_t *pgd)`
+
+[pgd_free()][pgd_free] frees the specified PGD page from the specified
+[struct mm_struct][mm_struct].
+
+It starts by calling [pgd_dtor()][pgd_dtor] which removes the underlying
+[struct page][page] from the `pgd_list` via [pgd_list_del()][pgd_list_del].
+
+[_pgd_free()][_pgd_free] then performs the actual freeing of the PGD page via
+[free_page()][free_page].
+
+#### Arguments
+
+* `mm` - The [struct mm_struct][mm_struct] whose PGD needs freeing.
+
+* `pgd` - The PGD page which is to be freed.
+
+#### Returns
+
+N/A
 
 ---
 
@@ -3069,6 +3096,7 @@ A copy of the input PTE entry with the huge flag cleared.
 [clone_pgd_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L879
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
 [flush_tlb_all]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L280
+[free_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/gfp.h#L520
 [high-memory]:https://en.wikipedia.org/wiki/High_memory
 [hugetlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/hugetlbpage.txt
 [invpcid_flush_all]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L48
@@ -3091,6 +3119,7 @@ A copy of the input PTE entry with the huge flag cleared.
 [pgd_alloc]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L354
 [pgd_bad]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L689
 [pgd_ctor]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L116
+[pgd_dtor]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L136
 [pgd_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L264
 [pgd_free]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L394
 [pgd_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L708
