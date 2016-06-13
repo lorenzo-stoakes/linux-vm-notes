@@ -2,7 +2,7 @@
 
 ## Contents
 
-## Page Tables
+### Page Tables
 
 [Page Table Functions](./page-tables-funcs.md) - Functions relating to
 [page tables][page-table].
