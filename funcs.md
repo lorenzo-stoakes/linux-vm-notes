@@ -47,7 +47,7 @@
 * [flush_tlb_others()](#flush_tlb_others) - Flushes a range of
   [struct mm_struct][mm_struct]'s [TLB][tlb] entries on other CPUs.
 
-## Address Translation
+---
 
 ### phys_to_virt()
 
@@ -314,7 +314,7 @@ On x86-64 it's as simple as `a.pte == b.pte`.
 
 1 if the PTE entries' physical address and flags are the same, 0 if not.
 
-## TLB
+---
 
 ### flush_tlb()
 
