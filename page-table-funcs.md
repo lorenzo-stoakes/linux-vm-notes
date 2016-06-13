@@ -62,7 +62,7 @@ flags masks respectively.
 * [pmd_flags_mask()](#pmd_flags_mask) - Returns a [bitmask][bitmask] for
   obtaining a PMD entry's flags.
 
-#### Creating Page Table Entries
+### Creating Page Table Entries
 
 * [native_make_pgd()](#native_make_pgd) - Converts the specified
   [pgdval_t][pgdval_t] into a [pgd_t][pgd_t].
@@ -85,7 +85,7 @@ flags masks respectively.
 * [pfn_pte()](#pfn_pte) - Creates a PTE entry pointing at the specified PFN with
   the specified flags.
 
-#### Retrieving Page Table Entry Indexes
+### Retrieving Page Table Entry Indexes
 
 * [pgd_index()](#pgd_index) - Gets the index of the specified virtual address's
   PGD entry within its PGD.
@@ -96,7 +96,7 @@ flags masks respectively.
 * [pte_index()](#pte_index) - Gets the index of the specified virtual address's
   PTE entry within its PTE directory.
 
-#### Retrieving Pages
+### Retrieving Pages
 
 __NOTE:__ Confusingly, `pXX_page[_vaddr]()` deals with the pointed at entry, so
 e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
@@ -116,7 +116,7 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 * [pte_page()](#pte_page) - Gets the virtual address of the [struct page][page]
   describing the page pointed to by the specified PTE entry.
 
-#### Page Table Entry State
+### Page Table Entry State
 
 * [pgd_none()](#pgd_none) - Determines if the specified PGD entry is empty.
 * [pud_none()](#pud_none) - Determines if the specified PUD entry is empty.
@@ -129,7 +129,7 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 * [pmd_bad()](#pmd_bad) - Determines if the specified PMD entry or its
   descendants are not in a safe state to be modified.
 
-#### Retrieving Flag Bitfields
+### Retrieving Flag Bitfields
 
 * [pgd_flags()](#pgd_flags) - Retrieves bitfield containing the specified PGD
   entry's flags.
@@ -146,7 +146,7 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 * [pte_pgprot()](#pte_pgprot) - Retrieves bitfield containing the specified PTE
   entry's flags wrapped in a [pgprot_t][pgprot_t].
 
-#### Creating Flag Bitfields
+### Creating Flag Bitfields
 
 * [__pgprot()](#__pgprot) - Converts the specified [pgprotval_t][pgprotval_t]
   into a [pgprot_t][pgprot_t].
@@ -155,7 +155,7 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 * [canon_pgprot()](#canon_pgprot) -  Masks the specified [pgprot_t][pgprot_t]
   fields against all possible flags, returns [pgprot_t][pgprot_t].
 
-#### Setting/Clearing Flag Bitfields
+### Setting/Clearing Flag Bitfields
 
 * [pmd_set_flags()](#pmd_set_flags) - Returns a new copy of a PMD with the
   specified bitfield appended to its flag bitfield.
@@ -166,7 +166,7 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 * [pte_clear_flags()](#pte_clear_flags) - Returns a new copy of a PTE with the
   specified bitfield cleared from its flag bitfield.
 
-#### Retrieving Individual Flags
+### Retrieving Individual Flags
 
 __NOTE:__ Confusingly, the `pXX_<flag>()` functions retrieve flags from the
 specified `pXX` entry, however they refer to the pointed at page,
@@ -206,7 +206,7 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pte_devmap()](#pte_devmap) - Determines if the physical page pointed at by
   the specified PTE entry is part of a [device mapping][device-mapper].
 
-##### Huge Pages
+#### Huge Pages
 
 * [pud_huge()](#pud_huge) - Determines if the PMD page pointed at by the
   specified PUD entry is huge in the context of [hugetlb][hugetlb].
@@ -223,9 +223,9 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pmd_large()](#pmd_large) - Determines if the pointed at PTE page is huge
   (without context.)
 
-#### Setting/Clearing Individual Flags
+### Setting/Clearing Individual Flags
 
-##### Accessed Flag
+#### Accessed Flag
 
 * [pmd_mkyoung()](#pmd_mkyoung) - Returns a new copy of the specified PMD entry
   with the accessed flag set.
@@ -236,7 +236,7 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pte_mkold()](#pte_mkold) - Returns a new copy of the specified PTE entry with
   the accessed flag cleared.
 
-##### Dirty Flag
+#### Dirty Flag
 
 * [pmd_mkdirty()](#pmd_mkdirty) - Returns a new copy of the specified PMD entry
   with the dirty (modified) flag set.
@@ -247,7 +247,7 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pte_mkclean()](#pte_mkclean) - Returns a new copy of the specified PTE entry
   with the dirty (modified) flag cleared.
 
-##### Read/Write Flag
+#### Read/Write Flag
 
 * [pmd_mkwrite()](#pmd_mkwrite) - Returns a new copy of the specified PMD entry
   with the read/write flag set.
@@ -258,7 +258,7 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pte_wrprotect()](#pte_wrprotect) - Returns a new copy of the specified PTE
   entry with the read/write flag cleared.
 
-##### Soft-Dirty Flag
+#### Soft-Dirty Flag
 
 * [pmd_mksoft_dirty()](#pmd_mksoft_dirty) - Returns a new copy of the specified
   PMD entry with the [soft-dirty][soft-dirty] flag set.
@@ -269,37 +269,37 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 * [pte_clear_soft_dirty()](#pte_clear_soft_dirty) - Returns a new copy of the
   specified PTE entry with the [soft-dirty][soft-dirty] flag cleared.
 
-##### dev-map Flag
+#### dev-map Flag
 
 * [pmd_mkdevmap()](#pmd_mkdevmap) - Returns a new copy of the specified PMD
   entry with the [devmap][device-mapper] flag set.
 * [pte_mkdevmap()](#pte_mkdevmap) - Returns a new copy of the specified PTE
   entry with the [devmap][device-mapper] flag cleared.
 
-##### Present Flag
+#### Present Flag
 
 * [pmd_mknotpresent()](#pmd_mknotpresent) - Returns a new copy of the specified
   PMD entry with the present flag cleared, i.e. indicating the underlying PTE
   page is not resident.
 
-##### Global Flag
+#### Global Flag
 
 * [pte_mkglobal()](#pte_mkglobal) - Returns a new copy of the specified PTE
   entry with the global flag set, avoiding [TLB][tlb] flushes.
 * [pte_clrglobal()](#pte_clrglobal) - Returns a new copy of the specified PTE
   entry with the global flag cleared.
 
-##### No-Execute (NX) flag
+#### No-Execute (NX) flag
 
 * [pte_mkexec()](#pte_mkexec) - Returns a new copy of the specified PTE entry
   with the NX flag cleared, marking the underlying physical page executable.
 
-##### Special Flag
+#### Special Flag
 
 * [pte_mkspecial()](#pte_mkspecial) - Returns a new copy of the specified PTE
   entry with the special flag set.
 
-##### Huge Pages
+#### Huge Pages
 
 * [pmd_mkhuge()](#pmd_mkhuge) - Returns a new copy of the specified PMD entry
   with the huge page flag set.
