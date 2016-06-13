@@ -1,9 +1,14 @@
 # Linux VM Notes
 
-## Contents
+## Function Cheat Sheets
 
-* [Functions](funcs.md) - List of VM-related kernel functions and what they do,
-  categorised by the part of the VM they relate to.
+These pages list useful VM functions with a reasonably detailed description of
+each.
+
+* [General](./funcs.md)
+* [Page Table](./page-table-funcs.md)
+
+## Contents
 
 1. [Fundamentals](fundamentals.md) - Overview of virtual memory concepts without
    referencing any actual code or making assumptions about prior knowledge.
