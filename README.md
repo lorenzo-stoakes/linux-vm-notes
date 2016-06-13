@@ -1,5 +1,7 @@
 # Linux VM Notes
 
+__NOTE:__ I target [linux 4.6][linux-4.6] and an x86-64 non-[NUMA][numa] system.
+
 ## Contents
 
 1. [Fundamentals](fundamentals.md) - Overview of virtual memory concepts without
@@ -36,19 +38,6 @@ code:
 
 * [General](./funcs.md)
 * [Page Tables](./page-table-funcs.md)
-
-## Assumptions
-
-* I target [linux 4.6][linux-4.6].
-
-* To begin with I'm going to focus on bog-standard x86-64 UMA
-  (i.e. non-[NUMA][numa]) - the notes will, without necessarily saying so,
-  assume this is the only system in existence.
-
-* I am stupid and constantly make mistakes. Don't take what I say to be
-  correct - check everything.
-
-* Arsenal will win the league at some point in the future.
 
 ## Introduction
 
