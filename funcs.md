@@ -2,11 +2,6 @@
 
 ## Contents
 
-### Page Tables
-
-[Page Table Functions](./page-table-funcs.md) - Functions relating to
-[page tables][page-table].
-
 ### Address Translation
 
 * [phys_to_virt()](#phys_to_virt) - Translates a physical address to a virtual
