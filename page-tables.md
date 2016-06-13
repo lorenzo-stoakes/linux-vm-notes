@@ -610,5 +610,5 @@ context_switch(struct rq *rq, struct task_struct *prev,
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
 [xen]:https://en.wikipedia.org/wiki/Xen
 
-[funcs]:./funcs.md
+[funcs]:./page-table-funcs.md
 [physical]:./physical.md
