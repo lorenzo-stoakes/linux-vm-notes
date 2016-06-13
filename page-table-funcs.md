@@ -85,6 +85,11 @@ flags masks respectively.
 * [pfn_pte()](#pfn_pte) - Creates a PTE entry pointing at the specified PFN with
   the specified flags.
 
+### Allocating/Freeing Page Table Entries
+
+* [pgd_alloc()](#pgd_alloc) - Allocates a new PGD page for the specified
+  [struct mm_struct][mm_struct].
+
 ### Retrieving Page Table Entry Indexes
 
 * [pgd_index()](#pgd_index) - Gets the index of the specified virtual address's
@@ -1100,6 +1105,29 @@ invalid.
 
 A [pte_t][pte_t] PTE entry pointing at the specified physical page with the
 specified flags.
+
+---
+
+### pgd_alloc()
+
+`pgd_t *pgd_alloc(struct mm_struct *mm)`
+
+[pgd_alloc()][pgd_alloc] allocates a single page for a PGD page via
+[_pgd_alloc()][_pgd_alloc] and [__get_free_page()][__get_free_page]. For x86-64
+systems it is as simple as this, for other x86 variants there is additional
+complexity.
+
+Kernel mappings are copied into the PGD via [pgd_ctor()][pgd_ctor] once the page
+has been allocated.
+
+#### Arguments
+
+* `mm` - The [struct mm_struct][mm_struct] whose PGD needs populating.
+
+#### Returns
+
+A pointer to the physical page containing an array of `PTRS_PER_PGD`
+[pgd_t][pgd_t]s.
 
 ---
 
@@ -3158,3 +3186,7 @@ A copy of the input PTE entry with the huge flag cleared.
 [split_huge_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/huge_mm.h#L92
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
+[pgd_alloc]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L354
+[_pgd_alloc]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L343
+[__get_free_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/gfp.h#L500
+[pgd_ctor]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L116
