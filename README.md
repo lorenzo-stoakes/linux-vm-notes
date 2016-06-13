@@ -1,41 +1,39 @@
 # Linux VM Notes
 
-## Function Cheat Sheets
-
-These pages list useful VM functions with a reasonably detailed description of
-each.
-
-* [General](./funcs.md)
-* [Page Table](./page-table-funcs.md)
-
 ## Contents
 
 1. [Fundamentals](fundamentals.md) - Overview of virtual memory concepts without
    referencing any actual code or making assumptions about prior knowledge.
 
-### Incomplete
-
 2. [Page Tables](page-tables.md) - Discussion about what
    [page tables][page-table] are, how they are used in linux, how they fit in
    the 64-bit address space, how they are manually traversed, the TLB and
-   finally how page tables are allocated and freed.
-
-### (Virtually-)Empty
+   finally how page tables are allocated and freed. __INCOMPLETE__
 
 3. [Physical Pages](physical.md) - Discussion about how physical pages are
-   managed in linux.
+   managed in linux. __INCOMPLETE__
 
 4. [Process Address Space](process.md) - Discussion about virtual memory address
    space for processes - managing VMAs, process data structure
    construction/destruction, file/device-backed memory regions, page faulting,
-   demand allocation, COW pages, copying to/from userland.
+   demand allocation, COW pages, copying to/from userland. __INCOMPLETE__
 
 5. [Buddy Allocator](buddy.md) - Discussion about the fundamental underlying
-   physical memory allocator.
+   physical memory allocator. __INCOMPLETE__
 
-6. [SLUB Allocator](slub.md) - Discussion about the default object allocator.
+6. [SLUB Allocator](slub.md) - Discussion about the default object
+   allocator. __INCOMPLETE__
 
-7. [Out of Memory Killer](oom.md) - Discussion about the OOM killer.
+7. [Out of Memory Killer](oom.md) - Discussion about the OOM
+   killer. __INCOMPLETE__
+
+### Functions
+
+These pages list useful VM functions with a reasonably detailed description of
+each.
+
+* [General](./funcs.md)
+* [Page Tables](./page-table-funcs.md)
 
 ## Assumptions
 
