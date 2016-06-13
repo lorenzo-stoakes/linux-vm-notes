@@ -30,7 +30,9 @@
 ### Functions
 
 These pages list useful VM functions with a reasonably detailed description of
-each.
+each function, their arguments, return value and a link to the function
+declaration within the [github mirror][linux-4.6] of the linux kernel source
+code:
 
 * [General](./funcs.md)
 * [Page Tables](./page-table-funcs.md)
