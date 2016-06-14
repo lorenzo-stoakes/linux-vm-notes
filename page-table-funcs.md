@@ -94,6 +94,8 @@ flags masks respectively.
 * [pud_alloc()](#pud_alloc) - If necessary, allocates a new PUD page for the
   specified address and returns a pointer to its PUD entry.
 * [pud_free()](#pud_free) - Frees the specified PUD page.
+* [pmd_alloc()](#pmd_alloc) - If necessary, allocates a new PMD page for the
+  specified address and returns a pointer to its PMD entry.
 
 ### Retrieving Page Table Entry Indexes
 
@@ -1241,6 +1243,68 @@ specified PGD entry points at. This entry may be empty.
 #### Returns
 
 N/A
+
+---
+
+### pmd_alloc()
+
+`pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)`
+
+[pmd_alloc()][pmd_alloc] first checks to see whether the specified PUD entry
+`pud` is empty, if so it allocates a new PMD page and modifies the PUD entry to
+point at that page, otherwise it leaves the existing mapping in place. It then
+returns the PMD entry indexed by the virtual `address` within that page.
+
+Note that the below _only_ applies if the mapping does not already exist and
+allocation is required.
+
+If allocation is required, this is performed via [__pmd_alloc()][__pmd_alloc]
+which subsequently calls [pmd_alloc_one()][pmd_alloc_one] which uses
+[alloc_pages()][alloc_pages] to allocate a physical [struct page][page] with the
+`GFP_KERNEL`, `__GFP_REPEAT` and `__GFP_ZERO` flags set. Looking at the two
+lower level flags:
+
+* `__GFP_REPEAT` - Try hard to allocate the memory.
+* `__GFP_ZERO` - Zero the page.
+
+The returned PMD [struct page][page] is then passed to
+[pgtable_pmd_page_ctor()][pgtable_pmd_page_ctor] which clears the
+[transparent huge page][transhuge]-utilised field `pmd_huge_pte`, and
+initialises the spinlock `page->ptl` via [ptlock_init()][ptlock_init] which
+allocates it via [ptlock_alloc()][ptlock_alloc].
+
+Finally the allocated page is translated to the returned virtual address via
+[page_address()][page_address].
+
+A [memory barrier][memory-barrier] is established via [smp_wmb()][smp_wmb] to
+ensure that the potentially newly allocated page is in its correct state prior
+to being made visible by other CPUs after being placed into the page tables.
+
+After this, the `mm->page_table_lock` spinlock is taken, and in the critical
+section the PUD entry is checked to see whether it has been filled behind our
+back - if so the PMD page is freed via [pmd_free()][pmd_free].
+
+Otherwise, the PUD entry is populated via [pud_populate()][pud_populate] which
+subsequently calls [set_pud()][set_pud] on the [__pud()][__pud]-created PUD
+entry value obtaining the physical address of the new PMD page via
+[__pa()][__pa], and assigning the bitfield of page flags defined by
+[_PAGE_TABLE][_PAGE_TABLE]. [native_set_pud()][native_set_pud] finally assigns
+this value in the PUD entry.
+
+#### Arguments
+
+* `mm` - The [struct mm_struct][mm_struct] within which the page table mappings
+  live.
+
+* `pud` - The PUD entry which is to point at the newly allocated PMD page (or
+  whose mapping is to be used if already mapped.)
+
+* `address` - The virtual address we are allocated the PMD page for.
+
+#### Returns
+
+A pointer to the PMD entry in the possibly newly allocated PMD page the
+specified PUD entry points at. This entry may be empty.
 
 ---
 
@@ -3156,6 +3220,7 @@ A copy of the input PTE entry with the huge flag cleared.
 [__pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L363
 [__pmd/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L500
 [__pmd]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L83
+[__pmd_alloc]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3567
 [__pte/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L377
 [__pte]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L87
 [__pud/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L540
@@ -3163,6 +3228,7 @@ A copy of the input PTE entry with the huge flag cleared.
 [__pud_alloc]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3544
 [_pgd_alloc]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L343
 [_pgd_free]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L348
+[alloc_pages]:https://github.com/torvalds/linux/blob/v4.6/include/linux/gfp.h#L466
 [amazon-gorman]:http://www.amazon.co.uk/Understanding-Virtual-Memory-Manager-Perens/dp/0131453483
 [arm64-stackoverflow]:http://stackoverflow.com/a/37433195/6380063
 [bitmask]:https://en.wikipedia.org/wiki/Mask_(computing)
@@ -3188,8 +3254,10 @@ A copy of the input PTE entry with the huge flag cleared.
 [native_pte_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L352
 [native_pud_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L277
 [native_set_pgd]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64.h#L109
+[native_set_pud]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64.h#L99
 [nx-bit]:https://en.wikipedia.org/wiki/NX_bit
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
+[page_address]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L986
 [paravirtualisation]:https://en.wikipedia.org/wiki/Paravirtualization
 [pfn_pmd]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L388
 [pfn_pte]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L382
@@ -3218,6 +3286,9 @@ A copy of the input PTE entry with the huge flag cleared.
 [pgprot_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L250
 [pgprot_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L362
 [pgprotval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L16
+[pgtable_pmd_page_ctor]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1721
+[pmd_alloc]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1582
+[pmd_alloc_one]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L81
 [pmd_bad]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L605
 [pmd_clear_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L283
 [pmd_clear_soft_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L361
@@ -3225,6 +3296,7 @@ A copy of the input PTE entry with the huge flag cleared.
 [pmd_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L121
 [pmd_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L342
 [pmd_flags_mask]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L337
+[pmd_free]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L94
 [pmd_huge]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/hugetlbpage.c#L62
 [pmd_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L575
 [pmd_large]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L173
@@ -3297,6 +3369,8 @@ A copy of the input PTE entry with the huge flag cleared.
 [pte_wrprotect]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L221
 [pte_young]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L116
 [pteval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L12
+[ptlock_alloc]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3963
+[ptlock_init]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1624
 [pud_alloc]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1576
 [pud_alloc_one]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L126
 [pud_bad]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L650
@@ -3313,12 +3387,14 @@ A copy of the input PTE entry with the huge flag cleared.
 [pud_pfn]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L166
 [pud_pfn_mask]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L311
 [pud_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L429
+[pud_populate]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L112
 [pud_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L621
 [pud_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L270
 [pud_val/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L554
 [pud_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L77
 [pudval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L14
 [set_pgd]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L56
+[set_pud]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L61
 [smp_wmb]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/barrier.h#L84
 [soft-dirty]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/soft-dirty.txt
 [split_huge_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/huge_mm.h#L92
