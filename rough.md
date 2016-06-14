@@ -24,8 +24,6 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 ### Page Tables
 
-* Add page table allocation, modification, freeing functions, description.
-
 * Add boot time description.
 
 ## TODO general
