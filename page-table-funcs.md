@@ -96,6 +96,7 @@ flags masks respectively.
 * [pud_free()](#pud_free) - Frees the specified PUD page.
 * [pmd_alloc()](#pmd_alloc) - If necessary, allocates a new PMD page for the
   specified address and returns a pointer to its PMD entry.
+* [pmd_free()](#pmd_free) - Frees the specified PMD page.
 
 ### Retrieving Page Table Entry Indexes
 
@@ -1305,6 +1306,34 @@ this value in the PUD entry.
 
 A pointer to the PMD entry in the possibly newly allocated PMD page the
 specified PUD entry points at. This entry may be empty.
+
+---
+
+### pmd_free()
+
+`void pmd_free(struct mm_struct *mm, pmd_t *pmd)`
+
+[pmd_free()][pmd_free] frees the specified PMD page `pmd`.
+
+It first checks that `pmd` is page-aligned, then runs the destructor function
+[pgtable_pmd_page_dtor()][pgtable_pmd_page_dtor] on the
+[virt_to_page()][virt_to_page]-derived physical [struct page][page] associated
+with the PMD page.
+
+[pgtable_pmd_page_dtor()][pgtable_pmd_page_dtor] checks to ensure the
+[transparent huge page][transhuge]-utilised `pmd_huge_pte` field is not set,
+then frees the `page->ptl` spinlock allocated in [pmd_alloc()][pmd_alloc] via
+[ptlock_free()][ptlock_free].
+
+#### Arguments
+
+* `mm` - The [struct mm_struct][mm_struct] the PMD page belongs to.
+
+* `pmd` - The PMD page we want to free.
+
+#### Returns
+
+N/A
 
 ---
 
@@ -3287,6 +3316,7 @@ A copy of the input PTE entry with the huge flag cleared.
 [pgprot_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L362
 [pgprotval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L16
 [pgtable_pmd_page_ctor]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1721
+[pgtable_pmd_page_dtor]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1729
 [pmd_alloc]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1582
 [pmd_alloc_one]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L81
 [pmd_bad]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L605
@@ -3370,6 +3400,7 @@ A copy of the input PTE entry with the huge flag cleared.
 [pte_young]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L116
 [pteval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L12
 [ptlock_alloc]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3963
+[ptlock_free]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3974
 [ptlock_init]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1624
 [pud_alloc]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1576
 [pud_alloc_one]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L126
@@ -3400,3 +3431,4 @@ A copy of the input PTE entry with the huge flag cleared.
 [split_huge_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/huge_mm.h#L92
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
+[virt_to_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L63
