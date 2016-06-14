@@ -1185,6 +1185,9 @@ N/A
 point at that page, otherwise it leaves the existing mapping in place. It then
 returns the PUD entry indexed by the virtual `address` within that page.
 
+Note that the below _only_ applies if the mapping does not already exist and
+allocation is required.
+
 If allocation is required, this is performed via [__pud_alloc()][__pud_alloc]
 which subsequently calls [pud_alloc_one()][pud_alloc_one] which uses
 [get_zeroed_page()][get_zeroed_page] to allocate the page from the physical
