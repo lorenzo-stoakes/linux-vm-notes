@@ -87,6 +87,14 @@ pmd_large -> pse         pmd_huge -> pse/not present
   an `invlpg` instruction does not override this), seems mostly used by vmalloc
   stuff, maybe those pages aren't marked global?
 
+* Talk about `rmap`s.
+
+* `__handle_mm_fault()` seems to be a really core function.
+
+* `struct per_cpu_pages` - is this used by modern kernels to obviate the need
+  for specific 'quick lists' for allocating page table pages? Covered in what's
+  new in linux 2.6 section of UtLVMM.
+
 ## Concerns
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
