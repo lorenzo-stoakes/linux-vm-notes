@@ -20,12 +20,6 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * `CONFIG_PGTABLE_LEVELS` is used to determine number of pg table levels now.
 
-## TODO next
-
-### Page Tables
-
-* Add boot time description.
-
 ## TODO general
 
 * Cover `switch_mm()` etc.
