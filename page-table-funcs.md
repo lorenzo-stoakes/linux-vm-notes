@@ -1202,7 +1202,7 @@ Otherwise, the PGD entry is populated via [pgd_populate()][pgd_populate] which
 subsequently calls [set_pgd()][set_pgd] on the [__pgd()][__pgd]-created PGD
 entry value obtaining the physical address of the new PUD page via
 [__pa()][__pa], and assigning the bitfield of page flags defined by
-[_PAGE_TABLE][_PAGE_TABLE].  [native_set_pgd()][native_set_pgd] finally assigns
+[_PAGE_TABLE][_PAGE_TABLE]. [native_set_pgd()][native_set_pgd] finally assigns
 this value in the PGD entry.
 
 #### Arguments
