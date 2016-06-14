@@ -92,7 +92,7 @@ flags masks respectively.
 * [pgd_free()](#pgd_free) - Frees the specified [struct mm_struct][mm_struct]'s
   specified PGD page.
 * [pud_alloc()](#pud_alloc) - If necessary, allocates a new PUD page for the
-  specified address and returns pointer to address's PUD entry.
+  specified address and returns a pointer to its PUD entry.
 * [pud_free()](#pud_free) - Frees the specified PUD page.
 
 ### Retrieving Page Table Entry Indexes
