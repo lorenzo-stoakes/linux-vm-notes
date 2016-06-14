@@ -18,6 +18,8 @@
   corresponding [struct page][page].
 * [__va()](#__va) - Translates a physical address to a virtual one.
 * [__pa()](#__pa) - Translates a virtual address to a physical one.
+* [page_address()](#page_address) - Returns the virtual address of a physical
+  [struct page][page].
 
 ### Utility Functions
 
@@ -129,6 +131,29 @@ kernel to be loaded in a different physical location e.g. when
 [kdump][kdump]ing.
 
 __NOTE:__ Macro, inferring function signature.
+
+---
+
+### page_address()
+
+`void *page_address(const struct page *page)`
+
+[page_address()][page_address] determines the virtual address of the specified
+physical [struct page][page].
+
+In x86-64 the implementation is straightforward and provided by
+[lowmem_page_address()][lowmem_page_address] (as we have no high memory to worry
+about.) We simply obtain the PFN of the page via [page_to_pfn()][page_to_pfn],
+translate it to a physical page via [PFN_PHYS()][PFN_PHYS] and return the
+kernel-mapped virtual address via [__va()][__va].
+
+#### Arguments
+
+* `page` - The physical page whose virtual address we desire.
+
+#### Returns
+
+The virtual address mapped to the specified physical [struct page][page].
 
 ---
 
@@ -683,6 +708,7 @@ N/A
 
 ---
 
+[PFN_PHYS]:https://github.com/torvalds/linux/blob/v4.6/include/linux/pfn.h#L20
 [__flush_tlb]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L62
 [__flush_tlb_all]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L182
 [__flush_tlb_global]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L63
@@ -712,8 +738,10 @@ N/A
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
 [leave_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L41
 [local_flush_tlb]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L291
+[lowmem_page_address]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L958
 [mm_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
+[page_address]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L986
 [page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L80
 [page_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L144
 [pfn_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L81
