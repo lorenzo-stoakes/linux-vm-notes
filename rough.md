@@ -87,7 +87,7 @@ pmd_large -> pse         pmd_huge -> pse/not present
   for specific 'quick lists' for allocating page table pages? Covered in what's
   new in linux 2.6 section of UtLVMM.
 
-## Concerns
+## Thoughts
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
   always referring to an underlying lower-level page table page, am I always
