@@ -97,10 +97,9 @@ flags masks respectively.
 * [pmd_alloc()](#pmd_alloc) - If necessary, allocates a new PMD page for the
   specified address and returns a pointer to its PMD entry.
 * [pmd_free()](#pmd_free) - Frees the specified PMD page.
-* [pte_alloc()](#pte_alloc) - If necessary, allocates a new PTE page for the
-  specified address and returns a pointer to its PTE entry.
-* [pte_alloc_map_lock()](#pte_alloc_map_lock) - [pte_alloc()][pte_alloc] and
-  acquires a lock on the PTE.
+* [pte_alloc()](#pte_alloc) - If necessary, allocates a new PTE page.
+* [pte_alloc_map_lock()](#pte_alloc_map_lock) - [pte_alloc_map()][pte_alloc_map]
+  and acquires a lock on the PTE.
 
 ### Retrieving Page Table Entry Indexes
 
@@ -1354,12 +1353,13 @@ N/A
 
 ### pte_alloc()
 
-`pte_t *pte_alloc(struct mm_struct *mm, pmd_t *pmd, unsigned long address)`
+`int pte_alloc(struct mm_struct *mm, pmd_t *pmd, unsigned long address)`
 
 [pte_alloc()][pte_alloc] first checks to see whether the specified PMD entry
 `pmd` is empty, if so it allocates a new PTE page and modifies the PMD entry to
-point at that page, otherwise it leaves the existing mapping in place. It then
-returns the PTE entry indexed by the virtual `address` within that page.
+point at that page, otherwise it leaves the existing mapping in place. It
+returns 0 if no allocation was required or if the allocation succeeded, truthy
+(non-zero) otherwise.
 
 Note that the below _only_ applies if the mapping does not already exist and
 allocation is required.
