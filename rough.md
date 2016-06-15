@@ -100,9 +100,14 @@ pmd_large -> pse         pmd_huge -> pse/not present
   PMD does refer to a page this way, I will need to modify the function
   descriptions accordingly.
 
+## Interesting functions
+
+* [free_pgd_range()][free_pgd_range]
+
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
 [flush_tlb_kernel_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L296
 [mem_section]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1040
 [mtrr]:https://en.wikipedia.org/wiki/Memory_type_range_register
 [pat]:https://en.wikipedia.org/wiki/Page_attribute_table
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
+[free_pgd_range]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L473
