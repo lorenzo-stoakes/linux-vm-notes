@@ -1211,6 +1211,10 @@ entry value obtaining the physical address of the new PUD page via
 [_PAGE_TABLE][_PAGE_TABLE]. [native_set_pgd()][native_set_pgd] finally assigns
 this value in the PGD entry.
 
+Note that [split page table locks][split-page-table-lock] do not provide
+fine-grained locks for page tables above PMDs, and since we're locking at the
+PGD level here we use the [struct mm_struct][mm_struct]'s lock.
+
 #### Arguments
 
 * `mm` - The [struct mm_struct][mm_struct] within which the page table mappings
@@ -1291,6 +1295,10 @@ entry value obtaining the physical address of the new PMD page via
 [__pa()][__pa], and assigning the bitfield of page flags defined by
 [_PAGE_TABLE][_PAGE_TABLE]. [native_set_pud()][native_set_pud] finally assigns
 this value in the PUD entry.
+
+Note that [split page table locks][split-page-table-lock] do not provide
+fine-grained locks for page tables above PMDs, and since we're locking at the
+PUD level here we use the [struct mm_struct][mm_struct]'s lock.
 
 #### Arguments
 
@@ -3428,6 +3436,7 @@ A copy of the input PTE entry with the huge flag cleared.
 [set_pud]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L61
 [smp_wmb]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/barrier.h#L84
 [soft-dirty]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/soft-dirty.txt
+[split-page-table-lock]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/split_page_table_lock
 [split_huge_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/huge_mm.h#L92
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
