@@ -20,6 +20,10 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * `CONFIG_PGTABLE_LEVELS` is used to determine number of pg table levels now.
 
+## TODO high
+
+* Discuss split page table locks in page-tables.md.
+
 ## TODO general
 
 * Cover `switch_mm()` etc.
