@@ -1277,8 +1277,8 @@ lower level flags:
 The returned PMD [struct page][page] is then passed to
 [pgtable_pmd_page_ctor()][pgtable_pmd_page_ctor] which clears the
 [transparent huge page][transhuge]-utilised field `pmd_huge_pte`, and
-initialises the spinlock `page->ptl` via [ptlock_init()][ptlock_init] which
-allocates it via [ptlock_alloc()][ptlock_alloc].
+initialises the spinlock `page->ptl` via [ptlock_init()][ptlock_init] (this lock
+is used by [split page table locks][split-page-table-lock].)
 
 Finally the allocated page is translated to the returned virtual address via
 [page_address()][page_address].
@@ -1333,7 +1333,8 @@ with the PMD page.
 [pgtable_pmd_page_dtor()][pgtable_pmd_page_dtor] checks to ensure the
 [transparent huge page][transhuge]-utilised `pmd_huge_pte` field is not set,
 then frees the `page->ptl` spinlock allocated in [pmd_alloc()][pmd_alloc] via
-[ptlock_free()][ptlock_free].
+[ptlock_free()][ptlock_free] (this lock is used by
+[split page table locks][split-page-table-lock].)
 
 #### Arguments
 
@@ -1371,8 +1372,7 @@ PGALLOC_USER_GFP` which in x86-64 breaks down into `GFP_KERNEL` and:
 
 The returned PTE [struct page][page] is then passed to
 [pgtable_page_ctor()][pgtable_page_ctor] which initialises the spinlock
-`page->ptl` via [ptlock_init()][ptlock_init] which allocates it via
-[ptlock_alloc()][ptlock_alloc], and invokes
+`page->ptl` via [ptlock_init()][ptlock_init] and invokes
 [inc_zone_page_state()][inc_zone_page_state] to increment the `NR_PAGETABLE`
 statistic for the current NUMA zone.
 
@@ -3502,7 +3502,6 @@ A copy of the input PTE entry with the huge flag cleared.
 [pte_wrprotect]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L221
 [pte_young]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L116
 [pteval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L12
-[ptlock_alloc]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3963
 [ptlock_free]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3974
 [ptlock_init]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1624
 [ptlock_ptr]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1613
