@@ -169,9 +169,6 @@ Offset  = 1656
   tables. Everything 'just works' and generic code can be safely written that
   assumes 4 levels regardless of architecture. Pretty nice right?
 
-* I'll get into more details about page tables and their actual implementation
-  in kernel code in a later section.
-
 ### Caching
 
 * Looking up entries in a number of tables just to determine the actual location
@@ -184,9 +181,6 @@ Offset  = 1656
   keeping a set of mappings for recently accessed memory. Since programs often
   access the same memory over and over again, this results in a significant
   speedup.
-
-* I'll get into more detail about the TLB and what the kernel code does with it
-  in a later section.
 
 [virtual-memory]:https://en.wikipedia.org/wiki/Virtual_memory
 [mmu]:https://en.wikipedia.org/wiki/Memory_management_unit
