@@ -1835,8 +1835,8 @@ below), but based on the definition from
 found online so far, 'modifiability' seems to be the canonical explanation so
 far, so I'm being conservative and sticking with that. On other architectures it
 seems the definition is more nebulous, I briefly
-[looked into][arm64-stackoverflow] recently where the definition was - does this
-entry actually refer to a lower level table.
+[looked into this][arm64-stackoverflow] recently where the definition was - does
+this entry actually refer to a lower level table.
 
 In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
 `_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set.
@@ -1886,8 +1886,8 @@ below), but based on the definition from
 found online so far, 'modifiability' seems to be the canonical explanation so
 far, so I'm being conservative and sticking with that. On other architectures it
 seems the definition is more nebulous, I briefly
-[looked into][arm64-stackoverflow] recently where the definition was - does this
-entry actually refer to a lower level table.
+[looked into this][arm64-stackoverflow] recently where the definition was - does
+this entry actually refer to a lower level table.
 
 In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
 `_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set.
@@ -1937,8 +1937,8 @@ below), but based on the definition from
 found online so far, 'modifiability' seems to be the canonical explanation so
 far, so I'm being conservative and sticking with that. On other architectures it
 seems the definition is more nebulous, I briefly
-[looked into][arm64-stackoverflow] recently where the definition was - does this
-entry actually refer to a lower level table.
+[looked into this][arm64-stackoverflow] recently where the definition was - does
+this entry actually refer to a lower level table.
 
 In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
 `_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set.
