@@ -20,6 +20,8 @@
 * [__pa()](#__pa) - Translates a virtual address to a physical one.
 * [page_address()](#page_address) - Returns the virtual address of a physical
   [struct page][page].
+* [pmd_to_page()](#pmd_to_page) - Returns the [struct page][page] associated
+  with the PMD page the specified PMD entry belongs to.
 
 ### Utility Functions
 
@@ -154,6 +156,39 @@ kernel-mapped virtual address via [__va()][__va].
 #### Returns
 
 The virtual address mapped to the specified physical [struct page][page].
+
+---
+
+### pmd_to_page()
+
+`struct page *pmd_to_page(pmd_t *pmd)`
+
+[pmd_to_page()][pmd_to_page] returns the [struct page][page] describing the
+physical page the PMD page the PMD entry `pmd` resides in.
+
+The function works by masking out the offset of the entry within the page using
+the mask `~(PTRS_PER_PMD * sizeof(pmd_t) - 1)` which ultimately page-aligns the
+virtual address.
+
+Note that we're dealing with the _address_ of the entry, utterly ignoring the
+entry's contents, so the virtual address refers to the PMD page rather than what
+the PMD entry is pointing at.
+
+Finally, the function returns the [struct page][page] associated with the PMD
+page via [virt_to_page()][virt_to_page].
+
+The function is used by the [split page table lock][split-page-table-lock]
+functionality in the kernel.
+
+#### Arguments
+
+* `pmd` - The PMD entry whose PMD page we want to obtain the [struct page][page]
+  to.
+
+#### Returns
+
+The [struct page][page] describing the PMD page the specified PMD entry belongs
+to.
 
 ---
 
@@ -748,8 +783,10 @@ N/A
 [pfn_valid]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1140
 [phys_addr_t]:https://github.com/torvalds/linux/blob/v4.6/include/linux/types.h#L162
 [phys_to_virt]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L136
+[pmd_to_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1710
 [pte_same]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L486
 [smp_call_function_many]:https://github.com/torvalds/linux/blob/v4.6/kernel/smp.c#L403
+[split-page-table-lock]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/split_page_table_lock
 [switch_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/mmu_context.h#L118
 [task_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L1394
 [tlb.txt]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/tlb.txt
