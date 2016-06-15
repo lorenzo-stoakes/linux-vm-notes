@@ -469,8 +469,10 @@ associated flags.
 
 ### pte_offset_map_lock()
 
-`pte_t *pte_offset_map_lock(struct mm_struct *mm, pmd_t *pmd, unsigned long address,
-                            spinlock_t **ptlp)`
+```c
+pte_t *pte_offset_map_lock(struct mm_struct *mm, pmd_t *pmd, unsigned long address,
+                           spinlock_t **ptlp)
+```
 
 [pte_offset_map_lock()][pte_offset_map_lock] performs the same task as
 [pte_offset_map()][pte_offset_map], but also acquires the spinlock returned by
