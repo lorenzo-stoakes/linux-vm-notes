@@ -99,6 +99,8 @@ flags masks respectively.
 * [pmd_free()](#pmd_free) - Frees the specified PMD page.
 * [pte_alloc()](#pte_alloc) - If necessary, allocates a new PTE page for the
   specified address and returns a pointer to its PTE entry.
+* [pte_alloc_map_lock()](#pte_alloc_map_lock) - [pte_alloc()][pte_alloc] and
+  acquires a lock on the PTE.
 
 ### Retrieving Page Table Entry Indexes
 
@@ -1421,6 +1423,40 @@ __NOTE:__ Macro, inferring function signature.
   whose mapping is to be used if already mapped.)
 
 * `address` - The virtual address we are allocated the PTE page for.
+
+#### Returns
+
+A pointer to the PTE entry in the possibly newly allocated PTE page the
+specified PMD entry points at. This entry may be empty.
+
+---
+
+### pte_alloc_map_lock()
+
+```c
+pte_t *pte_alloc_map_lock(struct mm_struct *mm, pmd_t *pmd, unsigned long address,
+                          spinlock_t **ptlp)
+```
+
+[pte_alloc_map_lock()][pte_alloc_map_lock] performs the same task as
+[pte_alloc()][pte_alloc], however it uses
+[pte_offset_map_lock()][pte_offset_map_lock] to return the PTE entry. See the
+descriptions of these functions for more details on their operation.
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `mm` - The [struct mm_struct][mm_struct] within which the page table mappings
+  live.
+
+* `pmd` - The PMD entry which is to point at the newly allocated PTE page (or
+  whose mapping is to be used if already mapped.)
+
+* `address` - The virtual address we are allocated the PTE page for.
+
+* `ptlp` - __OUT__ - A pointer to a `spinlock_t *` which will reference the
+  spinlock acquired by the function.
 
 #### Returns
 
@@ -3459,6 +3495,7 @@ A copy of the input PTE entry with the huge flag cleared.
 [pmd_young]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L126
 [pmdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L13
 [pte_alloc]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1694
+[pte_alloc_map_lock]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1700
 [pte_alloc_one]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L24
 [pte_clear_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L204
 [pte_clear_soft_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L356
