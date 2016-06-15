@@ -150,10 +150,10 @@ Offset  = 1656
 * These tables are called [page table][page-table]s and the CPU automatically
   walks through these in the hardware every time a virtual address is used, and
   since once you're in the CPU's 'paging mode' EVERY address any process whether
-  kernel or userland uses is virtual, meaning every address goes through this
-  process (OK I'm lying a little bit here - the CPU tries to 'remember',
-  i.e. cache, mappings for fast lookup when it can to avoid this costly process,
-  but more on that later.)
+  kernel or userland uses is virtual, every address goes through this process
+  (OK I'm lying a little bit here - the CPU tries to 'remember', i.e. cache,
+  mappings for fast lookup when it can to avoid this costly process, but more on
+  that later.)
 
 ### Page Tables in Linux
 
