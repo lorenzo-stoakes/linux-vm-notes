@@ -196,6 +196,8 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 
 ---
 
+## Function Descriptions
+
 ### pgd_none()
 
 `int pgd_none(pgd_t pgd)`

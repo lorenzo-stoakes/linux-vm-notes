@@ -53,6 +53,8 @@
 
 ---
 
+## Function Descriptions
+
 ### phys_to_virt()
 
 `void *phys_to_virt(phys_addr_t address)`
