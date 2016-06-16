@@ -102,6 +102,11 @@ flags masks respectively.
   the specified address and returns a pointer to its PTE entry.
 * [pte_alloc_map_lock()](#pte_alloc_map_lock) - [pte_alloc_map()][pte_alloc_map]
   and acquires a lock on the PTE.
+* [pte_alloc_kernel()](#pte_alloc_kernel) - Allocates a PTE for a kernel
+  mapping.
+* [pte_free()](#pte_free) - Frees the specified PTE page.
+* [pte_free_kernel()](#pte_free_kernel) - Frees the specified kernel-mapped PTE
+  page.
 
 ### Retrieving Page Table Entry Indexes
 
@@ -1496,6 +1501,110 @@ __NOTE:__ Macro, inferring function signature.
 
 A pointer to the PTE entry in the possibly newly allocated PTE page the
 specified PMD entry points at. This entry may be empty.
+
+---
+
+### pte_alloc_kernel()
+
+`pte_t *pte_alloc_kernel(pmd_t *pmd, unsigned long address)`
+
+[pte_alloc_kernel()][pte_alloc_kernel] allocates a kernel PTE using the
+[init_mm][init_mm] kernel [struct mm_struct][mm_struct] (and hence the
+[swapper_pg_dir][swapper_pg_dir] PGD.)
+
+The function operates similarly to [pte_alloc_map()][pte_alloc_map], only no
+attempt at mapping PTEs is made (this makes no difference in x86-64 as there is
+no high memory to worry about), amongst other differences. To avoid duplication,
+let's look at these differences, you can obtain a description of the basic
+functionality from the descriptions of [pte_alloc()][pte_alloc], etc. above.
+
+The key differences are that the [init_mm][init_mm]`.page_table_lock` is used
+rather than a finer-grained lock, and no statistics are updated in the
+allocation.
+
+The allocation, if required, is performed by
+[pte_alloc_one_kernel()][pte_alloc_one_kernel] which simply invokes
+[__get_free_page()][__get_free_page].
+
+The PMD entry is populated via [pmd_populate_kernel()][pmd_populate_kernel]
+which differs from [pmd_populate()][pmd_populate] in that it is parameterised on
+a [pte_t][pte_t] rather than a [struct page][page].
+
+If the PMD has been populated behind the functions back,
+[pte_free_kernel()][pte_free_kernel] is used to free the allocated PTE page
+rather than [pte_free()][pte_free]. This differs is that no statistics are
+updated nor are finer-grained split lock attempted to be cleaned up.
+
+Finally, the PTE entry indexed by `address` is returned via
+[pte_offset_kernel()][pte_offset_kernel] which in x86-64 is equivalent to
+[pte_offset_map()][pte_offset_map].
+
+__NOTE:__ Macro, inferring function signature.
+
+#### Arguments
+
+* `pmd` - The PMD entry which is to point at the newly allocated PTE page (or
+  whose mapping is to be used if already mapped.)
+
+* `address` - The virtual address we are allocated the PTE page for.
+
+#### Returns
+
+A pointer to the PTE entry in the possibly newly allocated PTE page the
+specified PMD entry points at. This entry may be empty.
+
+---
+
+### pte_free()
+
+`void pte_free(struct mm_struct *mm, struct page *pte)`
+
+[pte_free()][pte_free] frees the specified PTE [struct page][page] `pte`. This
+function differs from other `pXX_free()` functions in that the physical
+[struct page][page] describing the PTE is provided rather than a [pte_t][pte_t].
+
+Firstly it invokes [pgtable_page_dtor()][pgtable_page_dtor] which calls
+[pte_lock_deinit()][pte_lock_deinit] to set the [struct page][page]`->mapping`
+field to NULL to avoid [free_pages_check()][free_pages_check] issue with
+non-null mapping, and decrements the zone page statistics for `NR_PAGETABLE` via
+[dec_zone_page_state()][dec_zone_page_state].
+
+Finally the actual freeing of the PTE page is performed by
+[__free_page()][__free_page].
+
+#### Arguments
+
+* `mm` - The [struct mm_struct][mm_struct] the PTE page belongs to.
+
+* `pte` - The physical [struct page][page] that describes the PTE page we want
+  to free.
+
+#### Returns
+
+N/A
+
+---
+
+### pte_free_kernel()
+
+`void pte_free_kernel(struct mm_struct *mm, pte_t *pte)`
+
+[pte_free_kernel()][pte_free_kernel] frees the specified kernel mapping-only PTE
+page `pte`, and performs no statistics update or split lock cleanup. It differs
+from [pte_free()][pte_free] in that a [pte_t][pte_t] is input rather than a
+[struct page][page], meaning it uses [free_page()][free_page] rather than
+[__free_page()][__free_page].
+
+#### Arguments
+
+* `mm` - The [struct mm_struct][mm_struct] the PTE page belongs to. Can't see
+  any reason why this will be anything other than `&`[init_mm][init_mm].
+
+* `pte` - The PTE page we want to free.
+
+#### Returns
+
+N/A
 
 ---
 
@@ -3404,6 +3513,7 @@ A copy of the input PTE entry with the huge flag cleared.
 [PTRS_PER_PUD]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L34
 [_PAGE_TABLE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L118
 [__flush_tlb_global]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L63
+[__free_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/gfp.h#L519
 [__get_free_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/gfp.h#L500
 [__pa]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L40
 [__pgd/para]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/paravirt.h#L407
@@ -3426,13 +3536,16 @@ A copy of the input PTE entry with the huge flag cleared.
 [bitmask]:https://en.wikipedia.org/wiki/Mask_(computing)
 [canon_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L431
 [clone_pgd_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L879
+[dec_zone_page_state]:https://github.com/torvalds/linux/blob/v4.6/mm/vmstat.c#L377
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
 [flush_tlb_all]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L280
 [free_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/gfp.h#L520
+[free_pages_check]:https://github.com/torvalds/linux/blob/v4.6/mm/page_alloc.c#L787
 [get_zeroed_page]:https://github.com/torvalds/linux/blob/v4.6/mm/page_alloc.c#L3421
 [high-memory]:https://en.wikipedia.org/wiki/High_memory
 [hugetlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/hugetlbpage.txt
 [inc_zone_page_state]:https://github.com/torvalds/linux/blob/v4.6/mm/vmstat.c#L371
+[init_mm]:https://github.com/torvalds/linux/blob/v4.6/mm/init-mm.c#L16
 [invpcid_flush_all]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L48
 [massage_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L372
 [memory-barrier]:https://en.wikipedia.org/wiki/Memory_barrier
@@ -3481,6 +3594,7 @@ A copy of the input PTE entry with the huge flag cleared.
 [pgprot_val]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L362
 [pgprotval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L16
 [pgtable_page_ctor]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1666
+[pgtable_page_dtor]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1674
 [pgtable_pmd_page_ctor]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1721
 [pgtable_pmd_page_dtor]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1729
 [pgtable_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L417
@@ -3516,6 +3630,7 @@ A copy of the input PTE entry with the huge flag cleared.
 [pmd_pfn_mask]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L329
 [pmd_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L428
 [pmd_populate]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L69
+[pmd_populate_kernel]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L62
 [pmd_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L521
 [pmd_set_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L276
 [pmd_soft_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L341
@@ -3529,9 +3644,11 @@ A copy of the input PTE entry with the huge flag cleared.
 [pmd_young]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L126
 [pmdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L13
 [pte_alloc]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1694
+[pte_alloc_kernel]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1704
 [pte_alloc_map]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1697
 [pte_alloc_map_lock]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1700
 [pte_alloc_one]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L24
+[pte_alloc_one_kernel]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L19
 [pte_clear_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L204
 [pte_clear_soft_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L356
 [pte_clrglobal]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L261
@@ -3540,9 +3657,12 @@ A copy of the input PTE entry with the huge flag cleared.
 [pte_dirty]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L97
 [pte_exec]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L146
 [pte_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L357
+[pte_free]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L48
+[pte_free_kernel]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L42
 [pte_global]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L141
 [pte_huge]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L136
 [pte_index]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L595
+[pte_lock_deinit]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1641
 [pte_lockptr]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1619
 [pte_mkclean]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L211
 [pte_mkdevmap]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L271
@@ -3606,6 +3726,7 @@ A copy of the input PTE entry with the huge flag cleared.
 [soft-dirty]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/soft-dirty.txt
 [split-page-table-lock]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/split_page_table_lock
 [split_huge_page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/huge_mm.h#L92
+[swapper_pg_dir]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64.h#L25
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
 [virt_to_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L63
