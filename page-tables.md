@@ -374,6 +374,13 @@ PTE_FLAGS_MASK = ~PTE_PFN_MASK =
   by simply clearing the `_PAGE_USER` flag. These mappings are marked with
   `_PAGE_GLOBAL` so TLB flushes do not invalidate them.
 
+* The kernel has its own [struct mm_struct][mm_struct] - [init_mm][init_mm],
+  which references the initial kernel PGD,
+  [swapper_pg_dir][swapper_pg_dir]. However (as discussed), in process context,
+  the kernel mappings form part of each process's page tables so this PGD does
+  not need to be loaded, and isn't used except for cases of manual [TLB][tlb]
+  flushes, see the section on lazy TLB below.
+
 ## Traversing Page Tables
 
 * A number of functions are provided to make it easier to traverse page
@@ -569,6 +576,7 @@ context_switch(struct rq *rq, struct task_struct *prev,
 [context_switch-lazytlb]:https://github.com/torvalds/linux/blob/v4.6/kernel/sched/core.c#L2731
 [doc-tlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/tlb.txt
 [flush_tlb_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L293
+[init_mm]:https://github.com/torvalds/linux/blob/v4.6/mm/init-mm.c#L16
 [ipi]:https://en.wikipedia.org/wiki/Inter-processor_interrupt
 [kdump-paper]:https://www.kernel.org/doc/ols/2007/ols2007v1-pages-167-178.pdf
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
