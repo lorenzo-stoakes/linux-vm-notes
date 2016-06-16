@@ -148,6 +148,8 @@ e.g. `pgd_page[_vaddr]()` return a PUD `struct page`/virtual address, etc.
 
 ---
 
+## Function Descriptions
+
 ### pgd_offset()
 
 `pgd_t *pgd_offset(struct mm_struct *mm, unsigned long address)`
