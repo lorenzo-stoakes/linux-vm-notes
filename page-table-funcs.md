@@ -106,7 +106,7 @@ flags masks respectively.
 * [pmd_free()](#pmd_free) - Frees the specified PMD page.
 * [pte_alloc()](#pte_alloc) - If necessary, allocates a new PTE page.
 * [pte_alloc_map()](#pte_alloc_map) - If necessary, allocates a new PTE page for
-  the specified address and returns a pointer to its PTE entry.
+  the specified address and returns its PTE entry pointer.
 * [pte_alloc_map_lock()](#pte_alloc_map_lock) - [pte_alloc_map()][pte_alloc_map]
   and acquires a lock on the PTE.
 * [pte_alloc_kernel()](#pte_alloc_kernel) - Allocates a PTE for a kernel
