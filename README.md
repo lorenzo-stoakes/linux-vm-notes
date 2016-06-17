@@ -29,6 +29,9 @@ __NOTE:__ I target [linux 4.6][linux-4.6] and an x86-64 non-[NUMA][numa] system.
 7. [Out of Memory Killer](oom.md) - Discussion about the OOM
    killer. __EMPTY__
 
+8. [Huge Pages](huge.md) - Discussion about huge pages, including
+   [transparent huge pages][transhuge]. __EMPTY__
+
 ### Function Cheat Sheets
 
 These pages list useful VM functions with a reasonably detailed description of
@@ -93,4 +96,5 @@ Take a look at the official Creative Commons site if you need more details.
 [memutils]:https://github.com/lorenzo-stoakes/memutils
 [numa]:https://en.wikipedia.org/wiki/Non-uniform_memory_access
 [page-table]:https://en.wikipedia.org/wiki/Page_table
+[transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
 [vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
