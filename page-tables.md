@@ -491,25 +491,25 @@ context_switch(struct rq *rq, struct task_struct *prev,
 
 ```c
 static int __handle_mm_fault(struct mm_struct *mm, struct vm_area_struct *vma,
-			     unsigned long address, unsigned int flags)
+                             unsigned long address, unsigned int flags)
 {
-	pgd_t *pgd;
-	pud_t *pud;
-	pmd_t *pmd;
-	pte_t *pte;
+        pgd_t *pgd;
+        pud_t *pud;
+        pmd_t *pmd;
+        pte_t *pte;
 
-	pgd = pgd_offset(mm, address);
-	pud = pud_alloc(mm, pgd, address);
-	if (!pud)
-		return VM_FAULT_OOM;
-	pmd = pmd_alloc(mm, pud, address);
-	if (!pmd)
-		return VM_FAULT_OOM;
-	pte = pte_alloc_map(mm, pmd, address);
-	if (!pte)
-		return VM_FAULT_OOM;
+        pgd = pgd_offset(mm, address);
+        pud = pud_alloc(mm, pgd, address);
+        if (!pud)
+                return VM_FAULT_OOM;
+        pmd = pmd_alloc(mm, pud, address);
+        if (!pmd)
+                return VM_FAULT_OOM;
+        pte = pte_alloc_map(mm, pmd, address);
+        if (!pte)
+                return VM_FAULT_OOM;
 
-	return handle_pte_fault(mm, vma, address, pte, pmd, flags);
+        return handle_pte_fault(mm, vma, address, pte, pmd, flags);
 }
 ```
 
