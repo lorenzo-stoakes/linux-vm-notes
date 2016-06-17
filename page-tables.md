@@ -186,105 +186,6 @@ phy offset = 000000010000 = 16
   maintained - the [Translation Lookaside Buffer (TLB)][tlb] - more on this in a
   later section.
 
-### 64-bit Address Space
-
-* In [current x86-64 implementations][x86-64-address-space] only the lower 48
-  bits of an address are used - the remaining higher order bits must all be
-  equal to the 48th bit, i.e. allowable addresses are 128TiB (47 bits) in the
-  `0000000000000000` - `00007fffffffffff` range, and 128TiB (47 bits) in the
-  `ffff800000000000` - `ffffffffffffffff` range - the address space is divided
-  into upper and lower portions.
-
-* In fact, reading the [x86-64 memory map doc][x86-64-mm], only 46 bits (64TiB)
-  of RAM is supported - this makes sense, as it allows for the entire physical
-  address space to be mapped into the kernel while leaving another 64TiB free
-  for other kernel data.
-
-* In linux, like most (if not all?) other operating systems, this provides a
-  nice separation between kernel and user address space for free - keep kernel
-  addresses in the upper portion and user addresses in the lower portion.
-
-* Taking another quick look at the [memory map][x86-64-mm]:
-
-```
-...
-0000000000000000 - 00007fffffffffff (=47 bits) user space, different per mm
-hole caused by [48:63] sign extension
-ffff800000000000 - ffff87ffffffffff (=43 bits) guard hole, reserved for hypervisor
-ffff880000000000 - ffffc7ffffffffff (=64 TB) direct mapping of all phys. memory
-...
-```
-
-* We can see there's a gap reserved for the hypervisor between ffff800000000000
-  and ffff87ffffffffff, immediately after which the entire 64TiB physical
-  address space is mapped.
-
-* This allows us to have a simple means of translating from a physical address
-  to a virtual one within the kernel - simply offset the physical one by
-  `ffff880000000000`. This constant is defined as [PAGE_OFFSET][PAGE_OFFSET] (an
-  alias for [__PAGE_OFFSET][__PAGE_OFFSET].)
-
-* More generally to translate from virtual to physical addresses and vice-versa
-  in the kernel, two functions are available - [phys_to_virt()][phys_to_virt] (a
-  wrapper around [__va()][__va]) and [virt_to_phys()][virt_to_phys] (a wrapper
-  around [__pa()][__pa].)
-
-* Give that we have `PAGE_OFFSET` [__va()][__va] is simple:
-
-```c
-#define __va(x) ((void *)((unsigned long)(x)+PAGE_OFFSET))
-```
-
-* [__pa()][__pa] is a little more complicated - It invokes
-  [__phys_addr()][__phys_addr], which (assuming we haven't set
-  `CONFIG_DEBUG_VIRTUAL`) subsequently invokes
-  [__phys_addr_nodebug()][__phys_addr_nodebug]:
-
-```c
-#define __pa(x) __phys_addr((unsigned long)(x))
-
-...
-
-#define __phys_addr(x) __phys_addr_nodebug(x)
-
-...
-
-static inline unsigned long __phys_addr_nodebug(unsigned long x)
-{
-        unsigned long y = x - __START_KERNEL_map;
-
-        /* use the carry flag to determine if x was < __START_KERNEL_map */
-        x = y + ((x > y) ? phys_base : (__START_KERNEL_map - PAGE_OFFSET));
-
-        return x;
-}
-```
-
-* What is [__START_KERNEL_map][__START_KERNEL_map] (which is defined as
-  `ffffffff80000000`)? We can see from the [memory map][x86-64-mm] that this is
-  the virtual address above which the kernel is loaded:
-
-```
-...
-ffffffff80000000 - ffffffffa0000000 (=512 MB)  kernel text mapping, from phys 0
-ffffffffa0000000 - ffffffffff5fffff (=1526 MB) module mapping space
-ffffffffff600000 - ffffffffffdfffff (=8 MB) vsyscalls
-ffffffffffe00000 - ffffffffffffffff (=2 MB) unused hole
-```
-
-* [__phys_addr_nodebug()][__phys_addr_nodebug] therefore differentiates between
-  virtual addresses that have been mapped from the direct physical mapping at
-  [__PAGE_OFFSET][__PAGE_OFFSET] and those that originate from the kernel itself
-  from [__START_KERNEL_map][__START_KERNEL_map] on.
-
-* One important thing to note here is that [phys_base][phys_base] is used to
-  offset the returned address if it is indeed a reference to a kernel symbol -
-  this is a value that is [determined on startup][phys_base-fixup] in case the
-  kernel is loaded higher than expected. This might occur if the kernel is
-  loaded via [kdump][kdump] for example (more details are available in
-  [Kdump: Smarter, Easier, Trustier (PDF)][kdump-paper], a paper on the
-  subject.)
-
 ## Page Table Entry Flags
 
 * Since each of the directory tables are page-aligned, [PAGE_SHIFT][PAGE_SHIFT]
@@ -617,7 +518,6 @@ static int __handle_mm_fault(struct mm_struct *mm, struct vm_area_struct *vma,
   be freed by the allocation function if an error occurs (though the page tables
   that succeeded allocation will remain for the purposes of this function.)
 
-[PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L35
 [PAGE_SHIFT]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L8
 [PGDIR_SHIFT]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L27
 [PMD_SHIFT]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L40
@@ -628,22 +528,15 @@ static int __handle_mm_fault(struct mm_struct *mm, struct vm_area_struct *vma,
 [PTRS_PER_PTE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L46
 [PTRS_PER_PUD]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L34
 [PUD_SHIFT]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L33
-[__PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L35
-[__START_KERNEL_map]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L37
 [__follow_pte]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3594
 [__handle_mm_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3412
 [__pa]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L40
-[__phys_addr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L26
-[__phys_addr_nodebug]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L12
-[__va]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L54
 [context-switch]:https://en.wikipedia.org/wiki/Context_switch
 [context_switch-lazytlb]:https://github.com/torvalds/linux/blob/v4.6/kernel/sched/core.c#L2731
 [doc-tlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/tlb.txt
 [flush_tlb_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L293
 [init_mm]:https://github.com/torvalds/linux/blob/v4.6/mm/init-mm.c#L16
 [ipi]:https://en.wikipedia.org/wiki/Inter-processor_interrupt
-[kdump-paper]:https://www.kernel.org/doc/ols/2007/ols2007v1-pages-167-178.pdf
-[kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
 [leave_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L41
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
 [mmu]:https://en.wikipedia.org/wiki/Memory_management_unit
@@ -659,9 +552,6 @@ static int __handle_mm_fault(struct mm_struct *mm, struct vm_area_struct *vma,
 [pgdval_t]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
 [pgtable_64_types.h]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h
 [pgtable_types.h]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h
-[phys_base-fixup]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L140
-[phys_base]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L520
-[phys_to_virt]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L136
 [pmd_alloc]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1582
 [pmd_free]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L94
 [pmd_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L566
@@ -687,10 +577,7 @@ static int __handle_mm_fault(struct mm_struct *mm, struct vm_area_struct *vma,
 [task_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L1394
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [virt_to_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L63
-[virt_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L118
 [virtual-memory]:https://en.wikipedia.org/wiki/Virtual_memory
-[x86-64-address-space]:https://en.wikipedia.org/wiki/X86-64#VIRTUAL-ADDRESS-SPACE
-[x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
 [xen]:https://en.wikipedia.org/wiki/Xen
 
 [funcs]:./page-table-funcs.md

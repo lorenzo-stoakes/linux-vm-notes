@@ -12,6 +12,13 @@ __NOTE:__ I target [linux 4.6][linux-4.6] and an x86-64 non-[NUMA][numa] system.
    the 64-bit address space, how they are manually traversed, the TLB and
    finally how page tables are allocated and freed.
 
+### In Progress
+
+* [Process Address Space](process.md) - Discussion about virtual memory address
+  space for processes - managing VMAs, process data structure
+  construction/destruction, file/device-backed memory regions, page faulting,
+  demand allocation, COW pages, copying to/from userland.
+
 ### Function Cheat Sheets
 
 These pages list useful VM functions with a reasonably detailed description of
@@ -26,11 +33,6 @@ code:
 
 * [Physical Pages](physical.md) - Discussion about how physical pages are
   managed in linux.
-
-* [Process Address Space](process.md) - Discussion about virtual memory address
-  space for processes - managing VMAs, process data structure
-  construction/destruction, file/device-backed memory regions, page faulting,
-  demand allocation, COW pages, copying to/from userland.
 
 * [Buddy Allocator](buddy.md) - Discussion about the fundamental underlying
   physical memory allocator.
