@@ -13,7 +13,7 @@ __NOTE:__ I target [linux 4.6][linux-4.6] and an x86-64 non-[NUMA][numa] system.
    finally how page tables are allocated and freed.
 
 3. [Physical Pages](physical.md) - Discussion about how physical pages are
-   managed in linux. __INCOMPLETE__
+   managed in linux. __EMPTY__
 
 4. [Process Address Space](process.md) - Discussion about virtual memory address
    space for processes - managing VMAs, process data structure
