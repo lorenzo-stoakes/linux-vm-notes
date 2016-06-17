@@ -31,7 +31,7 @@ Kernel (128TiB)
                                             |     memory     | |
                         ffffc80000000000 -> |----------------| v
                                             /                /
-                                            \       hole     \
+                                            \      hole      \
                                             /                /
         VMALLOC_START = ffffc90000000000 -> |----------------| ^
                                             |    vmalloc/    | |
