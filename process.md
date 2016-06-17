@@ -21,76 +21,75 @@ Userland (128TiB)
 
 Kernel (128TiB)
 
-                        ffff800000000000 -> |---------------| ^
-                                            |   Hypervisor  | |
-                                            |    Reserved   | | 8 TiB
-                                            |     Space     | |
-        __PAGE_OFFSET = ffff880000000000 -> |---------------| x
-                                            |     Direct    | |
-                                            |     Mapping   | | 64 TiB
-                                            |  of all phys. | |
-                                            |     memory    | |
-                        ffffc80000000000 -> |---------------| v
-                                            /               /
-                                            \      hole     \
-                                            /               /
-        VMALLOC_START = ffffc90000000000 -> |---------------| ^
-                                            |    vmalloc/   | |
-                                            |    ioremap    | | 32 TiB
-                                            |     space     | |
-      VMALLOC_END + 1 = ffffe90000000000 -> |---------------| v
-                                            /               /
-                                            \      hole     \
-                                            /               /
-        VMEMMAP_START = ffffea0000000000 -> |---------------| ^
-                                            |    Virtual    | |
-                                            |  Memory Map   | | 1 TiB
-                                            | (struct page  | |
-                                            |     array)    | |
-                        ffffeb0000000000 -> |---------------| v
-                                            /               /
-                                            \    'unused'   \
-                                            /      hole     /
-                                            \               \
-                        ffffec0000000000 -> |---------------| ^
-                                            |  Kasan Shadow | | 16 TiB
-                                            |    Memory     | |
-                        fffffc0000000000 -> |---------------| v
-                                            /               /
-                                            \    'unused'   \
-                                            /      hole     /
-                                            \               \
-     ESPFIX_BASE_ADDR = ffffff0000000000 -> |---------------| ^
-                                            |  %esp fixup   | | 512 GiB
-                                            |    stacks     | |
-                        ffffff8000000000 -> |---------------| v
-                                            /               /
-                                            \    'unused'   \
-                                            /      hole     /
-                                            \               \
-           EFI_VA_END = ffffffef00000000 -> |---------------| ^
-                                            |   EFI region  | | 64 GiB
-                                            | mapping space | |
-         EFI_VA_START = ffffffff00000000 -> |---------------| v
-                                            /               /
-                                            \    'unused'   \
-                                            /      hole     /
-                                            \               \
-   __START_KERNEL_map = ffffffff80000000 -> |---------------| ^
-                                            |  Kernel text  | | 512 MiB
-                                            |    mapping    | |
-        MODULES_VADDR = ffffffffa0000000 -> |---------------| x
-                                            |     Module    | |
-                                            |    mapping    | | 1.5GiB
-                                            |     space     | |
-                        ffffffffff600000 -> |---------------| x
-                                            |   vsyscalls   | | 8MiB
-                        ffffffffffe00000 -> |---------------| v
-                                            /               /
-                                            \    'unused'   \
-                                            /      hole     /
-                                            \               \
-                                            -----------------
+                        ffff800000000000 -> |----------------| ^
+                                            |   Hypervisor   | |
+                                            |    Reserved    | | 8 TiB
+                                            |      Space     | |
+        __PAGE_OFFSET = ffff880000000000 -> |----------------| x
+                                            | Direct mapping | |
+                                            |  of all phys.  | | 64 TiB
+                                            |     memory     | |
+                        ffffc80000000000 -> |----------------| v
+                                            /                /
+                                            \       hole     \
+                                            /                /
+        VMALLOC_START = ffffc90000000000 -> |----------------| ^
+                                            |    vmalloc/    | |
+                                            |    ioremap     | | 32 TiB
+                                            |     space      | |
+      VMALLOC_END + 1 = ffffe90000000000 -> |----------------| v
+                                            /                /
+                                            \      hole      \
+                                            /                /
+        VMEMMAP_START = ffffea0000000000 -> |----------------| ^
+                                            |     Virtual    | |
+                                            |   Memory Map   | | 1 TiB
+                                            |  (struct page  | |
+                                            |     array)     | |
+                        ffffeb0000000000 -> |----------------| v
+                                            /                /
+                                            \    'unused'    \
+                                            /      hole      /
+                                            \                \
+                        ffffec0000000000 -> |----------------| ^
+                                            |  Kasan Shadow  | | 16 TiB
+                                            |     Memory     | |
+                        fffffc0000000000 -> |----------------| v
+                                            /                /
+                                            \    'unused'    \
+                                            /      hole      /
+                                            \                \
+     ESPFIX_BASE_ADDR = ffffff0000000000 -> |----------------| ^
+                                            |   %esp fixup   | | 512 GiB
+                                            |     stacks     | |
+                        ffffff8000000000 -> |----------------| v
+                                            /                /
+                                            \    'unused'    \
+                                            /      hole      /
+                                            \                \
+           EFI_VA_END = ffffffef00000000 -> |----------------| ^
+                                            |   EFI region   | | 64 GiB
+                                            | mapping space  | |
+         EFI_VA_START = ffffffff00000000 -> |----------------| v
+                                            /                /
+                                            \    'unused'    \
+                                            /      hole      /
+                                            \                \
+   __START_KERNEL_map = ffffffff80000000 -> |----------------| ^
+                                            |  Kernel text   | | 512 MiB
+                                            |    mapping     | |
+        MODULES_VADDR = ffffffffa0000000 -> |----------------| x
+                                            |     Module     | |
+                                            |    mapping     | | 1.5 GiB
+                                            |     space      | |
+                        ffffffffff600000 -> |----------------| x
+                                            |   vsyscalls    | | 8 MiB
+                        ffffffffffe00000 -> |----------------| v
+                                            /                /
+                                            \    'unused'    \
+                                            /      hole      /
+                                            \                \
+                                            ------------------
 ```
 
 * In [current x86-64 implementations][x86-64-address-space] only the lower 48
