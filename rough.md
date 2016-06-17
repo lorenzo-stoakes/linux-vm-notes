@@ -100,6 +100,9 @@ pmd_large -> pse         pmd_huge -> pse/not present
   PMD does refer to a page this way, I will need to modify the function
   descriptions accordingly.
 
+* What happens when a new kernel mapping is added in page tables? Are all shared
+  mappings updated? Or kept to a single PUD maybe? Probably just pre-mapped.
+
 ## Interesting functions
 
 * [free_pgd_range()][free_pgd_range]
