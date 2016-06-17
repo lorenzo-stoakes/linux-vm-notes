@@ -91,6 +91,10 @@ pmd_large -> pse         pmd_huge -> pse/not present
   for specific 'quick lists' for allocating page table pages? Covered in what's
   new in linux 2.6 section of UtLVMM.
 
+* What are `%esp` fixup stacks referenced in the [x86-64 memory map][x86-64-mm]?
+
+* Cover ASLR (maybe mention DEP in passing, have already covered the NX bit.)
+
 ## Thoughts
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
