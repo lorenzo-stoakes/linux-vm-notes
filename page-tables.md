@@ -1,5 +1,9 @@
 # Page Tables
 
+__NOTE:__ The [page table functions][funcs] page contains a lot of details and
+often expands a great deal on functions referenced to here. It's highly
+recommended to study that page along with this.
+
 ## Introduction
 
 * [Virtual memory][virtual-memory], used by the majority of modern operating
