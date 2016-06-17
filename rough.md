@@ -120,3 +120,4 @@ pmd_large -> pse         pmd_huge -> pse/not present
 [pat]:https://en.wikipedia.org/wiki/Page_attribute_table
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
 [free_pgd_range]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L473
+[x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
