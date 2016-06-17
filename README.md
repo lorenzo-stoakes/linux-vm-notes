@@ -10,7 +10,7 @@ __NOTE:__ I target [linux 4.6][linux-4.6] and an x86-64 non-[NUMA][numa] system.
 2. [Page Tables](page-tables.md) - Discussion about what
    [page tables][page-table] are, how they are used in linux, how they fit in
    the 64-bit address space, how they are manually traversed, the TLB and
-   finally how page tables are allocated and freed. __INCOMPLETE__
+   finally how page tables are allocated and freed.
 
 3. [Physical Pages](physical.md) - Discussion about how physical pages are
    managed in linux. __INCOMPLETE__
