@@ -8,9 +8,9 @@ __NOTE:__ I target [linux 4.6][linux-4.6] and an x86-64 non-[NUMA][numa] system.
    referencing any actual code or making assumptions about prior knowledge.
 
 2. [Page Tables](page-tables.md) - Discussion about what
-   [page tables][page-table] are, how they are used in linux, how they fit in
-   the 64-bit address space, how they are manually traversed, the TLB and
-   finally how page tables are allocated and freed.
+   [page tables][page-table] are, how they are used in linux, how they are
+   manually traversed, the TLB and finally how page tables are allocated and
+   freed.
 
 ### In Progress
 
