@@ -9,8 +9,8 @@ Userland (128TiB)
 
                         0000000000000000 -> |---------------| ^
                                             |    Process    | |
-                                            |    Address    | | 128 TiB
-                                            |     Space     | |
+                                            |    address    | | 128 TiB
+                                            |     space     | |
                         0000800000000000 -> |---------------| v
 
              .        ` .     -                 `-       ./   _
@@ -23,8 +23,8 @@ Kernel (128TiB)
 
                         ffff800000000000 -> |----------------| ^
                                             |   Hypervisor   | |
-                                            |    Reserved    | | 8 TiB
-                                            |      Space     | |
+                                            |    reserved    | | 8 TiB
+                                            |      space     | |
         __PAGE_OFFSET = ffff880000000000 -> |----------------| x
                                             | Direct mapping | |
                                             |  of all phys.  | | 64 TiB
@@ -43,7 +43,7 @@ Kernel (128TiB)
                                             /                /
         VMEMMAP_START = ffffea0000000000 -> |----------------| ^
                                             |     Virtual    | |
-                                            |   Memory Map   | | 1 TiB
+                                            |   memory map   | | 1 TiB
                                             |  (struct page  | |
                                             |     array)     | |
                         ffffeb0000000000 -> |----------------| v
@@ -52,8 +52,8 @@ Kernel (128TiB)
                                             /      hole      /
                                             \                \
                         ffffec0000000000 -> |----------------| ^
-                                            |  Kasan Shadow  | | 16 TiB
-                                            |     Memory     | |
+                                            |  Kasan shadow  | | 16 TiB
+                                            |     memory     | |
                         fffffc0000000000 -> |----------------| v
                                             /                /
                                             \    'unused'    \
