@@ -105,7 +105,9 @@ pmd_large -> pse         pmd_huge -> pse/not present
   descriptions accordingly.
 
 * What happens when a new kernel mapping is added in page tables? Are all shared
-  mappings updated? Or kept to a single PUD maybe? Probably just pre-mapped.
+  mappings updated? Or kept to a single PUD maybe? Probably just pre-mapped. -
+  `KERNEL_IMAGE_SIZE_DEFAULT` seems to indicate that the 512MiB kernel is
+  pre-mapped.
 
 ## Interesting functions
 
