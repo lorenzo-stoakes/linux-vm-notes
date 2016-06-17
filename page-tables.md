@@ -558,6 +558,65 @@ context_switch(struct rq *rq, struct task_struct *prev,
   process's PGD via [leave_mm()][leave_mm]. At this point the 'lazy' TLB is
   forced into action :)
 
+## Allocating/Freeing Page Table Pages
+
+* It's important to note that the pages that contain the contents of each of the
+  PGD, PUD, PMD and PTE pages are simply pages like any other in the system,
+  allocated within the kernel.
+
+* The page table structure only becomes 'special' in a sense when the CPU is
+  made aware that we wish a page to represent the currently valid PGD by placing
+  its physical address in the `cr3` register (see [switch_mm()][switch_mm].)
+
+* The actual allocation of page table pages is handled by
+  [pgd_alloc()][pgd_alloc], [pud_alloc()][pud_alloc], [pmd_alloc()][pmd_alloc],
+  [pte_alloc()][pte_alloc] (and its associated wrapper functions
+  [pte_alloc_map()][pte_alloc_map] and
+  [pte_alloc_map_lock()][pte_alloc_map_lock]) and
+  [pte_alloc_kernel()][pte_alloc_kernel] for kernel allocations.
+
+* Conversely, freeing is performed by [pgd_free()][pgd_free],
+  [pud_free()][pud_free], [pmd_free()][pmd_free], [pte_free()][pte_free] and
+  [pte_free_kernel()][pte_free_kernel].
+
+* There are interesting details as to the operation of each of these functions,
+  I go into a fair bit of detail in these in the [page table functions][funcs]
+  page.
+
+* A function which performs allocation is
+  [__handle_mm_fault()][__handle_mm_fault]. Simplifying and stripping out the
+  huge page handling (see the [huge pages][huge] section for discussion of
+  this):
+
+```c
+static int __handle_mm_fault(struct mm_struct *mm, struct vm_area_struct *vma,
+			     unsigned long address, unsigned int flags)
+{
+	pgd_t *pgd;
+	pud_t *pud;
+	pmd_t *pmd;
+	pte_t *pte;
+
+	pgd = pgd_offset(mm, address);
+	pud = pud_alloc(mm, pgd, address);
+	if (!pud)
+		return VM_FAULT_OOM;
+	pmd = pmd_alloc(mm, pud, address);
+	if (!pmd)
+		return VM_FAULT_OOM;
+	pte = pte_alloc_map(mm, pmd, address);
+	if (!pte)
+		return VM_FAULT_OOM;
+
+	return handle_pte_fault(mm, vma, address, pte, pmd, flags);
+}
+```
+
+* Here you can see the general form of using the `pXX_alloc()` functions. Note
+  there is no attempt to free the pages. The page table page just allocated will
+  be freed by the allocation function if an error occurs (though the page tables
+  that succeeded allocation will remain for the purposes of this function.)
+
 [PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L35
 [PAGE_SHIFT]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L8
 [PGDIR_SHIFT]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L27
@@ -572,6 +631,7 @@ context_switch(struct rq *rq, struct task_struct *prev,
 [__PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L35
 [__START_KERNEL_map]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L37
 [__follow_pte]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3594
+[__handle_mm_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3412
 [__pa]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L40
 [__phys_addr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L26
 [__phys_addr_nodebug]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L12
@@ -592,6 +652,8 @@ context_switch(struct rq *rq, struct task_struct *prev,
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
 [page_to_pfn]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/memory_model.h#L80
 [page_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L144
+[pgd_alloc]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L354
+[pgd_free]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L394
 [pgd_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L676
 [pgd_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L252
 [pgdval_t]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L15
@@ -600,17 +662,28 @@ context_switch(struct rq *rq, struct task_struct *prev,
 [phys_base-fixup]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L140
 [phys_base]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L520
 [phys_to_virt]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L136
+[pmd_alloc]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1582
+[pmd_free]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L94
 [pmd_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L566
 [pmd_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L291
 [pmdval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L13
+[pte_alloc]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1694
+[pte_alloc_kernel]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1704
+[pte_alloc_map]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1697
+[pte_alloc_map_lock]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1700
+[pte_free]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L48
+[pte_free_kernel]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L42
 [pte_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L171
 [pte_t]:http://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L18
 [pteval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L12
+[pud_alloc]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1576
+[pud_free]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgalloc.h#L131
 [pud_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L635
 [pud_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L270
 [pudval_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64_types.h#L14
 [ring]:https://en.wikipedia.org/wiki/Protection_ring
 [swapper_pg_dir]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64.h#L25
+[switch_mm]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/mmu_context.h#L118
 [task_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L1394
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [virt_to_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L63
@@ -621,4 +694,5 @@ context_switch(struct rq *rq, struct task_struct *prev,
 [xen]:https://en.wikipedia.org/wiki/Xen
 
 [funcs]:./page-table-funcs.md
+[huge]:./huge.md
 [physical]:./physical.md
