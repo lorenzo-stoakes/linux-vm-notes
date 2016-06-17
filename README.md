@@ -12,6 +12,16 @@ __NOTE:__ I target [linux 4.6][linux-4.6] and an x86-64 non-[NUMA][numa] system.
    the 64-bit address space, how they are manually traversed, the TLB and
    finally how page tables are allocated and freed.
 
+### Function Cheat Sheets
+
+These pages list useful VM functions with a reasonably detailed description of
+each function, their arguments, return value and a link to the function
+declaration within the [github mirror][linux-4.6] of the linux kernel source
+code:
+
+* [General](./funcs.md)
+* [Page Tables](./page-table-funcs.md)
+
 ### Forthcoming
 
 * [Physical Pages](physical.md) - Discussion about how physical pages are
@@ -33,16 +43,6 @@ __NOTE:__ I target [linux 4.6][linux-4.6] and an x86-64 non-[NUMA][numa] system.
 
 * [Huge Pages](huge.md) - Discussion about huge pages, including
   [transparent huge pages][transhuge].
-
-### Function Cheat Sheets
-
-These pages list useful VM functions with a reasonably detailed description of
-each function, their arguments, return value and a link to the function
-declaration within the [github mirror][linux-4.6] of the linux kernel source
-code:
-
-* [General](./funcs.md)
-* [Page Tables](./page-table-funcs.md)
 
 ## Introduction
 
