@@ -92,6 +92,7 @@ pmd_large -> pse         pmd_huge -> pse/not present
   new in linux 2.6 section of UtLVMM.
 
 * What are `%esp` fixup stacks referenced in the [x86-64 memory map][x86-64-mm]?
+  Presumably a means of handling 32-bit processes (given `esp` not `rsp`.)
 
 * Cover ASLR (maybe mention DEP in passing, have already covered the NX bit.)
 
