@@ -2,6 +2,97 @@
 
 ## 64-bit Address Space
 
+* Let's take a look at the _virtual_ [x86-64 memory map][x86-64-mm]:
+
+```
+Userland (128TiB)
+
+                        0000000000000000 -> |---------------| ^
+                                            |    Process    | |
+                                            |    Address    | | 128 TiB
+                                            |     Space     | |
+                        0000800000000000 -> |---------------| v
+
+             .        ` .     -                 `-       ./   _
+                      _    .`   -   The netherworld of  `/   `
+            -     `  _        |  /      unavailable sign-extended -/ .
+             ` -        .   `  48-bit address space  -     \  /    -
+           \-                - . . . .             \      /       -
+
+Kernel (128TiB)
+
+                        ffff800000000000 -> |---------------| ^
+                                            |   Hypervisor  | |
+                                            |    Reserved   | | 8 TiB
+                                            |     Space     | |
+        __PAGE_OFFSET = ffff880000000000 -> |---------------| x
+                                            |     Direct    | |
+                                            |     Mapping   | | 64 TiB
+                                            |  of all phys. | |
+                                            |     memory    | |
+                        ffffc80000000000 -> |---------------| v
+                                            /               /
+                                            \      hole     \
+                                            /               /
+        VMALLOC_START = ffffc90000000000 -> |---------------| ^
+                                            |    vmalloc/   | |
+                                            |    ioremap    | | 32 TiB
+                                            |     space     | |
+      VMALLOC_END + 1 = ffffe90000000000 -> |---------------| v
+                                            /               /
+                                            \      hole     \
+                                            /               /
+        VMEMMAP_START = ffffea0000000000 -> |---------------| ^
+                                            |    Virtual    | |
+                                            |  Memory Map   | | 1 TiB
+                                            | (struct page  | |
+                                            |     array)    | |
+                        ffffeb0000000000 -> |---------------| v
+                                            /               /
+                                            \    'unused'   \
+                                            /      hole     /
+                                            \               \
+                        ffffec0000000000 -> |---------------| ^
+                                            |  Kasan Shadow | | 16 TiB
+                                            |    Memory     | |
+                        fffffc0000000000 -> |---------------| v
+                                            /               /
+                                            \    'unused'   \
+                                            /      hole     /
+                                            \               \
+     ESPFIX_BASE_ADDR = ffffff0000000000 -> |---------------| ^
+                                            |  %esp fixup   | | 512 GiB
+                                            |    stacks     | |
+                        ffffff8000000000 -> |---------------| v
+                                            /               /
+                                            \    'unused'   \
+                                            /      hole     /
+                                            \               \
+           EFI_VA_END = ffffffef00000000 -> |---------------| ^
+                                            |   EFI region  | | 64 GiB
+                                            | mapping space | |
+         EFI_VA_START = ffffffff00000000 -> |---------------| v
+                                            /               /
+                                            \    'unused'   \
+                                            /      hole     /
+                                            \               \
+   __START_KERNEL_map = ffffffff80000000 -> |---------------| ^
+                                            |  Kernel text  | | 512 MiB
+                                            |    mapping    | |
+        MODULES_VADDR = ffffffffa0000000 -> |---------------| x
+                                            |     Module    | |
+                                            |    mapping    | | 1.5GiB
+                                            |     space     | |
+                        ffffffffff600000 -> |---------------| x
+                                            |   vsyscalls   | | 8MiB
+                        ffffffffffe00000 -> |---------------| v
+                                            /               /
+                                            \    'unused'   \
+                                            /      hole     /
+                                            \               \
+                                            -----------------
+```
+
 * In [current x86-64 implementations][x86-64-address-space] only the lower 48
   bits of an address are used - the remaining higher order bits must all be
   equal to the 48th bit, i.e. allowable addresses are 128TiB (47 bits) in the
@@ -17,17 +108,6 @@
 * In linux, like most (if not all?) other operating systems, this provides a
   nice separation between kernel and user address space for free - keep kernel
   addresses in the upper portion and user addresses in the lower portion.
-
-* Taking another quick look at the [memory map][x86-64-mm]:
-
-```
-...
-0000000000000000 - 00007fffffffffff (=47 bits) user space, different per mm
-hole caused by [48:63] sign extension
-ffff800000000000 - ffff87ffffffffff (=43 bits) guard hole, reserved for hypervisor
-ffff880000000000 - ffffc7ffffffffff (=64 TB) direct mapping of all phys. memory
-...
-```
 
 ### Kernel Address Translation
 
