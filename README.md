@@ -12,25 +12,27 @@ __NOTE:__ I target [linux 4.6][linux-4.6] and an x86-64 non-[NUMA][numa] system.
    the 64-bit address space, how they are manually traversed, the TLB and
    finally how page tables are allocated and freed.
 
-3. [Physical Pages](physical.md) - Discussion about how physical pages are
-   managed in linux. __EMPTY__
+### Empty
 
-4. [Process Address Space](process.md) - Discussion about virtual memory address
-   space for processes - managing VMAs, process data structure
-   construction/destruction, file/device-backed memory regions, page faulting,
-   demand allocation, COW pages, copying to/from userland. __EMPTY__
+* [Physical Pages](physical.md) - Discussion about how physical pages are
+  managed in linux.
 
-5. [Buddy Allocator](buddy.md) - Discussion about the fundamental underlying
-   physical memory allocator. __EMPTY__
+* [Process Address Space](process.md) - Discussion about virtual memory address
+  space for processes - managing VMAs, process data structure
+  construction/destruction, file/device-backed memory regions, page faulting,
+  demand allocation, COW pages, copying to/from userland.
 
-6. [SLUB Allocator](slub.md) - Discussion about the default object
-   allocator. __EMPTY__
+* [Buddy Allocator](buddy.md) - Discussion about the fundamental underlying
+  physical memory allocator.
 
-7. [Out of Memory Killer](oom.md) - Discussion about the OOM
-   killer. __EMPTY__
+* [SLUB Allocator](slub.md) - Discussion about the default object
+  allocator.
 
-8. [Huge Pages](huge.md) - Discussion about huge pages, including
-   [transparent huge pages][transhuge]. __EMPTY__
+* [Out of Memory Killer](oom.md) - Discussion about the OOM
+  killer.
+
+* [Huge Pages](huge.md) - Discussion about huge pages, including
+  [transparent huge pages][transhuge].
 
 ### Function Cheat Sheets
 
