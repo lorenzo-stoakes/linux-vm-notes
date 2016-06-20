@@ -99,6 +99,8 @@ pmd_large -> pse         pmd_huge -> pse/not present
 * `MODULES_END = 0xffffffffff000000` but the [x86-64 memory map][x86-64-mm] says
   they end at `0xffffffffff600000`. Why the difference?
 
+* Cover anonymous memory.
+
 ## Thoughts
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
