@@ -345,8 +345,9 @@ struct mm_struct {
   and a [red-black tree][red-black], the head of the linked list being kept in
   the `mm_struct`'s `mmap` field, and previous/next nodes kept in the
   [struct vm_area_struct][vm_area_struct]'s `vm_prev` and `vm_next` fields,
-  sorted in address order, and the red/black root in the `mm_struct`'s `mm_rb`
-  field, with the node kept in the `vm_area_struct`'s `vm_rb` field.
+  sorted in address order, and the red/black root in the `mm_struct`'s
+  [struct rb_root][rb_root] `mm_rb` field, with the node kept in the
+  `vm_area_struct`'s [struct rb_node][rb_node] `vm_rb` field.
 
 * Looking at the [struct vm_area_struct][vm_area_struct] (again assuming x86-64
   with a pretty standard configuration in order to strip irrelevant `CONFIG_xxx`
@@ -413,6 +414,202 @@ struct vm_area_struct {
 };
 ```
 
+* The [struct vm_area_struct][vm_area_struct] references its
+  [struct mm_struct][mm_struct] back in turn via its `vm_mm` field.
+
+* [struct vm_area_struct][vm_area_struct]'s `vm_ops` field references a
+  [struct vm_operations_struct][vm_operations_struct] which contains function
+  pointers which are invoked when certain events occur in the VMA:
+
+```c
+struct vm_operations_struct {
+        void (*open)(struct vm_area_struct * area);
+        void (*close)(struct vm_area_struct * area);
+        int (*mremap)(struct vm_area_struct * area);
+        int (*fault)(struct vm_area_struct *vma, struct vm_fault *vmf);
+        int (*pmd_fault)(struct vm_area_struct *, unsigned long address,
+                                                pmd_t *, unsigned int flags);
+        void (*map_pages)(struct vm_area_struct *vma, struct vm_fault *vmf);
+
+        /* notification that a previously read-only page is about to become
+         * writable, if an error is returned it will cause a SIGBUS */
+        int (*page_mkwrite)(struct vm_area_struct *vma, struct vm_fault *vmf);
+
+        /* same as page_mkwrite when using VM_PFNMAP|VM_MIXEDMAP */
+        int (*pfn_mkwrite)(struct vm_area_struct *vma, struct vm_fault *vmf);
+
+        /* called by access_process_vm when get_user_pages() fails, typically
+         * for use by special VMAs that can switch between memory and hardware
+         */
+        int (*access)(struct vm_area_struct *vma, unsigned long addr,
+                      void *buf, int len, int write);
+
+        /* Called by the /proc/PID/maps code to ask the vma whether it
+         * has a special name.  Returning non-NULL will also cause this
+         * vma to be dumped unconditionally. */
+        const char *(*name)(struct vm_area_struct *vma);
+
+        /*
+         * set_policy() op must add a reference to any non-NULL @new mempolicy
+         * to hold the policy upon return.  Caller should pass NULL @new to
+         * remove a policy and fall back to surrounding context--i.e. do not
+         * install a MPOL_DEFAULT policy, nor the task or system default
+         * mempolicy.
+         */
+        int (*set_policy)(struct vm_area_struct *vma, struct mempolicy *new);
+
+        /*
+         * get_policy() op must add reference [mpol_get()] to any policy at
+         * (vma,addr) marked as MPOL_SHARED.  The shared policy infrastructure
+         * in mm/mempolicy.c will do this automatically.
+         * get_policy() must NOT add a ref if the policy at (vma,addr) is not
+         * marked as MPOL_SHARED. vma policies are protected by the mmap_sem.
+         * If no [shared/vma] mempolicy exists at the addr, get_policy() op
+         * must return NULL--i.e., do not "fallback" to task or system default
+         * policy.
+         */
+        struct mempolicy *(*get_policy)(struct vm_area_struct *vma,
+                                        unsigned long addr);
+        /*
+         * Called by vm_normal_page() for special PTEs to find the
+         * page for @addr.  This is useful if the default behavior
+         * (using pte_page()) would not find the correct page.
+         */
+        struct page *(*find_special_page)(struct vm_area_struct *vma,
+                                          unsigned long addr);
+};
+```
+
+* Of most note here are `fault()`, which is called when a
+  [page fault][page-fault] occurs and `map_pages()` which maps a specified range
+  of addresses. These both use [struct vm_fault][vm_fault] to parameterise their
+  operation and to place certain out fields:
+
+```c
+struct vm_fault {
+        unsigned int flags;             /* FAULT_FLAG_xxx flags */
+        gfp_t gfp_mask;                 /* gfp mask to be used for allocations */
+        pgoff_t pgoff;                  /* Logical page offset based on vma */
+        void __user *virtual_address;   /* Faulting virtual address */
+
+        struct page *cow_page;          /* Handler may choose to COW */
+        struct page *page;              /* ->fault handlers should return a
+                                         * page here, unless VM_FAULT_NOPAGE
+                                         * is set (which is also implied by
+                                         * VM_FAULT_ERROR).
+                                         */
+        /* for ->map_pages() only */
+        pgoff_t max_pgoff;              /* map pages for offset from pgoff till
+                                         * max_pgoff inclusive */
+        pte_t *pte;                     /* pte entry associated with ->pgoff */
+};
+```
+
+* Most files that are mapped to memory will not have any need for custom
+  handling and hence will use the [generic_file_vm_ops][generic_file_vm_ops]
+  [struct vm_operations_struct][vm_operations_struct]:
+
+```c
+const struct vm_operations_struct generic_file_vm_ops = {
+        .fault          = filemap_fault,
+        .map_pages      = filemap_map_pages,
+        .page_mkwrite   = filemap_page_mkwrite,
+};
+```
+
+* This invokes [filemap_fault()][filemap_fault] on a [page fault][page-fault],
+  [filemap_map_pages()][filemap_map_pages] when pages are to be mapped, and
+  [filemap_page_mkwrite()][filemap_page_mkwrite] to handle the case where a
+  read-only page is about to be made writeable.
+
+* If a memory region is mapped to a file, its `vm_file` field will be non-NULL
+  and point to a [struct file][file] which describes the file which is mapped.
+
+* The [struct file][file] in turn references a
+  [struct address_space][address_space] via `f_mapping` which contains the data
+  needed to track memory mapped to the file it describes:
+
+```c
+struct address_space {
+        struct inode            *host;          /* owner: inode, block_device */
+        struct radix_tree_root  page_tree;      /* radix tree of all pages */
+        spinlock_t              tree_lock;      /* and lock protecting it */
+        atomic_t                i_mmap_writable;/* count VM_SHARED mappings */
+        struct rb_root          i_mmap;         /* tree of private and shared mappings */
+        struct rw_semaphore     i_mmap_rwsem;   /* protect tree, count, list */
+        /* Protected by tree_lock together with the radix tree */
+        unsigned long           nrpages;        /* number of total pages */
+        /* number of shadow or DAX exceptional entries */
+        unsigned long           nrexceptional;
+        pgoff_t                 writeback_index;/* writeback starts here */
+        const struct address_space_operations *a_ops;   /* methods */
+        unsigned long           flags;          /* error bits/gfp mask */
+        spinlock_t              private_lock;   /* for use by the address_space */
+        struct list_head        private_list;   /* ditto */
+        void                    *private_data;  /* ditto */
+}
+```
+
+* Note the [struct rb_root][rb_root] field `i_mmap` - this provides a
+  [red-black][red-black] tree root listing private and shared VMAs which map the
+  file, including the VMA that references the address space via
+  `vm_file->f_mapping`.
+
+* The operations a [struct address_space][address_space] needs to perform are
+  provided via its [struct address_space_operations][address_space_operations]
+  `a_ops` field, for example reading/writing pages from/to the file, etc.:
+
+```c
+struct address_space_operations {
+        int (*writepage)(struct page *page, struct writeback_control *wbc);
+        int (*readpage)(struct file *, struct page *);
+
+        /* Write back some dirty pages from this mapping. */
+        int (*writepages)(struct address_space *, struct writeback_control *);
+
+        /* Set a page dirty.  Return true if this dirtied it */
+        int (*set_page_dirty)(struct page *page);
+
+        int (*readpages)(struct file *filp, struct address_space *mapping,
+                        struct list_head *pages, unsigned nr_pages);
+
+        int (*write_begin)(struct file *, struct address_space *mapping,
+                                loff_t pos, unsigned len, unsigned flags,
+                                struct page **pagep, void **fsdata);
+        int (*write_end)(struct file *, struct address_space *mapping,
+                                loff_t pos, unsigned len, unsigned copied,
+                                struct page *page, void *fsdata);
+
+        /* Unfortunately this kludge is needed for FIBMAP. Don't use it */
+        sector_t (*bmap)(struct address_space *, sector_t);
+        void (*invalidatepage) (struct page *, unsigned int, unsigned int);
+        int (*releasepage) (struct page *, gfp_t);
+        void (*freepage)(struct page *);
+        ssize_t (*direct_IO)(struct kiocb *, struct iov_iter *iter, loff_t offset);
+        /*
+         * migrate the contents of a page to the specified target. If
+         * migrate_mode is MIGRATE_ASYNC, it must not block.
+         */
+        int (*migratepage) (struct address_space *,
+                        struct page *, struct page *, enum migrate_mode);
+        int (*launder_page) (struct page *);
+        int (*is_partially_uptodate) (struct page *, unsigned long,
+                                        unsigned long);
+        void (*is_dirty_writeback) (struct page *, bool *, bool *);
+        int (*error_remove_page)(struct address_space *, struct page *);
+
+        /* swapfile support */
+        int (*swap_activate)(struct swap_info_struct *sis, struct file *file,
+                                sector_t *span);
+        void (*swap_deactivate)(struct file *file);
+};
+```
+
+* Non-anonymously mapped [struct page][page]'s which represent the underlying
+  physical pages of memory mapped to a [struct address_space][address_space]
+  reference it via their `mapping` field (if & only if the low bit of the
+  `mapping` field is clear.)
+
 [PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L35
 [__PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L35
 [__START_KERNEL_map]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L37
@@ -420,15 +617,28 @@ struct vm_area_struct {
 [__phys_addr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L26
 [__phys_addr_nodebug]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L12
 [__va]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L54
+[address_space]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L430
+[address_space_operations]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L372
+[file]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L873
+[filemap_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2013
+[filemap_map_pages]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2134
+[filemap_page_mkwrite]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2207
+[generic_file_vm_ops]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2234
 [kdump-paper]:https://www.kernel.org/doc/ols/2007/ols2007v1-pages-167-178.pdf
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
+[page-fault]:https://en.wikipedia.org/wiki/Page_fault
+[page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
 [phys_base-fixup]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L140
 [phys_base]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L520
 [phys_to_virt]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L136
+[rb_node]:https://github.com/torvalds/linux/blob/v4.6/include/linux/rbtree.h#L36
+[rb_root]:https://github.com/torvalds/linux/blob/v4.6/include/linux/rbtree.h#L43
 [red-black]:https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
 [virt_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L118
 [vm_area_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L294
+[vm_fault]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L290
+[vm_operations_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L313
 [x86-64-address-space]:https://en.wikipedia.org/wiki/X86-64#VIRTUAL-ADDRESS-SPACE
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
 
