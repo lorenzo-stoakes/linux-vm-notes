@@ -119,11 +119,15 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * [free_pgd_range()][free_pgd_range]
 
+* [vm_normal_page()][vm_normal_page] - has some discussion about 'special' PTEs,
+  worth investigating.
+
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
 [flush_tlb_kernel_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L296
+[free_pgd_range]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L473
 [mem_section]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1040
 [mtrr]:https://en.wikipedia.org/wiki/Memory_type_range_register
 [pat]:https://en.wikipedia.org/wiki/Page_attribute_table
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
-[free_pgd_range]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L473
+[vm_normal_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L742
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
