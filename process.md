@@ -287,6 +287,54 @@ struct mm_struct {
 
 ## Virtual Memory Areas
 
+```
+     |------------------|      |------------------|      |------------------|
+     | struct mm_struct | .... | struct mm_struct | .... | struct mm_struct |
+     |------------------|      |------------------|      |------------------|
+                                  mmap | ^
+                                       | |
+                 /---------------------/ \-----------------------\
+                 |                                               |
+                 v                                               | vm_mm
+     |-----------------------|       vm_next         |-----------------------| vm_next
+     |                       | --------------------> |                       | - - ->
+     | struct vm_area_struct |       vm_prev         | struct vm_area_struct | vm_prev
+     |                       | <-------------------- |                       | <- - -
+     |-----------------------|                       |-----------------------|
+                 ^    | vm_file                                  | vm_ops
+                 |    |                                          |
+                 |    |                                          v
+                 |    \-----------------\        |-----------------------------|
+                 |                      |        | struct vm_operations_struct |
+                 |                      v        |-----------------------------|
+                 |               |-------------|
+                 |               | struct file |
+    Other VMAs   |               |-------------|
+          .      |            f_mapping |
+           .     |                      |
+            .    |                      v
+             \   |           |----------------------|
+              \  |           | struct address_space |
+               \ |           |----------------------|
+                \|         i_mmap |     ^      | a_ops
+(red-black tree) \----------------/     |      \---------------\
+                                        |                      |
+                                        |                      v
+                                        |     |----------------------------------|
+                                        |     |  struct address_space_operations |
+                                        |     |----------------------------------|
+                                        |
+                       -  - - --/-------X-------\-- - -  -
+                                |               |
+                        mapping |               | mapping
+                         |-------------| |-------------|
+                         | struct page | | struct page |
+                         |-------------| |-------------|
+```
+
+* The above diagram shows the relationship between the various process address
+  space structures (far from exhaustively), which we'll get into below:
+
 * Each process's virtual memory is additionally divided into non-overlapping
   regions (Virtual Memory Areas or 'VMA's) related by their purpose and
   protection state.
