@@ -291,9 +291,18 @@ struct mm_struct {
   regions (Virtual Memory Areas or 'VMA's) related by their purpose and
   protection state.
 
-* VMAs are represented by the [struct vm_area_struct][vm_area_struct] type
-  (again assuming x86-64 with a pretty standard configuration in order to strip
-  irrelevant `CONFIG_xxx` fields):
+* VMAs are represented by the [struct vm_area_struct][vm_area_struct] type.
+
+* A [struct mm_struct][mm_struct]'s VMAs are stored both as a doubly-linked list
+  and a [red-black tree][red-black], the head of the linked list being kept in
+  the `mm_struct`'s `mmap` field, and previous/next nodes kept in the
+  [struct vm_area_struct][vm_area_struct]'s `vm_prev` and `vm_next` fields,
+  sorted in address order, and the red/black root in the `mm_struct`'s `mm_rb`
+  field, with the node kept in the `vm_area_struct`'s `vm_rb` field.
+
+* Looking at the [struct vm_area_struct][vm_area_struct] (again assuming x86-64
+  with a pretty standard configuration in order to strip irrelevant `CONFIG_xxx`
+  fields):
 
 ```c
 struct vm_area_struct {
@@ -369,6 +378,7 @@ struct vm_area_struct {
 [phys_base-fixup]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L140
 [phys_base]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L520
 [phys_to_virt]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L136
+[red-black]:https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
 [virt_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L118
 [vm_area_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L294
 [x86-64-address-space]:https://en.wikipedia.org/wiki/X86-64#VIRTUAL-ADDRESS-SPACE
