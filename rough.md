@@ -101,6 +101,8 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * Cover anonymous memory.
 
+* Cover spurious faults, e.g. [spurious_fault()][spurious_fault].
+
 ## Thoughts
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
@@ -117,7 +119,7 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 ## Interesting functions
 
-* [free_pgd_range()][free_pgd_range]
+* [free_pgd_range()][free_pgd_range].
 
 * [vm_normal_page()][vm_normal_page] - has some discussion about 'special' PTEs,
   worth investigating.
@@ -129,5 +131,6 @@ pmd_large -> pse         pmd_huge -> pse/not present
 [mtrr]:https://en.wikipedia.org/wiki/Memory_type_range_register
 [pat]:https://en.wikipedia.org/wiki/Page_attribute_table
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
+[spurious_fault]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L1045
 [vm_normal_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L742
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
