@@ -640,9 +640,57 @@ struct address_space_operations {
    fault triggers a copy of the page. Since most process's pages of memory are
    only read, this hugely increases the efficiency of forks.
 
+### Handling Page Faults
+
+* Under x86, the kernel can specify an interrupt handler for page faults which
+  is invoked by the CPU when one occurs. When the handler function is invoked,
+  an error code describing the cause of the fault is pushed to the stack and the
+  `cr2` control register is set to the linear address that caused the fault.
+
+* The linux page fault handler is [do_page_fault()][do_page_fault]. It retrieves
+  the error code and address before handing off the heavy lifting to
+  [__do_page_fault()][__do_page_fault].
+
+#### Kernel faults
+
+* Page faults in the kernel are not permitted, except for the case of `vmalloc`
+  memory (will discuss this in a later section), which is used to allow for
+  virtually contiguous memory.
+
+#### Page Fault Error Code
+
+* The error code specified by x86 consists of a bitfield of
+  [enum x86_pf_error_code][x86_pf_error_code] providing information on the cause
+  of the page fault:
+
+```c
+/*
+ * Page fault error code bits:
+ *
+ *   bit 0 ==    0: no page found       1: protection fault
+ *   bit 1 ==    0: read access         1: write access
+ *   bit 2 ==    0: kernel-mode access  1: user-mode access
+ *   bit 3 ==                           1: use of reserved bit detected
+ *   bit 4 ==                           1: fault was an instruction fetch
+ *   bit 5 ==                           1: protection keys block access
+ */
+enum x86_pf_error_code {
+
+        PF_PROT         =               1 << 0,
+        PF_WRITE        =               1 << 1,
+        PF_USER         =               1 << 2,
+        PF_RSVD         =               1 << 3,
+        PF_INSTR        =               1 << 4,
+        PF_PK           =               1 << 5,
+};
+```
+
+
+
 [PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L35
 [__PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L35
 [__START_KERNEL_map]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L37
+[__do_page_fault]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L1169
 [__pa]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L40
 [__phys_addr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L26
 [__phys_addr_nodebug]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L12
@@ -651,6 +699,7 @@ struct address_space_operations {
 [address_space_operations]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L372
 [copy-on-write]:https://en.wikipedia.org/wiki/Copy-on-write
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
+[do_page_fault]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L1399
 [file]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L873
 [filemap_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2013
 [filemap_map_pages]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2134
@@ -677,5 +726,6 @@ struct address_space_operations {
 [vm_operations_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L313
 [x86-64-address-space]:https://en.wikipedia.org/wiki/X86-64#VIRTUAL-ADDRESS-SPACE
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
+[x86_pf_error_code]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L40
 
 [page-tables]:./page-tables.md
