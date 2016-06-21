@@ -610,6 +610,36 @@ struct address_space_operations {
   reference it via their `mapping` field (if & only if the low bit of the
   `mapping` field is clear.)
 
+## Page Faulting
+
+* A [page fault][page-fault] occurs when either a virtual memory address is not
+  mapped, or it is and no physical page is actually mapped to the address
+  (i.e. [pte_present()][pte_present] returns 0 on the mapping's PTE), or a write
+  is attempted on a read-only mapping (i.e. [pte_write()][pte_write] returns 0
+  on the mapping's PTE) or when userland tries to access a kernel mapping.
+
+* This isn't necessary an error, in fact modern operating systems (including
+  linux, naturally) use page faulting for a number of different mechanisms:
+
+1. [Swap][swap] - 'Swapped out' memory is data that has been written to the disk
+   so that RAM can be used for other purposes. The memory is marked non-present,
+   then when a fault occurs the data can be read from disk and placed in memory
+   for the referencing process to access.
+
+2. [Demand paging][demand-paging] - Under demand paging, physical pages are not
+   actually mapped until they are used. This allows for a far more efficient
+   means of allocation of memory compared to the case where memory must be fully
+   allocated as soon as it is requested - as soon as the memory is actually used
+   in some way, a page fault occurs and the kernel allocates the memory.
+
+3. [Copy-on-write semantics][copy-on-write] - Since page faults occur when a
+   read-only page of memory is attempted to be written to, this can be used to
+   significantly improve the efficiency of a [fork][fork]. Rather than copying
+   the allocated pages of the parent process, the pages can be marked read-only
+   in both parent and child, and as soon as one writes to a page the arising
+   fault triggers a copy of the page. Since most process's pages of memory are
+   only read, this hugely increases the efficiency of forks.
+
 [PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L35
 [__PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L35
 [__START_KERNEL_map]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L37
@@ -619,10 +649,13 @@ struct address_space_operations {
 [__va]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L54
 [address_space]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L430
 [address_space_operations]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L372
+[copy-on-write]:https://en.wikipedia.org/wiki/Copy-on-write
+[demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
 [file]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L873
 [filemap_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2013
 [filemap_map_pages]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2134
 [filemap_page_mkwrite]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2207
+[fork]:https://en.wikipedia.org/wiki/Fork_(system_call)
 [generic_file_vm_ops]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2234
 [kdump-paper]:https://www.kernel.org/doc/ols/2007/ols2007v1-pages-167-178.pdf
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
@@ -632,9 +665,12 @@ struct address_space_operations {
 [phys_base-fixup]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L140
 [phys_base]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L520
 [phys_to_virt]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L136
+[pte_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L491
+[pte_write]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L131
 [rb_node]:https://github.com/torvalds/linux/blob/v4.6/include/linux/rbtree.h#L36
 [rb_root]:https://github.com/torvalds/linux/blob/v4.6/include/linux/rbtree.h#L43
 [red-black]:https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
+[swap]:https://en.wikipedia.org/wiki/Paging
 [virt_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L118
 [vm_area_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L294
 [vm_fault]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L290
