@@ -684,8 +684,8 @@ struct address_space_operations {
                                \-------------/                   | No           |
                                       | No                       v              |
                                       v                    /-----------\ Yes    |
- ---------------          Yes /--------------\            /  Was fault  \-------|
- |  bad_area() |<------------/      SMAP      \           \  spurious?  /       |
+ ---------------          Yes /--------------\            /  Was fault  \-------\
+ |  bad_area() |<-------\----/      SMAP      \           \  spurious?  /       |
  | (see below) |        |    \   violation?   /            \-----------/        |
  ---------------        |     \--------------/                   | No           |
    ^                    |             | No                       |              |
@@ -742,13 +742,13 @@ struct address_space_operations {
                  /  Did we fault in kernel  \--------/    / Is there a kernel  \--\
                  \          space?          /             \ exception handler? /  |
                   \------------------------/               \------------------/   |
-                               |                                     | Yes        |
+                               | No                                  | Yes        |
                                v                                     v            |
-                    /-------------------\                   ------------------    |
+                    /-------------------\ Yes               ------------------    |
                    / Attempted access of \-----------\      | Call exception |    |
                    \    kernel memory?   /           |      |     handler    |    |
                     \-------------------/            |      ------------------    |
-                               |                     |                            |
+                               | No                  |                            |
                                v                     v                            |
                        ----------------     -------------------   ---------       |
                        | Send SIGSEGV |<--- | Mark protection |   | OOPS! |<------/
