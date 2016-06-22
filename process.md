@@ -651,6 +651,111 @@ struct address_space_operations {
   the error code and address before handing off the heavy lifting to
   [__do_page_fault()][__do_page_fault].
 
+* [__do_page_fault()][__do_page_fault] performs a number of checks to handle the
+  error cases, before handing off to the non-arch specific
+  [handle_mm_fault()][handle_mm_fault] if the fault looks
+  valid. Diagrammatically (simplifying the process somewhat, ignoring
+  [kmemcheck][kmemcheck] and [kprobes][kprobes], some special case fault
+  support, and vsyscall emulation - better to look at the code for those cases):
+
+```
+                                       -------------------
+                                       |   CPU invokes   |
+                                       | do_page_fault() |
+                                       -------------------
+                                                |
+                                                v
+                                    ------------------------
+                                    | Retrieve address and |
+                                    | error code then call |
+                                    |   __do_page_fault()  |
+                                    ------------------------
+                                                |
+                                                v
+                                   /------------------------\
+                                  /  Did we fault in kernel  \---\
+                                  \          space?          /   | Yes
+                                   \------------------------/    |
+                                      | No                       v
+                                      v                 /-----------------\ Yes
+ ---------                 Yes /-------------\         /  vmalloc_fault()  \----\
+ | OOPS! |<-------------------/ Reserved bits \        \      succeed?     /    |
+ ---------                    \   modified?   /         \-----------------/     |
+                               \-------------/                   | No           |
+                                      | No                       v              |
+                                      v                    /-----------\ Yes    |
+ ---------------          Yes /--------------\            /  Was fault  \-------|
+ |  bad_area() |<------------/      SMAP      \           \  spurious?  /       |
+ | (see below) |        |    \   violation?   /            \-----------/        |
+ ---------------        |     \--------------/                   | No           |
+   ^                    |             | No                       |              |
+   |                    \-------------(--------------------------/              |
+   |                    |             v                                         |
+   |                    | Yes /--------------\                                  |
+   |                    \----/  Fault handler \                                 |
+   |                         \    disabled?   /                                 |
+   |                          \--------------/                                  |
+   |                                  | No                                      |
+   |                                  v                                         |
+   |                         --------------------                               |
+   |                         | Find nearest VMA |<--------\                     |
+   |                         --------------------         |                     |
+   |                                  |                   |                     |
+   |                                  v                   |                     |
+   |  No /-------------\  No /----------------\           |                     |
+   \----/  Is region a  \<--/     Does VMA     \          | No                  |
+   |    \     stack?    /   \ contain address? /    /------------\ Yes          |
+   |     \-------------/     \----------------/    / Fatal signal \--\          |
+   |            | Yes                 | Yes        \   pending?   /  |          |
+   |            v                     v             \------------/   |          |
+   | No /---------------\ Yes  /-----------\              ^          |          |
+   \---/  expand_stack() \--->/ Permissions \             |          |          |
+   |   \    succeed?     /    \     OK?     /       --------------   |          |
+   |    \---------------/      \-----------/        | Mark retry |   |          |
+   |                         No |     | Yes         | disallowed |   |          |
+   \----------------------------/     |             --------------   |          |
+                                      v                   ^          |          |
+                            ---------------------         | Yes      |          |
+                            |        Call       |     /--------\ No  |          |
+                            | handle_mm_fault() |    /  Retry   \----\          |
+                            ---------------------    \ allowed? /    |          |
+                                      |               \--------/     |          |
+                                      v                   ^          |          |
+                              /---------------\  Yes      |          v          |
+                             /     Returns     \----------/       /-----\ Yes   |
+                             \ VM_FAULT_RETRY? /                 / User  \------\
+                              \---------------/                  \ Mode? /      |
+                                      | No                        \-----/       |
+                                      v                              | No       |
+                              ------------------                     |          |
+                              | Fault Complete |<--------------------)----------/
+                              ------------------                     |
+                                                                     |
+                                                                     v
+                   (from bad_area() above)                   -----------------
+                 -----------------------------       /------>|     Call      |
+                 | __bad_area_no_semaphore() |       |       |  no_context() |
+                 -----------------------------       |       -----------------
+                               |                     |               |
+                               v                     |               v
+                  /------------------------\ Yes     |     /------------------\ No
+                 /  Did we fault in kernel  \--------/    / Is there a kernel  \--\
+                 \          space?          /             \ exception handler? /  |
+                  \------------------------/               \------------------/   |
+                               |                                     | Yes        |
+                               v                                     v            |
+                    /-------------------\                   ------------------    |
+                   / Attempted access of \-----------\      | Call exception |    |
+                   \    kernel memory?   /           |      |     handler    |    |
+                    \-------------------/            |      ------------------    |
+                               |                     |                            |
+                               v                     v                            |
+                       ----------------     -------------------   ---------       |
+                       | Send SIGSEGV |<--- | Mark protection |   | OOPS! |<------/
+                       ----------------     |      fault      |   ---------
+                                            -------------------
+```
+
 #### Kernel faults
 
 * Page faults in the kernel are not permitted, except for the case of `vmalloc`
@@ -706,8 +811,11 @@ enum x86_pf_error_code {
 [filemap_page_mkwrite]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2207
 [fork]:https://en.wikipedia.org/wiki/Fork_(system_call)
 [generic_file_vm_ops]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2234
+[handle_mm_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3501
 [kdump-paper]:https://www.kernel.org/doc/ols/2007/ols2007v1-pages-167-178.pdf
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
+[kmemcheck]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kmemcheck.txt
+[kprobes]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kprobes.txt
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
 [page-fault]:https://en.wikipedia.org/wiki/Page_fault
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
