@@ -103,6 +103,8 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * Cover spurious faults, e.g. [spurious_fault()][spurious_fault].
 
+* Look at vsyscall emulation.
+
 ## Thoughts
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
