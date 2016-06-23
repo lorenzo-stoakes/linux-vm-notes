@@ -790,9 +790,15 @@ enum x86_pf_error_code {
 };
 ```
 
+* Page faults are divided into 3 types - minor, major and error, the latter two
+  cases represented by [VM_FAULT_MAJOR][VM_FAULT_MAJOR] and
+  [VM_FAULT_ERROR][VM_FAULT_ERROR] respectively.
+
 
 
 [PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L35
+[VM_FAULT_ERROR]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1101
+[VM_FAULT_MAJOR]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1088
 [__PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L35
 [__START_KERNEL_map]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L37
 [__do_page_fault]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L1169
