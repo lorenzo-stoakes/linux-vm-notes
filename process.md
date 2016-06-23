@@ -722,7 +722,7 @@ struct address_space_operations {
                                       |               \--------/     |          |
                                       v                   ^          |          |
                               /---------------\  Yes      |          v          |
-                             /     Returns     \----------/     /---------\ Yes |
+                             / Return Value &  \----------/     /---------\ Yes |
                              \ VM_FAULT_RETRY? /               / User-Mode \----\
                               \---------------/                \   Linux?  /    |
                                       | No                      \---------/     |
