@@ -69,35 +69,15 @@ Speaking of hacks `linux-vm-notes`'s sister repo, [linux-vm-hacks][vm-hacks], is
 where I'm putting exploratory code and patches relating to my exploration of the
 VM subsystem.
 
-## Utilities
-
-For tools that might be of some actual use, [memutils][memutils] is the place to
-be.
-
-Additionally, I've created some [kernel hacking scripts][kernel-scripts] that
-some people might find useful for configuring, compiling and running kernels
-under qemu amongst other things.
-
 ## License
 
-These notes are licensed under [Creative Commons BY-NC-SA][license] - basically
-do what you want with them as long as you:
-
-1. Use them in a non-commercial setting.
-
-2. Provide proper attribution.
-
-3. Distribute them under the same license.
-
-Take a look at the official Creative Commons site if you need more details.
+These notes are licensed under [Creative Commons BY-NC-SA][license].
 
 [amazon-gorman]:http://www.amazon.co.uk/Understanding-Virtual-Memory-Manager-Perens/dp/0131453483
 [gorman]:http://www.csn.ul.ie/~mel/blog/
-[kernel-scripts]:https://github.com/lorenzo-stoakes/kernel-scripts
 [license]:http://creativecommons.org/licenses/by-nc-sa/4.0/
 [linux-4.6]:https://github.com/torvalds/linux/tree/v4.6
 [linux-gorman]:https://github.com/lorenzo-stoakes/linux-gorman-book-notes
-[memutils]:https://github.com/lorenzo-stoakes/memutils
 [numa]:https://en.wikipedia.org/wiki/Non-uniform_memory_access
 [page-table]:https://en.wikipedia.org/wiki/Page_table
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
