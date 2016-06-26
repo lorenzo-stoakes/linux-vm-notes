@@ -707,8 +707,14 @@ struct address_space_operations {
    |    \     stack?    /   \ contain address? /    /------------\ Yes          |
    |     \-------------/     \----------------/    / Fatal signal \--\          |
    |            | Yes                 | Yes        \   pending?   /  |          |
-   |            v                     v             \------------/   |          |
-   | No /---------------\ Yes  /-----------\              ^          |          |
+   |            v                     |             \------------/   |          |
+   | Yes /--------------\             |                   ^          |          |
+   \----/  Is address <  \            |                   |          |          |
+   |    \ stack pointer? /            |                   |          |          |
+   |     \--------------/             |                   |          |          |
+   |            | No                  |                   |          |          |
+   |            v                     v                   |          |          |
+   | No /---------------\ Yes  /-----------\              |          |          |
    \---/  expand_stack() \--->/ Permissions \             |          |          |
    |   \    succeed?     /    \     OK?     /       --------------   |          |
    |    \---------------/      \-----------/        | Mark retry |   |          |
