@@ -723,8 +723,8 @@ struct address_space_operations {
   |  mm_fault_error() |  |            v                   ^          |          |
   ---------------------  |    /---------------\  Yes      |          v          |
                          |   / Return Value &  \----------/     /---------\ Yes |
-                         |   \ VM_FAULT_RETRY? /               / User-Mode \----\
-                         |    \---------------/                \   Linux?  /    |
+                         |   \ VM_FAULT_RETRY? /               /   From    \----\
+                         |    \---------------/                \ userland? /    |
                          |            | No                      \---------/     |
                          |            v                              | No       |
                          |    /---------------\                      |          |
