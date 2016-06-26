@@ -715,18 +715,24 @@ struct address_space_operations {
    |                         No |     | Yes         | disallowed |   |          |
    \----------------------------/     |             --------------   |          |
                                       v                   ^          |          |
-                            ---------------------         | Yes      |          |
-                            |        Call       |     /--------\ No  |          |
-                            | handle_mm_fault() |    /  Retry   \----\          |
-                            ---------------------    \ allowed? /    |          |
-                                      |               \--------/     |          |
-                                      v                   ^          |          |
-                              /---------------\  Yes      |          v          |
-                             / Return Value &  \----------/     /---------\ Yes |
-                             \ VM_FAULT_RETRY? /               / User-Mode \----\
-                              \---------------/                \   Linux?  /    |
-                                      | No                      \---------/     |
-                                      v                              | No       |
+            /------------\  ---------------------         | Yes      |          |
+            |            |  |        Call       |     /--------\ No  |          |
+            v            |  | handle_mm_fault() |    /  Retry   \----\          |
+  ---------------------  |  ---------------------    \ allowed? /    |          |
+  |       Call        |  |            |               \--------/     |          |
+  |  mm_fault_error() |  |            v                   ^          |          |
+  ---------------------  |    /---------------\  Yes      |          v          |
+                         |   / Return Value &  \----------/     /---------\ Yes |
+                         |   \ VM_FAULT_RETRY? /               / User-Mode \----\
+                         |    \---------------/                \   Linux?  /    |
+                         |            | No                      \---------/     |
+                         |            v                              | No       |
+                         |    /---------------\                      |          |
+                         \---/ Return value &  \                     |          |
+                             \ VM_FAULT_ERROR? /                     |          |
+                              \---------------/                      |          |
+                                      | No                           |          |
+                                      v                              |          |
                               ------------------                     |          |
                               | Fault Complete |<--------------------)----------/
                               ------------------                     |
@@ -793,8 +799,6 @@ enum x86_pf_error_code {
 * Page faults are divided into 3 types - minor, major and error, the latter two
   cases represented by [VM_FAULT_MAJOR][VM_FAULT_MAJOR] and
   [VM_FAULT_ERROR][VM_FAULT_ERROR] respectively.
-
-
 
 [PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L35
 [VM_FAULT_ERROR]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1101
