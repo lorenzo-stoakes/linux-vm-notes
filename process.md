@@ -693,7 +693,7 @@ struct address_space_operations {
    |                                  v                                         |
    |                  Yes /-----------------------\                             |
    /---------------------/  Fault handler disabled \                            |
-   |                     \    or no mm_struct?     /                            |
+   |                     \    or !current->mm?     /                            |
    |                      \-----------------------/                             |
    |                                  | No                                      |
    |                                  v                                         |
