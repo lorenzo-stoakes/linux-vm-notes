@@ -7,15 +7,14 @@ cgroup/namespace logic, these will be considered separately.
 
 ## Contents
 
-1. [Fundamentals](fundamentals.md) - Overview of virtual memory concepts without
+1. [Fundamentals][fundamentals] - Overview of virtual memory concepts without
    referencing any actual code or making assumptions about prior knowledge.
 
-2. [Page Tables](page-tables.md) - Discussion about what
-   [page tables][page-table] are, how they are used in linux, how they are
-   manually traversed, the TLB and finally how page tables are allocated and
-   freed.
+2. [Page Tables][page-tables] - Discussion about what [page tables][page-table]
+   are, how they are used in linux, how they are manually traversed, the TLB and
+   finally how page tables are allocated and freed.
 
-3. [Process Address Space](process.md) - Discussion about virtual memory address
+3. [Process Address Space][process] - Discussion about virtual memory address
   space for processes - managing VMAs, process data structure
   construction/destruction, file/device-backed memory regions, page faulting,
   demand allocation, COW pages, copying to/from userland. __WORK IN PROGRESS__
@@ -27,35 +26,33 @@ each function, their arguments, return value and a link to the function
 declaration within the [github mirror][linux-4.6] of the linux kernel source
 code:
 
-1. [General Functions](./funcs.md) - A list of general functions that don't fit
-   under any other category.
+1. [General Functions][funcs] - A list of general functions that don't fit under
+   any other category.
 
-2. [Page Table Functions](./page-table-funcs.md) - Functions relating to
-   [page tables](page-tables.md) other than the copious functions relating to
-   page table flags which rendered this page too huge.
+2. [Page Table Functions][page-table-funcs] - Functions relating to
+   [page tables][page-tables] other than the copious functions relating to page
+   table flags which rendered this page too huge.
 
-3. [Page Table Flag Functions](./page-table-flag-funcs.md) - Page table
-   functions relating to page table flags, separated out to avoid the page table
-   functions page getting to huge.
+3. [Page Table Flag Functions][page-table-flag-funcs] - Page table functions
+   relating to page table flags, separated out to avoid the page table functions
+   page getting to huge.
 
-4. [VMA Functions](./vma-funcs.md) - Functions relating to Virtual Memory Areas
+4. [VMA Functions][vma-funcs] - Functions relating to Virtual Memory Areas
    (VMAs.)
 
 ### Forthcoming
 
-* [Physical Pages](physical.md) - Discussion about how physical pages are
-  managed in linux.
+* [Physical Pages][physical] - Discussion about how physical pages are managed
+  in linux.
 
-* [Buddy Allocator](buddy.md) - Discussion about the fundamental underlying
+* [Buddy Allocator][buddy] - Discussion about the fundamental underlying
   physical memory allocator.
 
-* [SLUB Allocator](slub.md) - Discussion about the default object
-  allocator.
+* [SLUB Allocator][slub] - Discussion about the default object allocator.
 
-* [Out of Memory Killer](oom.md) - Discussion about the OOM
-  killer.
+* [Out of Memory Killer][oom] - Discussion about the OOM killer.
 
-* [Huge Pages](huge.md) - Discussion about huge pages, including
+* [Huge Pages][huge] - Discussion about huge pages, including
   [transparent huge pages][transhuge].
 
 ## Introduction
@@ -94,3 +91,17 @@ These notes are licensed under [Creative Commons BY-NC-SA][license].
 [page-table]:https://en.wikipedia.org/wiki/Page_table
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
 [vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
+
+[buddy]:./buddy.md
+[fundamentals]:./fundamentals.md
+[huge]:./huge.md
+[oom]:./oom.md
+[page-tables]:./page-tables.md
+[physical]:./physical.md
+[process]:./process.md
+[slub]:./slub.md
+
+[funcs]:./funcs.md
+[page-table-funcs]:./page-table-funcs.md
+[page-table-flag-funcs]:./page-table-flag-funcs.md
+[vma-funcs]:./vma-funcs.md
