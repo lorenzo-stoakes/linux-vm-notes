@@ -32,6 +32,7 @@ code:
 * [General](./funcs.md)
 * [Page Tables](./page-table-funcs.md)
 * [Page Table Flags](./page-table-flag-funcs.md)
+* [VMA](./vma-funcs.md)
 
 ### Forthcoming
 
