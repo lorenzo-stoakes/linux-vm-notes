@@ -15,12 +15,10 @@ cgroup/namespace logic, these will be considered separately.
    manually traversed, the TLB and finally how page tables are allocated and
    freed.
 
-### In Progress
-
-* [Process Address Space](process.md) - Discussion about virtual memory address
+3. [Process Address Space](process.md) - Discussion about virtual memory address
   space for processes - managing VMAs, process data structure
   construction/destruction, file/device-backed memory regions, page faulting,
-  demand allocation, COW pages, copying to/from userland.
+  demand allocation, COW pages, copying to/from userland. __WORK IN PROGRESS_
 
 ### Function Cheat Sheets
 
