@@ -18,7 +18,7 @@ cgroup/namespace logic, these will be considered separately.
 3. [Process Address Space](process.md) - Discussion about virtual memory address
   space for processes - managing VMAs, process data structure
   construction/destruction, file/device-backed memory regions, page faulting,
-  demand allocation, COW pages, copying to/from userland. __WORK IN PROGRESS_
+  demand allocation, COW pages, copying to/from userland. __WORK IN PROGRESS__
 
 ### Function Cheat Sheets
 
