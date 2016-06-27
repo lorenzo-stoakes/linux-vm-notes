@@ -827,6 +827,11 @@ enum x86_pf_error_code {
 };
 ```
 
+* This is used by [__do_page_fault()][__do_page_fault] and the functions it
+  invokes to handle cases correctly. Note that it enables the code to determine
+  whether the access was made from userland or kernel mode, and given we know
+  the address we can determine whether it is a kernel address or userland one.
+
 * Page faults are divided into 3 types - minor, major and error, the latter two
   cases represented by [VM_FAULT_MAJOR][VM_FAULT_MAJOR] and
   [VM_FAULT_ERROR][VM_FAULT_ERROR] respectively (`VM_FAULT_ERROR` is a bitmask
