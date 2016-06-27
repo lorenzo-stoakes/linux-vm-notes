@@ -832,12 +832,60 @@ enum x86_pf_error_code {
   whether the access was made from userland or kernel mode, and given we know
   the address we can determine whether it is a kernel address or userland one.
 
+#### Generic Page Table Fault Handling
+
+* As shown in the flow chart above, an initial check is made against a number of
+  error states, before the generic (i.e. non-arch specific)
+  [handle_mm_fault()][handle_mm_fault] is called.
+
+* [__handle_mm_fault()][__handle_mm_fault] does the heavy lifting, allocating
+  page tables as necessary.
+
+* It's interesting to note here that in fact page table mappings might not exist
+  for _valid_ addresses. Looking back to the flow chart, we can see that we
+  don't differentiate between a page fault caused by invalid virtual address
+  (i.e. no page table mappings for that address) or one where the present bit is
+  not set in the PTE.
+
+* Instead, we use the VMA to determine if the address is valid (with a special
+  case for stacks.) This means that large blocks of memory can not only fault-in
+  the physical pages of memory when requested, but also the page tables required
+  to map those pages.
+
+* In practice, it seems that multi-page allocations result in the first and last
+  pages being mapped and those in the middle not being. Experiment with the
+  [multi-page alloc][multi-page-alloc] sample code and the
+  [pagetables hack][pagetables-hack], both from the sister repo
+  [linux-vm-hacks][linux-vm-hacks] to explore this on a local linux system.
+
+* Physical page allocation is handled via
+  [handle_pte_fault()][handle_pte_fault]. Firstly, the function needs to handle
+  cases where the PTE is not present:
+
+1. If the PTE is empty and the VMA is anonymous i.e. not mapping a file,
+   [do_anonymous_page()][do_anonymous_page] handles allocating an anonymous page.
+
+2. If the PTE is empty and the VMA is not anonymous, i.e. mapping a file,
+   [do_fault()][do_fault] handles allocating the page.
+
+3. Finally, if the PTE is not present but also not empty, then
+   [do_swap_page()][do_swap_page] is invoked to handle the swapping.
+
+* In each of the above cases, the relevant function is returned and the rest of
+  the function does not run.
+
+#### Page Fault Types
+
 * Page faults are divided into 3 types - minor, major and error, the latter two
   cases represented by [VM_FAULT_MAJOR][VM_FAULT_MAJOR] and
   [VM_FAULT_ERROR][VM_FAULT_ERROR] respectively (`VM_FAULT_ERROR` is a bitmask
   of error states.)
 
+* Minor page faults are those where either memory simply needs to be faulted in
+  or a [CoW][copy-on-write] copy needs to be made.
 
+* Major faults are those that require I/O - i.e. a page needs to be swapped back
+  into memory, or a file mapping needs to be flushed or read from.
 
 [PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L35
 [VM_FAULT_ERROR]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1101
@@ -845,6 +893,7 @@ enum x86_pf_error_code {
 [__PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L35
 [__START_KERNEL_map]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L37
 [__do_page_fault]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L1169
+[__handle_mm_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3412
 [__pa]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L40
 [__phys_addr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L26
 [__phys_addr_nodebug]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L12
@@ -853,7 +902,10 @@ enum x86_pf_error_code {
 [address_space_operations]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L372
 [copy-on-write]:https://en.wikipedia.org/wiki/Copy-on-write
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
+[do_anonymous_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L2729
+[do_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3182
 [do_page_fault]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L1399
+[do_swap_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L2511
 [file]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L873
 [filemap_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2013
 [filemap_map_pages]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2134
@@ -861,6 +913,7 @@ enum x86_pf_error_code {
 [fork]:https://en.wikipedia.org/wiki/Fork_(system_call)
 [generic_file_vm_ops]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2234
 [handle_mm_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3501
+[handle_pte_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3345
 [kdump-paper]:https://www.kernel.org/doc/ols/2007/ols2007v1-pages-167-178.pdf
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
 [kmemcheck]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kmemcheck.txt
@@ -885,4 +938,7 @@ enum x86_pf_error_code {
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
 [x86_pf_error_code]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L40
 
+[linux-vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
+[multi-page-alloc]:https://github.com/lorenzo-stoakes/linux-vm-hacks/blob/master/experiments/multi_page_alloc.c
 [page-tables]:./page-tables.md
+[pagetables-hack]:https://github.com/lorenzo-stoakes/linux-vm-hacks/tree/master/pagetables
