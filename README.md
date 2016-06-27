@@ -2,6 +2,9 @@
 
 __NOTE:__ I target [linux 4.6][linux-4.6] and an x86-64 non-[NUMA][numa] system.
 
+__NOTE:__ For the time being I am more-or-less ignoring huge page and
+cgroup/namespace logic, these will be considered separately.
+
 ## Contents
 
 1. [Fundamentals](fundamentals.md) - Overview of virtual memory concepts without
