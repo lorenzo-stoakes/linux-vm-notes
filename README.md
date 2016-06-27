@@ -29,10 +29,19 @@ each function, their arguments, return value and a link to the function
 declaration within the [github mirror][linux-4.6] of the linux kernel source
 code:
 
-* [General](./funcs.md)
-* [Page Tables](./page-table-funcs.md)
-* [Page Table Flags](./page-table-flag-funcs.md)
-* [VMA](./vma-funcs.md)
+1. [General Functions](./funcs.md) - A list of general functions that don't fit
+   under any other category.
+
+2. [Page Table Functions](./page-table-funcs.md) - Functions relating to
+   [page tables](page-tables.md) other than the copious functions relating to
+   page table flags which rendered this page too huge.
+
+3. [Page Table Flag Functions](./page-table-flag-funcs.md) - Page table
+   functions relating to page table flags, separated out to avoid the page table
+   functions page getting to huge.
+
+4. [VMA Functions](./vma-funcs.md) - Functions relating to Virtual Memory Areas
+   (VMAs.)
 
 ### Forthcoming
 
