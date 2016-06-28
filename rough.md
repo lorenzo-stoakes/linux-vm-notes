@@ -105,6 +105,8 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * Look at vsyscall emulation.
 
+* Look at vmacache - https://lwn.net/Articles/589475/
+
 ## Thoughts
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
