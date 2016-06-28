@@ -285,6 +285,10 @@ struct mm_struct {
 };
 ```
 
+* The first [struct mm_struct][mm_struct] in the system is the statically
+  allocated [init_mm][init_mm], and all subsequent `mm_struct`'s are copies of
+  this one.
+
 ## Virtual Memory Areas
 
 ```
@@ -914,6 +918,7 @@ enum x86_pf_error_code {
 [generic_file_vm_ops]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2234
 [handle_mm_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3501
 [handle_pte_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3345
+[init_mm]:https://github.com/torvalds/linux/blob/v4.6/mm/init-mm.c#L16
 [kdump-paper]:https://www.kernel.org/doc/ols/2007/ols2007v1-pages-167-178.pdf
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
 [kmemcheck]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kmemcheck.txt
