@@ -37,8 +37,9 @@ code:
    [Page table][page-tables] functions relating to page table flags, separated
    out to avoid the page table functions page getting to huge.
 
-4. [VMA Functions][vma-funcs] - Functions relating to Virtual Memory Areas
-   (VMAs), which are described in the [Process Address Space][process] section.
+4. [VMA Functions][vma-funcs] - Functions relating to memory descriptors and
+   Virtual Memory Areas (VMAs), which are described in the
+   [Process Address Space][process] section.
 
 ### Forthcoming
 
