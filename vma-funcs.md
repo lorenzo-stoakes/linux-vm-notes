@@ -23,10 +23,10 @@
 
 `void *allocate_mm(void)`
 
-__NOTE:__ Macro, inferring function signature.
-
 [allocate_mm()][allocate_mm] simply allocates a new
 [struct mm_struct][mm_struct] from the slab allocator.
+
+__NOTE:__ Macro, inferring function signature.
 
 #### Arguments
 
@@ -35,6 +35,8 @@ N/A
 #### Returns
 
 A pointer to the newly allocated [struct mm_struct][mm_struct].
+
+---
 
 ### copy_mm()
 
