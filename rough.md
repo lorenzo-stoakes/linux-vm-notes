@@ -107,6 +107,8 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * Look at vmacache - https://lwn.net/Articles/589475/
 
+* Trace through a fork/exec.
+
 ## Thoughts
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
