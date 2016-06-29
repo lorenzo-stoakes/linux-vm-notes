@@ -307,6 +307,15 @@ struct mm_struct {
   allocation via the [slab][slab] allocator. They also both initialise
   process-specific fields are initialised via [mm_init()][mm_init].
 
+### Freeing
+
+* A [struct mm_struct][mm_struct] is ultimately freed via [free_mm()][free_mm]
+  which frees the object from the slab allocator.
+
+* `free_mm()` is invoked either when [mm_init()][mm_init] fails or in
+  [__mmdrop()][__mmdrop] which is called by [mmdrop()][mmdrop] when the
+  descriptor's reference count, `mm_count`, is reduced to zero.
+
 ## Virtual Memory Areas
 
 ```
@@ -916,6 +925,7 @@ enum x86_pf_error_code {
 [__START_KERNEL_map]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L37
 [__do_page_fault]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L1169
 [__handle_mm_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3412
+[__mmdrop]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L691
 [__pa]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L40
 [__phys_addr]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L26
 [__phys_addr_nodebug]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64.h#L12
@@ -937,6 +947,7 @@ enum x86_pf_error_code {
 [filemap_map_pages]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2134
 [filemap_page_mkwrite]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2207
 [fork]:https://en.wikipedia.org/wiki/Fork_(system_call)
+[free_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L567
 [generic_file_vm_ops]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2234
 [handle_mm_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3501
 [handle_pte_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3345
@@ -948,6 +959,7 @@ enum x86_pf_error_code {
 [mm_alloc]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L674
 [mm_init]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L598
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
+[mmdrop]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L2613
 [page-fault]:https://en.wikipedia.org/wiki/Page_fault
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
 [phys_base-fixup]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L140
