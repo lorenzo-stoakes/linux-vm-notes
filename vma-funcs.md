@@ -4,6 +4,8 @@
 
 ### Memory Descriptor
 
+* [allocate_mm()](#allocate_mm) - Allocates a new [struct mm_struct][mm_struct]
+  from the slab allocator.
 * [copy_mm()](#copy_mm) - Initialises the specified
   [struct task_struct][task_struct] with a copy of the current task's
   [struct mm_struct][mm_struct].
@@ -16,6 +18,23 @@
 ---
 
 ## Function Descriptions
+
+### allocate_mm()
+
+`void *allocate_mm(void)`
+
+__NOTE:__ Macro, inferring function signature.
+
+[allocate_mm()][allocate_mm] simply allocates a new
+[struct mm_struct][mm_struct] from the slab allocator.
+
+#### Arguments
+
+N/A
+
+#### Returns
+
+A pointer to the newly allocated [struct mm_struct][mm_struct].
 
 ### copy_mm()
 
@@ -73,6 +92,7 @@ operations are specified and so the VMA is anonymous, otherwise it is not.
 
 ---
 
+[allocate_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L566
 [copy_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L958
 [dup_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L923
 [dup_mmap]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L408
