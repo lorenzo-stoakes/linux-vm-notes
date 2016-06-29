@@ -24,7 +24,8 @@
 `void *allocate_mm(void)`
 
 [allocate_mm()][allocate_mm] simply allocates a new
-[struct mm_struct][mm_struct] from the slab allocator.
+[struct mm_struct][mm_struct] from the slab allocator via
+[kmem_cache_alloc()][kmem_cache_alloc].
 
 __NOTE:__ Macro, inferring function signature.
 
@@ -98,6 +99,7 @@ operations are specified and so the VMA is anonymous, otherwise it is not.
 [copy_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L958
 [dup_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L923
 [dup_mmap]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L408
+[kmem_cache_alloc]:https://github.com/torvalds/linux/blob/v4.6/mm/slub.c#L2583
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
 [task_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L1394
 [vm_area_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L294
