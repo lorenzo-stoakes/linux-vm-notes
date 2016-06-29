@@ -288,6 +288,23 @@ struct mm_struct {
 * The first [struct mm_struct][mm_struct] in the system is the statically
   allocated [init_mm][init_mm].
 
+* On a fork, the parent [struct mm_struct][mm_struct] is copied via
+  [copy_mm()][copy_mm], which also subsequently copies all page tables unless
+  it's a kernel thread which borrows the previous [struct mm_struct][mm_struct],
+  or the fork is invoked with `CLONE_VM` in which case the
+  [struct mm_struct][mm_struct] is shared.
+
+* `copy_mm()` invokes [dup_mm()][dup_mm] to do the heavy lifting of allocating
+  the new [struct mm_struct][mm_struct] and subsequently duplicating the
+  parent's page tables which is performed by [dup_mmap()][dup_mmap].
+
+* On an `exec` an entirely new [struct mm_struct][mm_struct] is allocated and
+  zeroed via [mm_alloc()][mm_alloc].
+
+* Both of these functions use [allocate_mm()][allocate_mm] to perform the
+  allocation via the [slab][slab] allocator. They also both initialise
+  process-specific fields are initialised via [mm_init()][mm_init].
+
 ## Virtual Memory Areas
 
 ```
@@ -903,12 +920,16 @@ enum x86_pf_error_code {
 [__va]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L54
 [address_space]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L430
 [address_space_operations]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L372
+[allocate_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L566
 [copy-on-write]:https://en.wikipedia.org/wiki/Copy-on-write
+[copy_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L958
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
 [do_anonymous_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L2729
 [do_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3182
 [do_page_fault]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L1399
 [do_swap_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L2511
+[dup_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L923
+[dup_mmap]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L408
 [file]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L873
 [filemap_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2013
 [filemap_map_pages]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2134
@@ -922,6 +943,8 @@ enum x86_pf_error_code {
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
 [kmemcheck]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kmemcheck.txt
 [kprobes]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kprobes.txt
+[mm_alloc]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L674
+[mm_init]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L598
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
 [page-fault]:https://en.wikipedia.org/wiki/Page_fault
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
@@ -946,3 +969,4 @@ enum x86_pf_error_code {
 [multi-page-alloc]:https://github.com/lorenzo-stoakes/linux-vm-hacks/blob/master/experiments/multi_page_alloc.c
 [page-tables]:./page-tables.md
 [pagetables-hack]:https://github.com/lorenzo-stoakes/linux-vm-hacks/tree/master/pagetables
+[slab]:./slub.md
