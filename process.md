@@ -285,6 +285,8 @@ struct mm_struct {
 };
 ```
 
+### Initialisation
+
 * The first [struct mm_struct][mm_struct] in the system is the statically
   allocated [init_mm][init_mm].
 
