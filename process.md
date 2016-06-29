@@ -286,8 +286,7 @@ struct mm_struct {
 ```
 
 * The first [struct mm_struct][mm_struct] in the system is the statically
-  allocated [init_mm][init_mm], and all subsequent `mm_struct`'s are copies of
-  this one.
+  allocated [init_mm][init_mm].
 
 ## Virtual Memory Areas
 
