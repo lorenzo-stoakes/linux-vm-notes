@@ -370,6 +370,10 @@ struct mm_struct {
   regions (Virtual Memory Areas or 'VMA's) related by their purpose and
   protection state.
 
+* This division exists because a process's virtual address space is necessarily
+  sparse - only portions of the space are allocated at any one time, so it makes
+  sense to track these regions.
+
 * VMAs are represented by the [struct vm_area_struct][vm_area_struct] type.
 
 * A [struct mm_struct][mm_struct]'s VMAs are stored both as a doubly-linked list
@@ -444,6 +448,9 @@ struct vm_area_struct {
         struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
 };
 ```
+
+* A list of a process's VMAs can be obtained via `/proc/<pid>/maps` or for
+  additional usage statistics, `/proc/<pid>/smaps`.
 
 * The [struct vm_area_struct][vm_area_struct] references its
   [struct mm_struct][mm_struct] back in turn via its `vm_mm` field.
