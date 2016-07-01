@@ -285,6 +285,136 @@ struct mm_struct {
 };
 ```
 
+### Fields
+
+* `struct vm_area_struct *mmap` - The first VMA in a linked-list of all the
+  memory descriptor's VMAs (see below diagram for more details.)
+
+* `struct rb_root mm_rb` - Root of the [red-black tree][red-black] containing
+  VMAs for fast lookup.
+
+* `u32 vmacache_seqnum` - __TBD__
+
+* `unsigned long (*get_unmapped_area)(struct file *filp, unsigned long addr,
+                                      unsigned long len, unsigned long pgoff,
+                                      unsigned long flags)` - __TBD__
+
+* `unsigned long mmap_base` - __TBD__
+
+* `unsigned long mmap_legacy_base` - __TBD__
+
+* `unsigned long task_size` - __TBD__
+
+* `unsigned long highest_vm_end` - __TBD__
+
+* `pgd_t *pgd` - The PGD for this process.
+
+* `atomic_t mm_users` - The reference count of processes that are using the
+  userspace portion of memory referenced by the descriptor, typically new
+  threads (in linux threads are processes that share a memory descriptor), or
+  logic that needs to avoid tear down. Decremented by [mmput()][mmput], which,
+  when this count reaches 0, invokes [exit_mmap()][exit_mmap] (and subsequently
+  [unmap_vmas()][unmap_vmas]) to free all userspace mappings. Finally `mmput()`
+  decrements `mm_count` via [mmdrop()][mmdrop]. Incrementing this count is
+  simply performed via [atomic_inc()][atomic_inc].
+
+* `atomic_t mm_count` - The ultimate reference count for the descriptor, with
+  all of the `mm_users` counting for 1 here. The key reason there's a separate
+  count from `mm_users` is that kernel threads 'borrow' the memory descriptor a
+  userland process (see lazy TLB in the [page tables][page-tables] section), and
+  don't care that userland has been torn down if `mm_users` has reached 0, but
+  obviously need to keep the descriptor around for the kernel
+  mappings. `mm_count` is decremented via [mmdrop()][mmdrop], and as with
+  `mm_users` it is simply incremented via [atomic_inc()][atomic_inc].
+
+* `atomic_long_t nr_ptes, nr_pmds` - A count of PTEs and PMDs associated with
+  the descriptor.
+
+* `int map_count` - The number of VMAs in use in the descriptor.
+
+* `spinlock_t page_table_lock` - A general lock for page tables (though
+  [split page table locks][split-page-table-lock] mean PTEs and PMDs have
+  finer-grained locking.)
+
+* `struct rw_semaphore mmap_sem` - Protects the VMA list.
+
+* `struct list_head mmlist` - Entry for list which is strung off
+  [init_mm][init_mm], protected by [mmlist_lock][mmlist_lock].
+
+* `unsigned long hiwater_rss` - __TBD__
+
+* `unsigned long hiwater_vm` - __TBD__
+
+* `unsigned long total_vm` - The total number of pages used by VMAs.
+
+* `unsigned long locked_vm` - __TBD__
+
+* `unsigned long pinned_vm` - __TBD__
+
+* `unsigned long data_vm` - __TBD__
+
+* `unsigned long exec_vm` - __TBD__
+
+* `unsigned long stack_vm` - __TBD__
+
+* `unsigned long def_flags` - A bit field which can contain only the `VM_LOCKED`
+  and `VM_LOCKONFAULT` flags. If one or both are set, then all VMA flags will
+  default to having these set. The former ensures mappings are not evictable
+  (i.e. swapped out), and by necessary pre-faulted in, the latter allows the
+  pages to be faulted in as normal, but locked once they are.
+
+* `unsigned long start_code, end_code, start_data, end_data` - The start address
+  and exclusive end of the code and data sections of the process, i.e. `start_*`
+  is the address of the first byte of these sections, and `end_*` is 1 byte past
+  the last byte of these sections.
+
+* `unsigned long start_brk, brk` - The start address and exclusive end, `brk`, of
+  the heap.
+
+* `unsigned long start_stack` - The start address of the stack.
+
+* `unsigned long arg_start, arg_end, env_start, env_end` - The start address and
+  exclusive end of the process's command-line arguments and environmental
+  variables.
+
+* `unsigned long saved_auxv[AT_VECTOR_SIZE]` - __TBD__
+
+* `struct mm_rss_stat rss_stat` - __TBD__
+
+* `struct linux_binfmt *binfmt` - __TBD__
+
+* `cpumask_var_t cpu_vm_mask_var` - __TBD__
+
+* `mm_context_t context` - Architecture-specific MMU context, though x86-64
+  doesn't need to store context data here, it's used to store various x86-64
+  specific data - [mm_context_t][mm_context_t] contains [VDSO][vdso], x86-64
+  RDPMC performance counters, a flag indicating whether 32-bit emulation mode is
+  available, and a per-process [local descriptor table][ldt] for running 16-bit
+  segmented code in e.g. DOSBox or Wine.
+
+* `unsigned long flags` - __TBD__
+
+* `struct core_state *core_state` - __TBD__
+
+* `spinlock_t ioctx_lock` (only if `CONFIG_AIO`) - __TBD__
+
+* `struct kioctx_table *ioctx_table` (only if `CONFIG_AIO`) - __TBD__
+
+* `struct task_struct *owner` (only if `CONFIG_MEMCG`) - The canonical owner of
+  this memory descriptor.
+
+* `struct file *exe_file` - A reference to the file that started this process,
+  for use in the `/proc/<pid>/exe` symlink.
+
+* `struct mmu_notifier_mm *mmu_notifier_mm` (only if `CONFIG_MMU_NOTIFIER`) -
+  __TBD__
+
+* `bool tlb_flush_pending` - __TBD__
+
+* `struct uprobes_state uprobes_state` - __TBD__
+
+* `atomic_long_t hugetlb_usage` (only if `CONFIG_HUGETLB_PAGE`) - __TBD__
+
 ### Initialisation
 
 * The first [struct mm_struct][mm_struct] in the system is the statically
@@ -940,6 +1070,7 @@ enum x86_pf_error_code {
 [address_space]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L430
 [address_space_operations]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L372
 [allocate_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L566
+[atomic_inc]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/atomic.h#L89
 [copy-on-write]:https://en.wikipedia.org/wiki/Copy-on-write
 [copy_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L958
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
@@ -949,6 +1080,7 @@ enum x86_pf_error_code {
 [do_swap_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L2511
 [dup_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L923
 [dup_mmap]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L408
+[exit_mmap]:https://github.com/torvalds/linux/blob/v4.6/mm/mmap.c#L2719
 [file]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L873
 [filemap_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2013
 [filemap_map_pages]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2134
@@ -963,10 +1095,14 @@ enum x86_pf_error_code {
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
 [kmemcheck]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kmemcheck.txt
 [kprobes]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kprobes.txt
+[ldt]:https://en.wikipedia.org/wiki/Global_Descriptor_Table#Local_Descriptor_Table
 [mm_alloc]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L674
+[mm_context_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/mmu.h#L11
 [mm_init]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L598
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
 [mmdrop]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L2613
+[mmlist_lock]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L564
+[mmput]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L705
 [page-fault]:https://en.wikipedia.org/wiki/Page_fault
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
 [phys_base-fixup]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L140
@@ -977,7 +1113,10 @@ enum x86_pf_error_code {
 [rb_node]:https://github.com/torvalds/linux/blob/v4.6/include/linux/rbtree.h#L36
 [rb_root]:https://github.com/torvalds/linux/blob/v4.6/include/linux/rbtree.h#L43
 [red-black]:https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
+[split-page-table-lock]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/split_page_table_lock
 [swap]:https://en.wikipedia.org/wiki/Paging
+[unmap_vmas]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L1350
+[vdso]:https://en.wikipedia.org/wiki/VDSO
 [virt_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L118
 [vm_area_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L294
 [vm_fault]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L290
