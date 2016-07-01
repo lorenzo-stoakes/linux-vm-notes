@@ -109,6 +109,11 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * Trace through a fork/exec.
 
+* Look into prefaulting - https://lwn.net/Articles/127301/ - is this still how
+  this is done?
+
+* Dive into `tlb_flush_pending` more deeply.
+
 ## Thoughts
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
