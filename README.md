@@ -56,6 +56,9 @@ code:
 * [Huge Pages][huge] - Discussion about huge pages, including
   [transparent huge pages][transhuge].
 
+* [cgroup Memory Management][cgroup] - Discussion about cgroup memory management
+  functionality.
+
 ## Introduction
 
 This repo contains my notes on the linux 4.6 VM subsystem. I don't make any
@@ -101,6 +104,7 @@ These notes are licensed under [Creative Commons BY-NC-SA][license].
 [physical]:./physical.md
 [process]:./process.md
 [slub]:./slub.md
+[cgroup]:./cgroup.md
 
 [funcs]:./funcs.md
 [page-table-funcs]:./page-table-funcs.md
