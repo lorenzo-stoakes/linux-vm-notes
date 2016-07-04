@@ -373,11 +373,19 @@ struct mm_struct {
 
 * `unsigned long hiwater_vm` - __TBD__
 
-* `unsigned long total_vm` - The total number of pages used by VMAs.
+* `unsigned long total_vm` - The total number of pages used by VMAs in the
+  memory descriptor.
 
-* `unsigned long locked_vm` - __TBD__
+* `unsigned long locked_vm` - The number of locked pages referenced by the
+  memory descriptor. These pages are never swapped out.
 
-* `unsigned long pinned_vm` - __TBD__
+* `unsigned long pinned_vm` - The number of 'pinned' pages referenced by the
+  memory descriptor. These pages are those which have had their refcount
+  incremented such that they are never moved in physical or virtual memory or
+  swapped. A 'pinned' page isn't a formal definition, rather a convention of
+  raising the refcount permanently (see [this discussion][vm_pinned-thread] for
+  possible future options), rather this counter was
+  [introduced][pinned_vm-commit] to prevent double-counting.
 
 * `unsigned long data_vm` - __TBD__
 
@@ -1146,6 +1154,7 @@ enum x86_pf_error_code {
 [phys_base-fixup]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L140
 [phys_base]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L520
 [phys_to_virt]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L136
+[pinned_vm-commit]:https://github.com/torvalds/linux/commit/bc3e53f682d93df677dbd5006a404722b3adfe18
 [pte_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L491
 [pte_write]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L131
 [rb_node]:https://github.com/torvalds/linux/blob/v4.6/include/linux/rbtree.h#L36
@@ -1160,6 +1169,7 @@ enum x86_pf_error_code {
 [vm_area_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L294
 [vm_fault]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L290
 [vm_operations_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L313
+[vm_pinned-thread]:https://marc.info/?t=142540464700001&r=1&w=1
 [vma-cache]:https://lwn.net/Articles/589475/
 [x86-64-address-space]:https://en.wikipedia.org/wiki/X86-64#VIRTUAL-ADDRESS-SPACE
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
