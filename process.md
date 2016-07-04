@@ -1072,16 +1072,16 @@ enum x86_pf_error_code {
 
 #### Page Fault Types
 
-* Page faults are divided into 3 types - minor, major and error, the latter two
-  cases represented by [VM_FAULT_MAJOR][VM_FAULT_MAJOR] and
+* Page faults are divided into 3 types - minor/soft, major/hard and error, the
+  latter two cases represented by [VM_FAULT_MAJOR][VM_FAULT_MAJOR] and
   [VM_FAULT_ERROR][VM_FAULT_ERROR] respectively (`VM_FAULT_ERROR` is a bitmask
   of error states.)
 
-* Minor page faults are those where either memory simply needs to be faulted in
-  or a [CoW][copy-on-write] copy needs to be made.
+* Minor (or soft) page faults are those where either memory simply needs to be
+  faulted in or a [CoW][copy-on-write] copy needs to be made.
 
-* Major faults are those that require I/O - i.e. a page needs to be swapped back
-  into memory, or a file mapping needs to be flushed or read from.
+* Major (or hard) page faults are those that require I/O - i.e. a page needs to be
+  swapped back into memory, or a file mapping needs to be flushed or read from.
 
 [MAX_GAP]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L55
 [MIN_GAP]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L54
