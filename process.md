@@ -328,7 +328,8 @@ struct mm_struct {
   `gap` <= [MAX_GAP][MAX_GAP]. In non-legacy mode, this base is used as an
   uppermost limit to assign from. The `MIN_GAP` is at least around 128MiB.
 
-* `unsigned long task_size` - __TBD__
+* `unsigned long task_size` - Set to the size of user-space address space,
+  [TASK_SIZE][TASK_SIZE] (128TiB - 1 page on x86-64.)
 
 * `unsigned long highest_vm_end` - __TBD__
 
@@ -1083,6 +1084,7 @@ enum x86_pf_error_code {
 [MAX_GAP]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L55
 [MIN_GAP]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L54
 [PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L35
+[TASK_SIZE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/processor.h#L755
 [TASK_UNMAPPED_BASE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/processor.h#L785
 [VM_FAULT_ERROR]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1101
 [VM_FAULT_MAJOR]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1088
