@@ -34,8 +34,8 @@ code:
    table flags which rendered this page too huge.
 
 3. [Page Table Flag Functions][page-table-flag-funcs] -
-   [Page table][page-tables] functions relating to page table flags, separated
-   out to avoid the page table functions page getting to huge.
+   [Page table][page-tables] functions relating to flags, separated out to avoid
+   the page table functions page getting too huge.
 
 4. [VMA Functions][vma-funcs] - Functions relating to memory descriptors and
    Virtual Memory Areas (VMAs), which are described in the
