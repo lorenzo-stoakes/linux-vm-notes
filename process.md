@@ -293,7 +293,13 @@ struct mm_struct {
 * `struct rb_root mm_rb` - Root of the [red-black tree][red-black] containing
   VMAs for fast lookup.
 
-* `u32 vmacache_seqnum` - __TBD__
+* `u32 vmacache_seqnum` - The [VMA cache][vma-cache] uses sequence numbers
+  stored in both the [struct mm_struct][mm_struct] and the
+  [struct task_struct][task_struct] to ensure that cached VMAs have not been
+  invalidated for the running threads - if the current task's sequence number
+  does not match the memory descriptor's, then the cache is considered invalid
+  and flushed. Changes to the address space increment the sequence number in the
+  `struct mm_struct`, and thus trigger this cache invalidation.
 
 * `unsigned long (*get_unmapped_area)(struct file *filp, unsigned long addr,
                                       unsigned long len, unsigned long pgoff,
@@ -1115,12 +1121,14 @@ enum x86_pf_error_code {
 [red-black]:https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
 [split-page-table-lock]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/split_page_table_lock
 [swap]:https://en.wikipedia.org/wiki/Paging
+[task_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L1394
 [unmap_vmas]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L1350
 [vdso]:https://en.wikipedia.org/wiki/VDSO
 [virt_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L118
 [vm_area_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L294
 [vm_fault]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L290
 [vm_operations_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L313
+[vma-cache]:https://lwn.net/Articles/589475/
 [x86-64-address-space]:https://en.wikipedia.org/wiki/X86-64#VIRTUAL-ADDRESS-SPACE
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
 [x86_pf_error_code]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L40
