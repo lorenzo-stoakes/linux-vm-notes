@@ -114,6 +114,8 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * Dive into `tlb_flush_pending` more deeply.
 
+* Look into the use of the [empty_zero_page][empty_zero_page].
+
 ## Thoughts
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
@@ -145,3 +147,4 @@ pmd_large -> pse         pmd_huge -> pse/not present
 [spurious_fault]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L1045
 [vm_normal_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L742
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
+[empty_zero_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L527
