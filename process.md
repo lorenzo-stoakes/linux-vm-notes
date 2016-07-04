@@ -331,7 +331,9 @@ struct mm_struct {
 * `unsigned long task_size` - Set to the size of user-space address space,
   [TASK_SIZE][TASK_SIZE] (128TiB - 1 page on x86-64.)
 
-* `unsigned long highest_vm_end` - __TBD__
+* `unsigned long highest_vm_end` - The highest `vm_end` of any VMA in the
+  descriptor, i.e. 1 + the maximum address covered by a VMA in the descriptor
+  (it's an exclusive bound.)
 
 * `pgd_t *pgd` - The PGD for this process.
 
