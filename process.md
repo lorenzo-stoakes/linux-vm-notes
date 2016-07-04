@@ -302,12 +302,31 @@ struct mm_struct {
   `struct mm_struct`, and thus trigger this cache invalidation.
 
 * `unsigned long (*get_unmapped_area)(struct file *filp, unsigned long addr,
-                                      unsigned long len, unsigned long pgoff,
-                                      unsigned long flags)` - __TBD__
+   unsigned long len, unsigned long pgoff, unsigned long flags)` - The function
+   used to get an unmapped area with the specified parameters within the memory
+   controlled by the descriptor. The actual function used is determined by what
+   [arch_pick_mmap_layout()][arch_pick_mmap_layout] has assigned to it -
+   [arch_get_unmapped_area_topdown()][arch_get_unmapped_area_topdown] is used if
+   there is no reason to avoid assigning the top-most available address (as
+   decided by [mmap_is_legacy()][mmap_is_legacy]), or if the top-down lookup
+   fails, otherwise an unmapped area is determined bottom-up via
+   [arch_get_unmapped_area()][arch_get_unmapped_area].
 
-* `unsigned long mmap_base` - __TBD__
+* `unsigned long mmap_legacy_base` - This is the minimum address to assign
+  bottom-up mmap allocations from, determined in
+  [arch_pick_mmap_layout()][arch_pick_mmap_layout] - which, consists of a random
+  [ASLR][aslr] offset via [arch_mmap_rnd()][arch_mmap_rnd] (if randomisation is
+  enabled for this descriptor), added to
+  [TASK_UNMAPPED_BASE][TASK_UNMAPPED_BASE]. This constant is set at
+  (page-aligned) 1/3 of the maximum userland address. All mmap's begin from this
+  base.
 
-* `unsigned long mmap_legacy_base` - __TBD__
+* `unsigned long mmap_base` - If in legacy mmap mode, then this is the same as
+  `mmap_legacy_base`, otherwise it is set to the (page-aligned) maximum userland
+  address subtracting an ASLR random factor (as above) and a gap equal to the
+  system stack size, adjusted to fit inside the range [MIN_GAP][MIN_GAP] <=
+  `gap` <= [MAX_GAP][MAX_GAP]. In non-legacy mode, this base is used as an
+  uppermost limit to assign from. The `MIN_GAP` is at least around 128MiB.
 
 * `unsigned long task_size` - __TBD__
 
@@ -1061,7 +1080,10 @@ enum x86_pf_error_code {
 * Major faults are those that require I/O - i.e. a page needs to be swapped back
   into memory, or a file mapping needs to be flushed or read from.
 
+[MAX_GAP]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L55
+[MIN_GAP]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L54
 [PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L35
+[TASK_UNMAPPED_BASE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/processor.h#L785
 [VM_FAULT_ERROR]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1101
 [VM_FAULT_MAJOR]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1088
 [__PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_64_types.h#L35
@@ -1076,6 +1098,11 @@ enum x86_pf_error_code {
 [address_space]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L430
 [address_space_operations]:https://github.com/torvalds/linux/blob/v4.6/include/linux/fs.h#L372
 [allocate_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L566
+[arch_get_unmapped_area]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/sys_x86_64.c#L125
+[arch_get_unmapped_area_topdown]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/sys_x86_64.c#L163
+[arch_mmap_rnd]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L68
+[arch_pick_mmap_layout]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L100
+[aslr]:https://en.wikipedia.org/wiki/Address_space_layout_randomization
 [atomic_inc]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/atomic.h#L89
 [copy-on-write]:https://en.wikipedia.org/wiki/Copy-on-write
 [copy_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L958
@@ -1106,6 +1133,7 @@ enum x86_pf_error_code {
 [mm_context_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/mmu.h#L11
 [mm_init]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L598
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
+[mmap_is_legacy]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L57
 [mmdrop]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L2613
 [mmlist_lock]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L564
 [mmput]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L705
