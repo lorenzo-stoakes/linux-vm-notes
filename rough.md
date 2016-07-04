@@ -119,6 +119,9 @@ pmd_large -> pse         pmd_huge -> pse/not present
 * Look in more depth into top-down vs. legacy bottom-up memory allocation e.g.
   as determined by [arch_pick_mmap_layout()][arch_pick_mmap_layout].
 
+* Why is [TASK_UNMAPPED_BASE][TASK_UNMAPPED_BASE] set to (page-aligned)
+  `TASK_SIZE/3`?
+
 ## Thoughts
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
@@ -140,6 +143,7 @@ pmd_large -> pse         pmd_huge -> pse/not present
 * [vm_normal_page()][vm_normal_page] - has some discussion about 'special' PTEs,
   worth investigating.
 
+[TASK_UNMAPPED_BASE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/processor.h#L785
 [arch_pick_mmap_layout]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L100
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
 [empty_zero_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L527
