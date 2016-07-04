@@ -116,6 +116,9 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * Look into the use of the [empty_zero_page][empty_zero_page].
 
+* Look in more depth into top-down vs. legacy bottom-up memory allocation e.g.
+  as determined by [arch_pick_mmap_layout()][arch_pick_mmap_layout].
+
 ## Thoughts
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
@@ -137,7 +140,9 @@ pmd_large -> pse         pmd_huge -> pse/not present
 * [vm_normal_page()][vm_normal_page] - has some discussion about 'special' PTEs,
   worth investigating.
 
+[arch_pick_mmap_layout]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L100
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
+[empty_zero_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L527
 [flush_tlb_kernel_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L296
 [free_pgd_range]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L473
 [mem_section]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1040
@@ -147,4 +152,3 @@ pmd_large -> pse         pmd_huge -> pse/not present
 [spurious_fault]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L1045
 [vm_normal_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L742
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
-[empty_zero_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L527
