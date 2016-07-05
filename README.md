@@ -20,7 +20,7 @@ cgroup/namespace logic, these will be considered separately.
   demand allocation, COW pages, copying to/from userland. __WORK IN PROGRESS__
 
 4. [Out of Memory Killer][oom] - Discussion about the OOM
-   killer. __WORK_IN_PROGRESS__
+   killer. __WORK IN PROGRESS__
 
 ### Function Cheat Sheets
 
