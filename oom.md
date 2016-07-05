@@ -43,6 +43,8 @@
 * As a real-life example of this, I set `vm.overcommit_memory` to
   `OVERCOMMIT_NEVER` on my live host system and chrome was immediately killed :)
 
+* Note that all modes still make use of [demand paging][demand-paging] - what
+  changes is the accounting of available memory.
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
 [overcommit-accounting]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/overcommit-accounting
 [sysctl]:https://wiki.archlinux.org/index.php/Sysctl
