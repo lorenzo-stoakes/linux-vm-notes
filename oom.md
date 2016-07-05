@@ -45,8 +45,59 @@
 
 * Note that all modes still make use of [demand paging][demand-paging] - what
   changes is the accounting of available memory.
+
+## Memory Availability Accounting
+
+* The function which determines whether sufficient memory is available is
+  [__vm_enough_memory()][__vm_enough_memory] which is invoked via
+  [security_vm_enough_memory_mm()][security_vm_enough_memory_mm].
+
+* This function determines the correct behaviour under each of the 3 overcommit
+  modes:
+
+* As expected, `OVERCOMMIT_ALWAYS` is a simple case in which regardless of the
+  number of requested pages, the function does not return an error.
+
+* Under `OVERCOMMIT_GUESS`, a calculation is performed to determine available
+  free pages, using [global_page_state()][global_page_state]:
+
+  * Roughly, the calculation is `available_pages = free_pages + page_cache_pages +
+    swap_pages + reclaimable_slab_pages - tmpfs_pages - reserved_pages -
+    admin_reserved_pages`.
+
+  * Note that the `admin_reserved_pages` value here is the [sysctl][sysctl]
+    `vm.admin_reserve_kbytes`, which defaults to 8MiB.
+
+  * tmpfs is subtracted to avoid double-counting, as these can only be swapped
+    out, which does not change the calculation.
+
+* Finally, under `OVERCOMMIT_NEVER`, [vm_commit_limit()][vm_commit_limit] is
+  invoked to determine the total available memory based on either
+  `vm.overcommit_ratio` or `vm.overcommit_kbytes` - this simply uses either of
+  these to determine maximum available memory then adds available swap pages.
+
+  * Then, as with `OVERCOMMIT_GUESS`, the [sysctl][sysctl]
+    `vm.admin_reserve_kbytes` is subtracted from total available memory.
+
+  * In order to prevent a single process from growing out of control, the
+    smaller of 1/32th of the total allocated VM of the process or the
+    [sysctl][sysctl] `vm.user_reserve_kbytes` is subtracted from available
+    memory.
+
+  * Finally, if the total amount of memory committed (via the per-CPU variable
+    [vm_committed_as][vm_committed_as], available for retrieval via
+    [vm_memory_committed()][vm_memory_committed]), including the newly requested
+    amount of memory, is less than the determined available memory, the function
+    succeeds, otherwise it fails.
+
+[__vm_enough_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L481
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
+[global_page_state]:https://github.com/torvalds/linux/blob/v4.6/include/linux/vmstat.h#L120
 [overcommit-accounting]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/overcommit-accounting
+[security_vm_enough_memory_mm]:https://github.com/torvalds/linux/blob/v4.6/security/security.c#L216
 [sysctl]:https://wiki.archlinux.org/index.php/Sysctl
+[vm_commit_limit]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L431
+[vm_committed_as]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L449
+[vm_memory_committed]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L459
 
 [process]:./process.md
