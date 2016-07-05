@@ -19,6 +19,9 @@ cgroup/namespace logic, these will be considered separately.
   construction/destruction, file/device-backed memory regions, page faulting,
   demand allocation, COW pages, copying to/from userland. __WORK IN PROGRESS__
 
+4. [Out of Memory Killer][oom] - Discussion about the OOM
+   killer. __WORK_IN_PROGRESS__
+
 ### Function Cheat Sheets
 
 These pages list useful VM functions with a reasonably detailed description of
@@ -50,8 +53,6 @@ code:
   physical memory allocator.
 
 * [SLUB Allocator][slub] - Discussion about the default object allocator.
-
-* [Out of Memory Killer][oom] - Discussion about the OOM killer.
 
 * [Huge Pages][huge] - Discussion about huge pages, including
   [transparent huge pages][transhuge].
