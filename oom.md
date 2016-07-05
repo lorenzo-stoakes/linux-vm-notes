@@ -30,7 +30,8 @@
     [sysctl][sysctl] `vm.overcommit_ratio`, which defines the maximum percentage
     to use (defaults to 50%), or [sysctl][sysctl] `vm.overcommit_kbytes` which
     specifies an absolute maximum amount of physical memory to allocate in
-    kilobytes.
+    kilobytes. Only one of these options can be set at any one time (changing
+    one causes the other to be zeroed.)
 
 * It's highly likely your system and most you encounter will use the
   `OVERCOMMIT_GUESS` mode. This makes sense, as under
