@@ -122,6 +122,13 @@ pmd_large -> pse         pmd_huge -> pse/not present
 * Why is [TASK_UNMAPPED_BASE][TASK_UNMAPPED_BASE] set to (page-aligned)
   `TASK_SIZE/3`?
 
+* Investigate behaviour at `sysctl -w vm.overcommit_memory=2` - this killed
+  chrome for me, so presumably in the transition from one mode to another tasks
+  are performed to put the system into the alternative mode. Perhaps when moving
+  to no overcommit, all allocations are faulted in? I didn't see an oom killer
+  invocation, but did see `traps: chrome[20500] trap invalid opcode
+  ip:563d68f60422 sp:7ffc425e68b0 error:0 in chrome[563d66ac1000+5d99000]`.
+
 ## Thoughts
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
