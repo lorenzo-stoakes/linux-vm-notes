@@ -15,7 +15,8 @@
   documentation):
 
   * `0` - `OVERCOMMIT_GUESS` - (Default) - Overcommit, but disallow obviously
-    crazy allocations.
+    crazy allocations. If the process has `CAP_SYS_ADMIN` capability, then more
+    memory can be allocated.
 
   * `1` - `OVERCOMMIT_ALWAYS` - Always overcommit, no matter what. YOLO.
 
