@@ -14,17 +14,17 @@
   `vm.overcommit_memory` (see the [overcommit accounting][overcommit-accounting]
   documentation):
 
-* `0` - `OVERCOMMIT_GUESS` - (Default) - Overcommit, but disallow obviously
-  crazy allocations.
+  * `0` - `OVERCOMMIT_GUESS` - (Default) - Overcommit, but disallow obviously
+    crazy allocations.
 
-* `1` - `OVERCOMMIT_ALWAYS` - Always overcommit, no matter what. YOLO.
+  * `1` - `OVERCOMMIT_ALWAYS` - Always overcommit, no matter what. YOLO.
 
-* `2` - `OVERCOMMIT_NEVER` - Do not overcommit and limit allocations to
-  available swap and a proportion of physical RAM, defined by either
-  [sysctl][sysctl] `vm.overcommit_ratio`, which defines the maximum percentage
-  to use (defaults to 50%), or [sysctl][sysctl] `vm.overcommit_kbytes` which
-  specifies an absolute maximum amount of physical memory to allocate in
-  kilobytes.
+  * `2` - `OVERCOMMIT_NEVER` - Do not overcommit and limit allocations to
+    available swap and a proportion of physical RAM, defined by either
+    [sysctl][sysctl] `vm.overcommit_ratio`, which defines the maximum percentage
+    to use (defaults to 50%), or [sysctl][sysctl] `vm.overcommit_kbytes` which
+    specifies an absolute maximum amount of physical memory to allocate in
+    kilobytes.
 
 * It's highly likely your system and most you encounter will use the
   `OVERCOMMIT_GUESS` mode. This makes sense, as under
