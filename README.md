@@ -33,12 +33,12 @@ code:
    any other category.
 
 2. [Page Table Functions][page-table-funcs] - Functions relating to
-   [page tables][page-tables] other than the copious functions relating to page
-   table flags which rendered this page too huge.
+   [page tables][page-tables] (other than the copious functions relating to page
+   table flags which rendered this page too huge.)
 
-3. [Page Table Flag Functions][page-table-flag-funcs] -
-   [Page table][page-tables] functions relating to flags, separated out to avoid
-   the page table functions page getting too huge.
+3. [Page Table Flag Functions][page-table-flag-funcs] - Functions relating to
+   page table flags, separated out to avoid the page table functions page
+   getting too huge.
 
 4. [VMA Functions][vma-funcs] - Functions relating to memory descriptors and
    Virtual Memory Areas (VMAs), which are described in the
