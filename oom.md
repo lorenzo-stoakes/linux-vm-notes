@@ -80,15 +80,15 @@
     `vm.admin_reserve_kbytes` is subtracted from total available memory.
 
   * In order to prevent a single process from growing out of control, the
-    smaller of 1/32th of the total allocated VM of the process or the
+    smaller of 1/32th of the total allocated VM of the process and the
     [sysctl][sysctl] `vm.user_reserve_kbytes` is subtracted from available
     memory.
 
-  * Finally, if the total amount of memory committed (via the per-CPU variable
-    [vm_committed_as][vm_committed_as], available for retrieval via
-    [vm_memory_committed()][vm_memory_committed]), including the newly requested
-    amount of memory, is less than the determined available memory, the function
-    succeeds, otherwise it fails.
+  * Finally if the total amount of memory committed, including the newly
+    requested amount of memory, is less than the determined available memory the
+    function succeeds. The total amount of committed memory is stored in the
+    per-CPU variable [vm_committed_as][vm_committed_as], which can be read via
+    [vm_memory_committed()][vm_memory_committed].
 
 [__vm_enough_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L481
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
