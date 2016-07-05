@@ -127,7 +127,9 @@ pmd_large -> pse         pmd_huge -> pse/not present
   are performed to put the system into the alternative mode. Perhaps when moving
   to no overcommit, all allocations are faulted in? I didn't see an oom killer
   invocation, but did see `traps: chrome[20500] trap invalid opcode
-  ip:563d68f60422 sp:7ffc425e68b0 error:0 in chrome[563d66ac1000+5d99000]`.
+  ip:563d68f60422 sp:7ffc425e68b0 error:0 in
+  chrome[563d66ac1000+5d99000]`. Confirmed that demand paging still happens
+  under this mode.
 
 ## Thoughts
 
