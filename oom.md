@@ -90,10 +90,49 @@
     per-CPU variable [vm_committed_as][vm_committed_as], which can be read via
     [vm_memory_committed()][vm_memory_committed].
 
+## Out of Memory Killer
+
+### Entry Point
+
+* The out of memory killer code is surprisingly short and clean, contained
+  within [mm/oom_kill.c][oom_kill.c]. In fact contained in the comment at the
+  top of the file is a pleasing comment:
+
+```c
+ *  Since we won't call these routines often (on a well-configured
+ *  machine) this file will double as a 'coding guide' and a signpost
+ *  for newbie kernel hackers. It features several pointers to major
+ *  kernel subsystems and hints as to where to find out what things do.
+```
+
+* The core function which is invoked by the kernel to do the killing is
+  [out_of_memory()][out_of_memory], which is protected by the
+  [oom_lock][oom_lock] mutex.
+
+* This is called by the physical page allocator when an allocation fails in
+  [__alloc_pages_may_oom()][__alloc_pages_may_oom].
+
+* It is also called by the OOM killer's own
+  [pagefault_out_of_memory()][pagefault_out_of_memory] function, which is
+  invoked by the page fault handler's [mm_fault_error()][mm_fault_error] in
+  cases where the page fault cannot be satisfied due to insufficient memory.
+
+* If a memory cgroup controller is in place with OOM handling enabled,
+  [mem_cgroup_oom_synchronize()][mem_cgroup_oom_synchronize] is invoked to
+  handle the OOM, otherwise `pagefault_out_of_memory()` invokes
+  [out_of_memory()][out_of_memory] while holding the `oom_lock`.
+
+[__alloc_pages_may_oom]:https://github.com/torvalds/linux/blob/v4.6/mm/page_alloc.c#L2831
 [__vm_enough_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L481
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
 [global_page_state]:https://github.com/torvalds/linux/blob/v4.6/include/linux/vmstat.h#L120
+[mem_cgroup_oom_synchronize]:https://github.com/torvalds/linux/blob/v4.6/mm/memcontrol.c#L1630
+[mm_fault_error]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L971
+[oom_kill.c]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c
+[oom_lock]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L51
+[out_of_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L849
 [overcommit-accounting]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/overcommit-accounting
+[pagefault_out_of_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L920
 [security_vm_enough_memory_mm]:https://github.com/torvalds/linux/blob/v4.6/security/security.c#L216
 [sysctl]:https://wiki.archlinux.org/index.php/Sysctl
 [vm_commit_limit]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L431
