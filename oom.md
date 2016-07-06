@@ -219,19 +219,110 @@
                                    ---------------
 ```
 
+### select_bad_process()
+
+* [select_bad_process()][select_bad_process] determines which process to
+  kill. The core of the function is a loop where it iterates over all _threads_
+  in the system (remember that in linux, threads are just processes which share
+  a memory descriptor with their parents) and assesses them for their
+  suitability for the chop via a points system.
+
+* The first task within the loop is to call
+  [oom_scan_process_thread()][oom_scan_process_thread] for the thread - this
+  determines one of [enum oom_scan_t][oom_scan_t]:
+
+```c
+enum oom_scan_t {
+        OOM_SCAN_OK,            /* scan thread and find its badness */
+        OOM_SCAN_CONTINUE,      /* do not consider thread for oom kill */
+        OOM_SCAN_ABORT,         /* abort the iteration and return */
+        OOM_SCAN_SELECT,        /* always select this thread first */
+};
+```
+
+* The typical case is for this function to return `OOM_SCAN_OK`, however each of
+  the other cases are dealt with appropriately - `OOM_SCAN_CONTINUE` simply
+  continues the loop and examines the next thread, `OOM_SCAN_ABORT` causes the
+  overall [select_bad_process()][select_bad_process] function to return -1 cast
+  to an unsigned long which indicates the OOM killer as a whole should abort and
+  finally `OOM_SCAN_SELECT` assigns the current thread as the victim and sets
+  its points to `ULONG_MAX` to ensure it can only get pipped to the post by a
+  subsequent `OOM_SCAN_SELECT`'d process.
+
+* Looking at the logic that leads to each outcome:
+
+1. Firstly, [oom_unkillable_task()][oom_unkillable_task] is checked to see
+   whether the thread cannot be killed (and thus `OOM_SCAN_CONTINUE` is
+   returned.) This returns true if the thread is the __global init process__ or
+   is a __kernel thread__. There is a check here for when a memory cgroup
+   controller is in place, however the function is invoked with this parameter
+   NULL when called via `select_bad_process()`. There is also a NUMA case, but
+   I'm ignoring crazy NUMA stuff in these notes for the time being :)
+
+2. Next, [test_tsk_thread_flag()][test_tsk_thread_flag] is called with the
+   `TIF_MEMDIE` flag set to see if another process has been OOM killed and is
+   therefore dying and releasing memory. If this is the case and the OOM killer
+   _wasn't_ invoked via [sysrq][sysrq], the OOM killer can be aborted and
+   `OOM_SCAN_ABORT` is returned.
+
+3. If the task does not have a [struct mm_struct][mm_struct] assigned in the
+   `mm` field, indicating that it is a kernel thread, it ought to be
+   skipped. Kernel threads are exempt from the [remorseless scythe][scythe] of
+   the OOM killer, hence `OOM_SCAN_CONTINUE` is returned in this case.
+
+4. Finally, if the thread is marked as the potential original of an OOM
+   (i.e. `signal->oom_flags & OOM_FLAG_ORIGIN`), indicated via
+   [oom_task_origin()][oom_task_origin] this thread should be selected
+   regardless, so `OOM_SCAN_SELECT` is returned. Note that in this case, if more
+   than one thread is marked this way, the last encountered will be the one
+   selected.
+
+5. If none of the above apply, `OOM_SCAN_OK` is returned.
+
+* If, as in the usual case, the scan indicates no special action is to be taken,
+  then the thread's score is calculated via [oom_badness()][oom_badness]
+  (discussed below.) If the points exceed any previously chosen process's
+  points, then the process is marked as that chosen to die.
+
+* There is a special case when the points are _equal_ to the previously chosen
+  thread - if the previously chosen thread is a thread group leader, then the
+  process under examination is _not_ chosen, otherwise it is. This ensures that
+  in the case of a multi-threaded application it's the thread group leader that
+  is chosen.
+
+* Finally [select_bad_process()][select_bad_process] returns the points of the
+  chosen process multiplied by 1000 and scaled by the total number of pages of
+  RAM in the system (i.e. the total physical RAM in page units) added to the
+  total number of pages of swap.
+
+* In NUMA-related cases the total RAM value used to scale the score can be
+  different as defined by [constrained_alloc()][constrained_alloc], however
+  again we are assuming an UMA system.
+
 [__alloc_pages_may_oom]:https://github.com/torvalds/linux/blob/v4.6/mm/page_alloc.c#L2831
 [__vm_enough_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L481
+[constrained_alloc]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L213
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
 [global_page_state]:https://github.com/torvalds/linux/blob/v4.6/include/linux/vmstat.h#L120
 [mem_cgroup_oom_synchronize]:https://github.com/torvalds/linux/blob/v4.6/mm/memcontrol.c#L1630
 [mm_fault_error]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L971
+[mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
+[oom_badness]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L164
 [oom_kill.c]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c
 [oom_lock]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L51
+[oom_scan_process_thread]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L271
+[oom_scan_t]:https://github.com/torvalds/linux/blob/v4.6/include/linux/oom.h#L46
+[oom_task_origin]:https://github.com/torvalds/linux/blob/v4.6/include/linux/oom.h#L68
+[oom_unkillable_task]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L136
 [out_of_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L849
 [overcommit-accounting]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/overcommit-accounting
 [pagefault_out_of_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L920
+[scythe]:https://www.youtube.com/watch?v=Ov6lWldus3o
 [security_vm_enough_memory_mm]:https://github.com/torvalds/linux/blob/v4.6/security/security.c#L216
+[select_bad_process]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L302
 [sysctl]:https://wiki.archlinux.org/index.php/Sysctl
+[sysrq]:https://en.wikipedia.org/wiki/Magic_SysRq_key
+[test_tsk_thread_flag]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L2915
 [vm_commit_limit]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L431
 [vm_committed_as]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L449
 [vm_memory_committed]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L459
