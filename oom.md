@@ -122,6 +122,103 @@
   handle the OOM, otherwise `pagefault_out_of_memory()` invokes
   [out_of_memory()][out_of_memory] while holding the `oom_lock`.
 
+### out_of_memory()
+
+* [out_of_memory()][out_of_memory] is the core function which performs the
+  actual work of the OOM killer.
+
+* Let's take a look at the logic of the function diagrammatically:
+
+```
+                              -------------------
+                              | out_of_memory() |
+                              -------------------
+                                       |
+                                       v
+      ----------------      Yes /------------\
+      | Return false |<--------/  OOM killer  \
+      ----------------         \   disabled?  /
+                                \------------/
+                                       | No
+                                       v
+                          /-------------------------\ Yes
+                         / Notifier indicates memory \--------------------------------\
+                         \   found at last moment?   /                                |
+                          \-------------------------/                                 |
+                                       | No                                           |
+                                       v                                              |
+                              /-----------------\ Yes      /-------------\ Yes        |
+                             / Current thread is \------->/ Fatal signal  \--\        |
+                             \   in userland ?   /        \    pending?   /  |        |
+                              \-----------------/          \-------------/   |        |
+                                       | No                       | No       |        |
+                                       v                          v          |        |
+     ---------          Yes /---------------------\     No /--------------\  |        |
+     | Oops! |<------------/         sysctl        \<-----/  Exiting but   \ |        |
+     ---------             \ vm.panic_on_oom != 0? /      \  no coredump?  / |        |
+                            \---------------------/        \--------------/  |        |
+                                       | No                       | Yes      |        |
+                                       |                          v          v        |
+                                       |            ------------------------------    |
+                                       |            | Mark current as OOM victim |----\
+                                       |            ------------------------------    |
+                                       v                                              |
+                      /---------------------------------\                             |
+                     /              sysctl               \                            |
+                     \ vm.oom_kill_allocating_task != 0? /                            |
+                      \---------------------------------/                             |
+                        Yes |                     | No                                |
+                            |                     |                                   |
+                            |                     |                                   |
+                     /------/                     \----\                              |
+                     |                                 |                              |
+                     v                                 v                              |
+            -------------------            ------------------------                   |
+            | Examine current |            | Choose a bad process |                   |
+            |     process     |        /-->|     to kill via      |                   |
+            -------------------        |   | select_bad_process() |                   |
+                     |                 |   ------------------------                   |
+                     v                 |               |                              |
+             /--------------\ Yes      |               v                              |
+            /   Is global    \---------/     Yes /-----------\                        |
+            \  init process? /         |   /----/ Bad process \                       |
+             \--------------/          |   |    \    found?   /                       |
+                     | No              |   |     \-----------/                        |
+                     v                 |   |           | No                           |
+                /---------\ Yes        |   |           v                              |
+               / Is kernel \-----------/   |   /---------------\ Yes                  |
+               \  thread?  /           |   |  / OOM invoked via \---------------------\
+                \---------/            |   |  \    a sysrq?     /                     |
+                     | No              |   |   \---------------/                      |
+                     v                 |   |           | No                           |
+        /------------------------\ Yes |   |           |              ---------       |
+       / memory cgroup controller \----/   |           \------------->| Oops! |       |
+       \ and task not in cgroup?  /    |   |                          ---------       |
+        \------------------------/     |   \---------------\                          |
+                     | No              |                   |                          |
+                     v                 |                   v                          |
+           /------------------\ Yes    |   /--------------------------------\ Yes     |
+          /  oom_score_adj ==  \-------/  /  OOM_SCAN_ABORT due to another   \--------\
+          \ OOM_SCORE_ADJ_MIN? /          \ process dying w/memory reserves? /        |
+           \------------------/            \--------------------------------/         |
+                     | No                                  | No                       |
+                     |                                     |                          |
+                     |                                     |                          |
+                     |                                 1st | 2nd                      |
+                     |                    /---------------/ \------------\            |
+                     |                    |                              |            |
+                     |                    v                              v            |
+                     |          ----------------------          -------------------   |
+                     \--------->|  Kill process via  |          | Sleep for 1s to |   |
+                                | oom_kill_process() |          | allow for kill  |   |
+                                ----------------------          -------------------   |
+                                          |                                           |
+                                          v                                           |
+                                   ---------------                                    |
+                                   | Return true |<------------------------------------
+                                   ---------------
+```
+
 [__alloc_pages_may_oom]:https://github.com/torvalds/linux/blob/v4.6/mm/page_alloc.c#L2831
 [__vm_enough_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L481
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
