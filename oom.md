@@ -410,9 +410,10 @@ of selecting a victim.
   reassigning the victim to the one with the highest score.
 
 * Once a victim is selected, it is first sent `SIGKILL` in order to try to break
-  up amicably. In case the break up is going to get messy, it is marked to die
-  via [mark_oom_victim()][mark_oom_victim] which simply sets the `TIF_MEMDIE`
-  thread flag.
+  up amicably. In case the break up is going to get messy, since its memory is
+  going to be reaped whether it likes it or not, it is marked to die via
+  [mark_oom_victim()][mark_oom_victim] which simply sets the `TIF_MEMDIE` thread
+  flag. This is used to avoid potential livelocks in the code.
 
 * Next, all processes are examined and checked to see whether they share the
   memory descriptor and are not in the same thread group.
