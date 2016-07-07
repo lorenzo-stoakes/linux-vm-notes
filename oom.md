@@ -266,9 +266,10 @@ enum oom_scan_t {
    `OOM_SCAN_ABORT` is returned.
 
 3. If the task does not have a [struct mm_struct][mm_struct] assigned in the
-   `mm` field, indicating that it is a kernel thread, it ought to be
-   skipped. Kernel threads are exempt from the [remorseless scythe][scythe] of
-   the OOM killer, hence `OOM_SCAN_CONTINUE` is returned in this case.
+   `mm` field, indicating that either it is a kernel thread or it is exiting so
+   it ought to be skipped. Kernel threads are exempt from the
+   [remorseless scythe][scythe] of the OOM killer, hence `OOM_SCAN_CONTINUE` is
+   returned in this case.
 
 4. Finally, if the thread is marked as the potential original of an OOM
    (i.e. `signal->oom_flags & OOM_FLAG_ORIGIN`), indicated via
