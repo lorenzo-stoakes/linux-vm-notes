@@ -391,18 +391,60 @@ of selecting a victim.
   calculated so far is negative, it returns 1 (remember 0 indicates that the
   process should not be considered for death.)
 
+### oom_kill_process()
+
+* Once a victim is chosen, [oom_kill_process()][oom_kill_process] performs the
+  actual killing.
+
+* Firstly, it checks whether the selected task is already exiting - if so it
+  merely marks it as the OOM victim and returns.
+
+* Next, an __important__ detail - rather than kill the selected process, the OOM
+  killer will first attempt to kill one of its first-generation child processes
+  which does not share a memory descriptor with the parent (i.e. is not a
+  thread.)
+
+* It does this by iterating through each thread of the process and each of its
+  children, checking whether it shares its memory descriptor with the parent,
+  and if not calculating a score via [oom_badness()][oom_badness] and
+  reassigning the victim to the one with the highest score.
+
+* Once a victim is selected, it is first sent `SIGKILL` in order to try to break
+  up amicably. In case the break up is going to get messy, it is marked to die
+  via [mark_oom_victim()][mark_oom_victim] which simply sets the `TIF_MEMDIE`
+  thread flag.
+
+* Next, all processes are examined and checked to see whether they share the
+  memory descriptor and are not in the same thread group.
+
+* If the discovered process is either a kernel thread, the global init process
+  or has its `oom_score_adj` set to `OOM_SCORE_ADJ_MIN` process reaping is
+  disabled - this memory might still be used as the shared process will not be
+  killed.
+
+* For each ordinary process that shares the memory descriptor, a SIGKILL is
+  sent.
+
+* Finally, the OOM grim reaper is woken up via
+  [wake_oom_reaper()][wake_oom_reaper]. This ultimately invokes
+  [oom_reap_task()][oom_reap_task] to perform the actual unconditional killing
+  of the chosen victim.
+
 [__alloc_pages_may_oom]:https://github.com/torvalds/linux/blob/v4.6/mm/page_alloc.c#L2831
 [__vm_enough_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L481
 [constrained_alloc]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L213
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
 [get_mm_rss]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1445
 [global_page_state]:https://github.com/torvalds/linux/blob/v4.6/include/linux/vmstat.h#L120
+[mark_oom_victim]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L590
 [mem_cgroup_oom_synchronize]:https://github.com/torvalds/linux/blob/v4.6/mm/memcontrol.c#L1630
 [mm_fault_error]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L971
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
 [oom_badness]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L164
 [oom_kill.c]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c
+[oom_kill_process]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L677
 [oom_lock]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L51
+[oom_reap_task]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L508
 [oom_scan_process_thread]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L271
 [oom_scan_t]:https://github.com/torvalds/linux/blob/v4.6/include/linux/oom.h#L46
 [oom_task_origin]:https://github.com/torvalds/linux/blob/v4.6/include/linux/oom.h#L68
@@ -420,5 +462,6 @@ of selecting a victim.
 [vm_commit_limit]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L431
 [vm_committed_as]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L449
 [vm_memory_committed]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L459
+[wake_oom_reaper]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L548
 
 [process]:./process.md
