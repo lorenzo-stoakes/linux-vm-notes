@@ -289,9 +289,9 @@ enum oom_scan_t {
 
 * If, as in the usual case, the scan indicates no special action is to be taken,
   then the thread's score is calculated via [oom_badness()][oom_badness]
-  (discussed below.) If the points exceed any previously chosen thread's
-  points, then the thread is marked as that chosen to die. If the returned
-  score is 0, the thread is ignored.
+  (discussed below.) If the points exceed any previously chosen thread's points,
+  then the thread is stored as that chosen to die. If the returned score is 0,
+  the thread is ignored.
 
 * There is a special case when the points are _equal_ to the previously chosen
   thread - if the previously chosen thread is a thread group leader, then the
