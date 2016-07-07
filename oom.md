@@ -149,7 +149,7 @@
                                        v                                              |
                               /-----------------\ Yes      /-------------\ Yes        |
                              / Current thread is \------->/ Fatal signal  \--\        |
-                             \   in userland ?   /        \    pending?   /  |        |
+                             \    in userland?   /        \    pending?   /  |        |
                               \-----------------/          \-------------/   |        |
                                        | No                       | No       |        |
                                        v                          v          |        |
