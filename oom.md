@@ -308,10 +308,94 @@ enum oom_scan_t {
   different as defined by [constrained_alloc()][constrained_alloc], however
   again we are assuming an UMA system.
 
+### oom_badness()
+
+__NOTE:__ If the below logic results in a returned score of 0, this causes
+[select_bad_process()][select_bad_process] to ignore the thread for the purposes
+of selecting a victim.
+
+* [oom_badness()][oom_badness] determines the 'points' associated with a
+  thread. The unit of the value returned by this function is in pages.
+
+* Note that the final result output to users after this function returns is
+  scaled by 1000 and divided by total RAM + swap in the system.
+
+* Firstly the function checks to see if the thread is unkillable via
+  [oom_unkillable_task()][oom_unkillable_task], see above for the criteria for
+  this. If so, the returned score is 0.
+
+* Since the thread might currently be exiting or otherwise not have a memory
+  descriptor available at the `mm` field, each sub-thread of the thread is
+  examined to see if a memory descriptor can be fetched. If not, the returned
+  score is 0.
+
+* Next the thread's `oom_score_adj` value is read. This value is a tunable
+  available in `/proc/<pid>/oom_score_adj` ranging from -1000 to 1000. This
+  value is directly added to the (user-visible) 'badness' score, therefore a
+  higher value makes it more likely the process will be killed, and a lower
+  value less likely.
+
+* If the retrieved `oom_score_adj` is set to -1000, i.e. `OOM_SCORE_ADJ_MIN`,
+  then [oom_badness()][oom_badness] returns a score of 0 - this indicates that
+  the process is not to be killed
+
+* Note that `/proc/<pid>/oom_adj` is kept around for legacy purposes only and
+  is simply mapped to an equivalent `oom_score_adj` value.
+
+* Usefully you can read the score `oom_badness()` would return for a process via
+  `/proc/<pid>/oom_score`.
+
+#### Scoring
+
+* Once the special cases above are taken into account, the score is calculated
+  as follows:
+
+```c
+        /*
+         * The baseline for the badness score is the proportion of RAM that each
+         * task's rss, pagetable and swap space use.
+         */
+        points = get_mm_rss(p->mm) + get_mm_counter(p->mm, MM_SWAPENTS) +
+                atomic_long_read(&p->mm->nr_ptes) + mm_nr_pmds(p->mm);
+```
+
+* The score is equal to the sum of the process's RSS (more on this below), swap
+  pages, PTE and PMD page count.
+
+* A process's RSS is its _resident set size_ (here retrieved via
+  [get_mm_rss()][get_mm_rss]. This is the amount of memory that a process is
+  actually using, i.e. that has been page faulted in (see the section on the
+  [process address space][process] for more details on page faulting),
+  _including_ shared memory from e.g. shared libraries.
+
+* Since shared memory is counted for each process, the fact it is counted
+  multiple times does not skew the results.
+
+* If the process has the `CAP_SYS_ADMIN` capability, its OOM score is discounted
+  by 3% - this mirrors the bonus provided to such processes in the case of
+  `OVERCOMMIT_GUESS`.
+
+* Finally, the `oom_score_adj` is taken into account by multiplying by total
+  pages of RAM and swap and dividing by 1000 before directly adding this to the
+  final score. Quoting from the [proc fs][proc-doc] documentation:
+
+>Consequently, it is very simple for userspace to define the amount of memory to
+>consider for each task.  Setting a /proc/<pid>/oom_score_adj value of +500, for
+>example, is roughly equivalent to allowing the remainder of tasks sharing the
+>same system, cpuset, mempolicy, or memory controller resources to use at least
+>50% more memory.  A value of -500, on the other hand, would be roughly
+>equivalent to discounting 50% of the task's allowed memory from being considered
+>as scoring against the task.
+
+* [oom_badness()][oom_badness] always returns a positive value, if the score
+  calculated so far is negative, it returns 1 (remember 0 indicates that the
+  process should not be considered for death.)
+
 [__alloc_pages_may_oom]:https://github.com/torvalds/linux/blob/v4.6/mm/page_alloc.c#L2831
 [__vm_enough_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L481
 [constrained_alloc]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L213
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
+[get_mm_rss]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1445
 [global_page_state]:https://github.com/torvalds/linux/blob/v4.6/include/linux/vmstat.h#L120
 [mem_cgroup_oom_synchronize]:https://github.com/torvalds/linux/blob/v4.6/mm/memcontrol.c#L1630
 [mm_fault_error]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L971
@@ -326,6 +410,7 @@ enum oom_scan_t {
 [out_of_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L849
 [overcommit-accounting]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/overcommit-accounting
 [pagefault_out_of_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L920
+[proc-doc]:https://github.com/torvalds/linux/blob/v4.6/Documentation/filesystems/proc.txt
 [scythe]:https://www.youtube.com/watch?v=Ov6lWldus3o
 [security_vm_enough_memory_mm]:https://github.com/torvalds/linux/blob/v4.6/security/security.c#L216
 [select_bad_process]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L302
