@@ -149,6 +149,12 @@ pmd_large -> pse         pmd_huge -> pse/not present
   `KERNEL_IMAGE_SIZE_DEFAULT` seems to indicate that the 512MiB kernel is
   pre-mapped.
 
+* Add discussion of [tlb_gather_mmu()][tlb_gather_mmu] and
+  [tlb_finish_mmu()][tlb_finish_mmu].
+
+* Investigate teardown of pages, e.g. via
+  [unmap_page_range()][unmap_page_range].
+
 ## Interesting functions
 
 * [free_pgd_range()][free_pgd_range].
@@ -169,5 +175,8 @@ pmd_large -> pse         pmd_huge -> pse/not present
 [pat]:https://en.wikipedia.org/wiki/Page_attribute_table
 [pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
 [spurious_fault]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L1045
+[tlb_finish_mmu]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L273
+[tlb_gather_mmu]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L219
+[unmap_page_range]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L1268
 [vm_normal_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L742
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
