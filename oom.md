@@ -221,11 +221,18 @@
 
 ### select_bad_process()
 
+__NOTE:__ In the below threads are examined. However, as threads are simply
+processes that share a memory descriptor in linux, all the threads in a
+multi-threaded application will share the same score (though theoretically in
+the time between examining different threads the value might change.) Since
+killing a thread kills all threads in the multi-threaded, it is irrelevant which
+one is selected, and in fact the logic prefers the thread group leader for
+clarity.
+
 * [select_bad_process()][select_bad_process] determines which thread to
   kill. The core of the function is a loop where it iterates over all _threads_
-  in the system (remember that in linux, threads are just processes which share
-  a memory descriptor with their parents) and assesses them for their
-  suitability for the chop via a points system.
+  in the system and assesses them for their suitability for the chop via a
+  points system.
 
 * The first task within the loop is to call
   [oom_scan_process_thread()][oom_scan_process_thread] for the thread - this
