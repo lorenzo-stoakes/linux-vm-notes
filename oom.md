@@ -431,7 +431,54 @@ of selecting a victim.
   [oom_reap_task()][oom_reap_task] to perform the actual unconditional killing
   of the chosen victim.
 
+### oom_reap_task()
+
+* [oom_reap_task()][oom_reap_task] is a wrapper around
+  [__oom_reap_task()][__oom_reap_task] which does the heavy lifting of freeing
+  the victim's VMAs (see [process address space][process] for more on VMAs.)
+
+* If the call to `__oom_reap_task()` fails, then it is repeated up to
+  `MAX_OOM_REAP_RETRIES` times (hardcoded to 10), with a roughly 1/10th second
+  delay between each attempt, before the reaper gives up (if this occurs it is
+  reported via `dmesg`.)
+
+### __oom_reap_task()
+
+* [__oom_reap_task()][__oom_reap_task] starts by checking whether the memory
+  descriptor has either been removed, or has a `mm_users` count of 0 (see
+  [process address space][process] on the `mm_users` field.) In either case, the
+  reaper need not take any special measures and simply exits with a positive
+  result.
+
+* If the function then cannot acquire the `mmap_sem` semaphore associated with
+  the memory descriptor, it returns indicating the the reaping has failed
+  allowing for retries.
+
+* What follows this is a loop over each of the process's VMAs in which we unmap
+  memory where it makes sense to do so. We ensure we flush the [TLB][tlb]
+  correctly by placing this process between [tlb_gather_mmu()][tlb_gather_mmu]
+  and a [tlb_finish_mmu()][tlb_finish_mmu] calls.
+
+* To avoid additional steps that are risky in an OOM system - if the VMA is
+  marked as being used by hugetlb, or is locked (i.e. are marked such as to not
+  be placed into the swap), or is shared but not anonymous (i.e. file-backed) -
+  then no unmapping is attempted.
+
+* When a VMA is selected, the actual unmapping is performed via
+  [unmap_page_range()][unmap_page_range], which removes page table mappings
+  along with the VMA's physical pages. The TLB is flushed as necessary
+  throughout.
+
+* Once this unmapping is complete, debug output is provided to `dmesg` and the
+  memory descriptor semaphore is released.
+
+* The process is then marked as having an `oom_score_adj` of `OOM_SCORE_ADJ_MIN`
+  as it makes no sense to try to reap memory from this process again if the OOM
+  killer needs to be invoked once again - we've just reaped as much memory as we
+  can.
+
 [__alloc_pages_may_oom]:https://github.com/torvalds/linux/blob/v4.6/mm/page_alloc.c#L2831
+[__oom_reap_task]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L426
 [__vm_enough_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L481
 [constrained_alloc]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L213
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
@@ -460,9 +507,13 @@ of selecting a victim.
 [sysctl]:https://wiki.archlinux.org/index.php/Sysctl
 [sysrq]:https://en.wikipedia.org/wiki/Magic_SysRq_key
 [test_tsk_thread_flag]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L2915
+[tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
+[tlb_finish_mmu]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L273
+[tlb_gather_mmu]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L219
 [vm_commit_limit]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L431
 [vm_committed_as]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L449
 [vm_memory_committed]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L459
 [wake_oom_reaper]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L548
+[unmap_page_range]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L1268
 
 [process]:./process.md
