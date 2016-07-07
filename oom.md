@@ -221,7 +221,7 @@
 
 ### select_bad_process()
 
-* [select_bad_process()][select_bad_process] determines which process to
+* [select_bad_process()][select_bad_process] determines which thread to
   kill. The core of the function is a loop where it iterates over all _threads_
   in the system (remember that in linux, threads are just processes which share
   a memory descriptor with their parents) and assesses them for their
@@ -247,7 +247,7 @@ enum oom_scan_t {
   to an unsigned long which indicates the OOM killer as a whole should abort and
   finally `OOM_SCAN_SELECT` assigns the current thread as the victim and sets
   its points to `ULONG_MAX` to ensure it can only get pipped to the post by a
-  subsequent `OOM_SCAN_SELECT`'d process.
+  subsequent `OOM_SCAN_SELECT`'d thread.
 
 * Looking at the logic that leads to each outcome:
 
@@ -260,7 +260,7 @@ enum oom_scan_t {
    I'm ignoring crazy NUMA stuff in these notes for the time being :)
 
 2. Next, [test_tsk_thread_flag()][test_tsk_thread_flag] is called with the
-   `TIF_MEMDIE` flag set to see if another process has been OOM killed and is
+   `TIF_MEMDIE` flag set to see if another thread has been OOM killed and is
    therefore dying and releasing memory. If this is the case and the OOM killer
    _wasn't_ invoked via [sysrq][sysrq], the OOM killer can be aborted and
    `OOM_SCAN_ABORT` is returned.
@@ -281,17 +281,18 @@ enum oom_scan_t {
 
 * If, as in the usual case, the scan indicates no special action is to be taken,
   then the thread's score is calculated via [oom_badness()][oom_badness]
-  (discussed below.) If the points exceed any previously chosen process's
-  points, then the process is marked as that chosen to die.
+  (discussed below.) If the points exceed any previously chosen thread's
+  points, then the thread is marked as that chosen to die. If the returned
+  score is 0, the thread is ignored.
 
 * There is a special case when the points are _equal_ to the previously chosen
   thread - if the previously chosen thread is a thread group leader, then the
-  process under examination is _not_ chosen, otherwise it is. This ensures that
+  thread under examination is _not_ chosen, otherwise it is. This ensures that
   in the case of a multi-threaded application it's the thread group leader that
   is chosen.
 
 * Finally [select_bad_process()][select_bad_process] returns the points of the
-  chosen process multiplied by 1000 and scaled by the total number of pages of
+  chosen thread multiplied by 1000 and scaled by the total number of pages of
   RAM in the system (i.e. the total physical RAM in page units) added to the
   total number of pages of swap.
 
