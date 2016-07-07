@@ -131,6 +131,10 @@ pmd_large -> pse         pmd_huge -> pse/not present
   chrome[563d66ac1000+5d99000]`. Confirmed that demand paging still happens
   under this mode.
 
+* [for_each_process_thread()][for_each_process_thread]
+  vs. [for_each_process()][for_each_process] - does the former double-count, or
+  does the latter simply skip thread processes? Check.
+
 ## Thoughts
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
@@ -157,6 +161,8 @@ pmd_large -> pse         pmd_huge -> pse/not present
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
 [empty_zero_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L527
 [flush_tlb_kernel_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L296
+[for_each_process]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L2696
+[for_each_process_thread]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L2718
 [free_pgd_range]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L473
 [mem_section]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1040
 [mtrr]:https://en.wikipedia.org/wiki/Memory_type_range_register
