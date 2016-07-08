@@ -305,14 +305,14 @@ enum oom_scan_t {
   in the case of a multi-threaded application it's the thread group leader that
   is chosen.
 
+* In NUMA-related cases the total RAM value used to scale the score can be
+  different as defined by [constrained_alloc()][constrained_alloc], however
+  again we are assuming an UMA system.
+
 * Finally [select_bad_process()][select_bad_process] returns the points of the
   chosen thread multiplied by 1000 and scaled by the total number of pages of
   RAM in the system (i.e. the total physical RAM in page units) added to the
   total number of pages of swap.
-
-* In NUMA-related cases the total RAM value used to scale the score can be
-  different as defined by [constrained_alloc()][constrained_alloc], however
-  again we are assuming an UMA system.
 
 ### oom_badness()
 
