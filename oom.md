@@ -343,7 +343,8 @@ of selecting a victim.
 
 4. If the retrieved `oom_score_adj` is set to -1000, i.e. `OOM_SCORE_ADJ_MIN`,
    then [oom_badness()][oom_badness] returns a score of 0 - this indicates that
-   the process is not to be killed
+   the process is not to be chosen as victim. This is a means for users to
+   completely disable OOM killing of critical processes.
 
 * Note that `/proc/<pid>/oom_adj` is kept around for legacy purposes only and
   is simply mapped to an equivalent `oom_score_adj` value.
