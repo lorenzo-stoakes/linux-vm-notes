@@ -272,10 +272,11 @@ enum oom_scan_t {
    I'm ignoring crazy NUMA stuff in these notes for the time being :)
 
 2. Next, [test_tsk_thread_flag()][test_tsk_thread_flag] is called with the
-   `TIF_MEMDIE` flag set to see if another thread has been OOM killed and is
-   therefore dying and releasing memory. If this is the case and the OOM killer
-   _wasn't_ invoked via [sysrq][sysrq], the OOM killer can be aborted and
-   `OOM_SCAN_ABORT` is returned.
+   `TIF_MEMDIE` flag set to see if it is marked to be OOM killed or is the
+   process of being killed, in either case dying and releasing memory
+   already. If this is the case and the OOM killer _wasn't_ invoked via
+   [sysrq][sysrq], the OOM killer should be aborted and `OOM_SCAN_ABORT` is
+   returned.
 
 3. If the task does not have a [struct mm_struct][mm_struct] assigned in the
    `mm` field, indicating that either it is a kernel thread or it is exiting so
