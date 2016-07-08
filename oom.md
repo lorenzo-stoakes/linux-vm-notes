@@ -353,8 +353,8 @@ of selecting a victim.
 
 #### Scoring
 
-* Once the special cases above are taken into account, the score is calculated
-  as follows:
+* If none of the special cases discussed above apply, the score is calculated as
+  follows:
 
 ```c
         /*
