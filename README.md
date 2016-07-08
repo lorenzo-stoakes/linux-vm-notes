@@ -19,8 +19,8 @@ cgroup/namespace logic, these will be considered separately.
   construction/destruction, file/device-backed memory regions, page faulting,
   demand allocation, COW pages, copying to/from userland. __WORK IN PROGRESS__
 
-4. [Out of Memory Killer][oom] - Discussion about the OOM
-   killer. __WORK IN PROGRESS__
+4. [Out of Memory Killer][oom] - Discussion about overcommit and how the OOM
+   killer selects and kills victims.
 
 ### Function Cheat Sheets
 
