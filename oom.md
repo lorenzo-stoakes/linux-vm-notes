@@ -461,8 +461,8 @@ of selecting a victim.
   the memory descriptor, it returns indicating the the reaping has failed
   allowing for retries.
 
-* What follows this is a loop over each of the process's VMAs in which we unmap
-  memory where it makes sense to do so. We ensure we flush the [TLB][tlb]
+* Next we loop over each of the process's VMAs and unmap the VMA's memory where
+  possible (see next step for details.) We ensure we flush the [TLB][tlb]
   correctly by placing this process between [tlb_gather_mmu()][tlb_gather_mmu]
   and a [tlb_finish_mmu()][tlb_finish_mmu] calls.
 
