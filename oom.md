@@ -6,9 +6,14 @@
   the system to resume normal operation.
 
 * In order for the OOM to reach the state where the OOM killer needs to be
-  invoked, the system needs to have 'overcommit' enabled. An overcommit is an
-  allocation which either does not take into account available physical memory
-  at all, or only rejects really crazy requests.
+  invoked, the system needs to have 'overcommit' enabled.
+
+* 'Overcommitting' is where memory allocations are permitted under circumstances
+  where the actual available memory might not be able to satisfy the
+  request. This is possible because of [demand paging][demand-paging] - memory
+  requested by processes isn't necessarily allocated right way, rather memory
+  ranges are stored in VMAs (see the section on [process address space][process]
+  for more on VMAs), and pages are 'faulted in' as necessary.
 
 * There are 3 possible overcommit modes, specified by the [sysctl][sysctl]
   `vm.overcommit_memory` (see the [overcommit accounting][overcommit-accounting]
