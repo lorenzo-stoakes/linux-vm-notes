@@ -1,8 +1,8 @@
 # Process Autopsy
 
 * In this section we'll examine in detail how the kernel allocates memory for a
-  simple userland process ([simple_alloc.c][simple_alloc.c] from the sister
-  repository to vm-notes - [linux VM hacks][vm-hacks]):
+  simple userland process ([simple_alloc.c][simple_alloc.c] from our sister
+  repository [linux VM hacks][vm-hacks]):
 
 ```c
 #define _GNU_SOURCE
