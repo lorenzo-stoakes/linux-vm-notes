@@ -39,8 +39,7 @@
 
 * It's highly likely your system and most you encounter will use the
   `OVERCOMMIT_GUESS` mode. This makes sense, as under
-  [demand paging][demand-paging], allocations are lazily allocated via page
-  faults (see the section on [process address space][process]), so requiring
+  [demand paging][demand-paging], allocations are lazily allocated, so requiring
   that there is sufficient physical memory to contain blocks of memory that are
   not yet used or observed in any way is highly wasteful.
 
