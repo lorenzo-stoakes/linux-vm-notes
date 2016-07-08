@@ -324,26 +324,26 @@ of selecting a victim.
 * [oom_badness()][oom_badness] determines the 'points' associated with a
   thread. The unit of the value returned by this function is in
   pages. __Important__ - the final result output to users after this function
-  returns is scaled by 1000 and divided by total RAM + swap in the system.
+  returns is scaled by 1000 and divided by total RAM + swap in the system:
 
-* Firstly the function checks to see if the thread is unkillable via
-  [oom_unkillable_task()][oom_unkillable_task], see above for the criteria for
-  this. If so, the returned score is 0.
+1. Firstly the function checks to see if the thread is unkillable via
+   [oom_unkillable_task()][oom_unkillable_task], see above for the criteria for
+   this. If so, the returned score is 0.
 
-* Since the thread might currently be exiting or otherwise not have a memory
-  descriptor available at the `mm` field, each sub-thread of the thread is
-  examined to see if a memory descriptor can be fetched. If not, the returned
-  score is 0.
+2. Since the thread might currently be exiting or otherwise not have a memory
+   descriptor available at the `mm` field, each sub-thread of the thread is
+   examined to see if a memory descriptor can be fetched. If not, the returned
+   score is 0.
 
-* Next the thread's `oom_score_adj` value is read. This value is a tunable
-  available in `/proc/<pid>/oom_score_adj` ranging from -1000 to 1000. This
-  value is directly added to the (user-visible) 'badness' score, therefore a
-  higher value makes it more likely the process will be killed, and a lower
-  value less likely.
+3. Next the thread's `oom_score_adj` value is read. This value is a tunable
+   available in `/proc/<pid>/oom_score_adj` ranging from -1000 to 1000. This
+   value is directly added to the (user-visible) 'badness' score, therefore a
+   higher value makes it more likely the process will be killed, and a lower
+   value less likely.
 
-* If the retrieved `oom_score_adj` is set to -1000, i.e. `OOM_SCORE_ADJ_MIN`,
-  then [oom_badness()][oom_badness] returns a score of 0 - this indicates that
-  the process is not to be killed
+4. If the retrieved `oom_score_adj` is set to -1000, i.e. `OOM_SCORE_ADJ_MIN`,
+   then [oom_badness()][oom_badness] returns a score of 0 - this indicates that
+   the process is not to be killed
 
 * Note that `/proc/<pid>/oom_adj` is kept around for legacy purposes only and
   is simply mapped to an equivalent `oom_score_adj` value.
