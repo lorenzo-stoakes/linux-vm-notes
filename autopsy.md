@@ -1,4 +1,4 @@
-# A Process Memory Autopsy
+# Process Autopsy
 
 * In this section we'll examine in detail how the kernel allocates memory for a
   simple userland process ([simple_alloc.c][simple_alloc.c] from the sister

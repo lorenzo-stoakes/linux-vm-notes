@@ -22,9 +22,8 @@ cgroup/namespace logic, these will be considered separately.
 4. [Out of Memory Killer][oom] - Discussion about overcommit and how the OOM
    killer selects and kills victims.
 
-5. [A Process Memory Autopsy][autopsy] - Examining the memory allocation
-   performed by the kernel for a simple userland application. __WORK IN
-   PROGRESS__
+5. [Process Autopsy][autopsy] - Examining the memory allocation performed by the
+   kernel for a simple userland application. __WORK IN PROGRESS__
 
 ### Function Cheat Sheets
 
