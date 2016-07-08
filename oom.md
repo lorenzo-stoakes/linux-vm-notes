@@ -98,8 +98,8 @@
 ### Entry Point
 
 * The out of memory killer code is surprisingly short and clean, contained
-  within [mm/oom_kill.c][oom_kill.c]. In fact contained in the comment at the
-  top of the file is a pleasing comment:
+  within [mm/oom_kill.c][oom_kill.c]. In fact there is a pleasing comment at the
+  top of the file:
 
 ```c
  *  Since we won't call these routines often (on a well-configured
