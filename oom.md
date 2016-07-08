@@ -346,11 +346,10 @@ of selecting a victim.
    the process is not to be chosen as victim. This is a means for users to
    completely disable OOM killing of critical processes.
 
-* Note that `/proc/<pid>/oom_adj` is kept around for legacy purposes only and
-  is simply mapped to an equivalent `oom_score_adj` value.
-
-* Usefully you can read the score `oom_badness()` would return for a process via
-  `/proc/<pid>/oom_score`.
+* Note that `/proc/<pid>/oom_adj` is kept around for legacy purposes only and is
+  simply mapped to an equivalent `oom_score_adj` value (usefully you can read
+  the score `oom_badness()` would return for a process via
+  `/proc/<pid>/oom_score`.)
 
 #### Scoring
 
