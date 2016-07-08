@@ -322,10 +322,9 @@ __NOTE:__ If the below logic results in a returned score of 0, this causes
 of selecting a victim.
 
 * [oom_badness()][oom_badness] determines the 'points' associated with a
-  thread. The unit of the value returned by this function is in pages.
-
-* Note that the final result output to users after this function returns is
-  scaled by 1000 and divided by total RAM + swap in the system.
+  thread. The unit of the value returned by this function is in
+  pages. __Important__ - the final result output to users after this function
+  returns is scaled by 1000 and divided by total RAM + swap in the system.
 
 * Firstly the function checks to see if the thread is unkillable via
   [oom_unkillable_task()][oom_unkillable_task], see above for the criteria for
