@@ -21,12 +21,11 @@
 
   * `0` - `OVERCOMMIT_GUESS` - (Default) - Heuristic overcommit - Determines the
     available free memory on the system, looking at _actually_ referenced
-    memory, not allocated (due to [demand paging][demand-paging], allocations
-    are lazy allocated on use by default), if the request is larger than this,
-    the allocation is refused. Processes with the `CAP_SYS_ADMIN` capability are
-    able to allocate more than those without it. This is an overcommit mode as
-    allocations of reasonable sizes are allowed then not taken into account in
-    future allocations unless the memory allocated is actually referenced.
+    memory, not allocated, if the request is larger than this, the allocation is
+    refused. Processes with the `CAP_SYS_ADMIN` capability are able to allocate
+    more than those without it. This is an overcommit mode as allocations of
+    reasonable sizes are allowed then not taken into account in future
+    allocations unless the memory allocated is actually referenced.
 
   * `1` - `OVERCOMMIT_ALWAYS` - Always overcommit, no matter what. YOLO.
 
