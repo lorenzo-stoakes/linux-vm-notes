@@ -22,6 +22,10 @@ cgroup/namespace logic, these will be considered separately.
 4. [Out of Memory Killer][oom] - Discussion about overcommit and how the OOM
    killer selects and kills victims.
 
+5. [A Process Memory Autopsy][autopsy] - Examining the memory allocation
+   performed by the kernel for a simple userland application. __WORK IN
+   PROGRESS__
+
 ### Function Cheat Sheets
 
 These pages list useful VM functions with a reasonably detailed description of
@@ -97,6 +101,7 @@ These notes are licensed under [Creative Commons BY-NC-SA][license].
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
 [vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
 
+[autopsy]:./autopsy.md
 [buddy]:./buddy.md
 [cgroup]:./cgroup.md
 [fundamentals]:./fundamentals.md
