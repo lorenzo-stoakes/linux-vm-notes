@@ -448,7 +448,8 @@ of selecting a victim.
   descriptor has either been removed, or has a `mm_users` count of 0 (see
   [process address space][process] on the `mm_users` field.) In either case, the
   reaper need not take any special measures and simply exits with a positive
-  result.
+  result. Otherwise, we increment the `mm_users` field to make sure we keep a
+  reference to it.
 
 * If the function then cannot acquire the `mmap_sem` semaphore associated with
   the memory descriptor, it returns indicating the the reaping has failed
@@ -477,17 +478,24 @@ of selecting a victim.
   killer needs to be invoked once again - we've just reaped as much memory as we
   can.
 
+* Finally, the `TIF_MEMDIE` flag is cleared from the task via
+  [exit_oom_victim()][exit_oom_victim], and we call [mmput()][mmput] to
+  decrement the memory descriptor's `mm_user` count - we've done what we can to
+  release memory.
+
 [__alloc_pages_may_oom]:https://github.com/torvalds/linux/blob/v4.6/mm/page_alloc.c#L2831
 [__oom_reap_task]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L426
 [__vm_enough_memory]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L481
 [constrained_alloc]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L213
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
+[exit_oom_victim]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L609
 [get_mm_rss]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1445
 [global_page_state]:https://github.com/torvalds/linux/blob/v4.6/include/linux/vmstat.h#L120
 [mark_oom_victim]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L590
 [mem_cgroup_oom_synchronize]:https://github.com/torvalds/linux/blob/v4.6/mm/memcontrol.c#L1630
 [mm_fault_error]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L971
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
+[mmput]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L705
 [oom_badness]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L164
 [oom_kill.c]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c
 [oom_kill_process]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L677
@@ -510,10 +518,10 @@ of selecting a victim.
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [tlb_finish_mmu]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L273
 [tlb_gather_mmu]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L219
+[unmap_page_range]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L1268
 [vm_commit_limit]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L431
 [vm_committed_as]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L449
 [vm_memory_committed]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L459
 [wake_oom_reaper]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L548
-[unmap_page_range]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L1268
 
 [process]:./process.md
