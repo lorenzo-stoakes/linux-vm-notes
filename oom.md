@@ -2,7 +2,7 @@
 
 * The Out of Memory Killer (OOM killer) is the last resort available to a linux
   system when it is unable to allocate requested memory. It uses heuristics to
-  determine process(es) to kill in order to free sufficient physical memory for
+  determine a process to kill in order to free sufficient physical memory for
   the system to resume normal operation.
 
 * In order for the OOM to reach the state where the OOM killer needs to be
