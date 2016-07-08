@@ -98,6 +98,7 @@ These notes are licensed under [Creative Commons BY-NC-SA][license].
 [vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
 
 [buddy]:./buddy.md
+[cgroup]:./cgroup.md
 [fundamentals]:./fundamentals.md
 [huge]:./huge.md
 [oom]:./oom.md
@@ -105,9 +106,8 @@ These notes are licensed under [Creative Commons BY-NC-SA][license].
 [physical]:./physical.md
 [process]:./process.md
 [slub]:./slub.md
-[cgroup]:./cgroup.md
 
 [funcs]:./funcs.md
-[page-table-funcs]:./page-table-funcs.md
 [page-table-flag-funcs]:./page-table-flag-funcs.md
+[page-table-funcs]:./page-table-funcs.md
 [vma-funcs]:./vma-funcs.md
