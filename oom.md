@@ -383,7 +383,7 @@ of selecting a victim.
 
 * Finally, the `oom_score_adj` is taken into account by multiplying by total
   pages of RAM and swap and dividing by 1000 before directly adding this to the
-  final score. Quoting from the [proc fs][proc-doc] documentation:
+  final score. Quoting from the [procfs][proc-doc] documentation:
 
 >Consequently, it is very simple for userspace to define the amount of memory to
 >consider for each task.  Setting a /proc/<pid>/oom_score_adj value of +500, for
