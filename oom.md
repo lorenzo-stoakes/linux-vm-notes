@@ -303,7 +303,8 @@ enum oom_scan_t {
   thread - if the previously chosen thread is a thread group leader, then the
   thread under examination is _not_ chosen, otherwise it is. This ensures that
   in the case of a multi-threaded application it's the thread group leader that
-  is chosen.
+  is chosen (except in the unlikely case where memory usage changes in the time
+  between scoring threads.)
 
 * In NUMA-related cases the total RAM value used to scale the score can be
   different as defined by [constrained_alloc()][constrained_alloc], however
