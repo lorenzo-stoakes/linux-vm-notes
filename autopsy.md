@@ -55,5 +55,12 @@ int main(void)
 }
 ```
 
+* In order to examine the behaviour of the application I'm using my my
+  [kernel scripts][kernel-scripts] project to run the application within a
+  kernel under [qemu][qemu].
+
 [simple_alloc.c]:https://github.com/lorenzo-stoakes/linux-vm-hacks/blob/master/experiments/simple_alloc.c
+
+[qemu]:http://wiki.qemu.org/Main_Page
+[kernel-scripts]:https://github.com/lorenzo-stoakes/kernel-scripts
 [vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
