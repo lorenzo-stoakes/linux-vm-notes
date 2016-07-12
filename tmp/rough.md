@@ -3,6 +3,13 @@
 __NOTE:__ These are rough notes intentionally not linked from elsewhere, and may
 be full of errors, swearing and bullshit.
 
+## TODO
+
+* Go into detail about `handle_mm_fault()` and how various page faults are
+  handled, incl. returning the zero page.
+
+* Discuss split page table locks in page-tables.md.
+
 ## General
 
 * `pXX_large()` seems to duplicate `pXX_huge()`, though the latter seems to be
@@ -20,9 +27,6 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * `CONFIG_PGTABLE_LEVELS` is used to determine number of pg table levels now.
 
-## TODO high
-
-* Discuss split page table locks in page-tables.md.
 
 ## TODO general
 
