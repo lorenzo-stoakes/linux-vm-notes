@@ -5,6 +5,8 @@
   specify that the final physical page they refer to is larger than the standard
   page size.
 
+## Huge Pages
+
 * On x86 the standard page size is 4KiB, huge pages are 2MiB and 'gigantic'
   pages are 1GiB.
 
