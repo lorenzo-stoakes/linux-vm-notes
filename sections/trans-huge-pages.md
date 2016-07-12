@@ -15,6 +15,10 @@
   expensive. Because the physical page size is larger, each TLB entry now maps
   512 times as much memory (2MiB/4KiB = 512.)
 
+* In addition page faulting is reduced by a factor of 512, however this is less
+  impactful as this speed up occurs only once in the lifetime of the memory
+  region.
+
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
 
