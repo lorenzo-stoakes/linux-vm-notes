@@ -20,14 +20,6 @@ pud_large -> pse/present pud_huge -> pse
 pmd_large -> pse         pmd_huge -> pse/not present
 ```
 
-## 2.4.22 -> 4.6
-
-* Seems like missing page levels is handled via
-  [pgtable-nopmd.h][pgtable-nopmd.h] now.
-
-* `CONFIG_PGTABLE_LEVELS` is used to determine number of pg table levels now.
-
-
 ## TODO general
 
 * Cover `switch_mm()` etc.
@@ -177,7 +169,6 @@ pmd_large -> pse         pmd_huge -> pse/not present
 [mem_section]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mmzone.h#L1040
 [mtrr]:https://en.wikipedia.org/wiki/Memory_type_range_register
 [pat]:https://en.wikipedia.org/wiki/Page_attribute_table
-[pgtable-nopmd.h]:https://github.com/torvalds/linux/blob/v4.6/include/asm-generic/pgtable-nopmd.h
 [spurious_fault]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L1045
 [tlb_finish_mmu]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L273
 [tlb_gather_mmu]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L219
