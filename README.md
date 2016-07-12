@@ -19,10 +19,13 @@ cgroup/namespace logic, these will be considered separately.
   construction/destruction, file/device-backed memory regions, page faulting,
   demand allocation, COW pages, copying to/from userland. __WORK IN PROGRESS__
 
-4. [Out of Memory Killer][oom] - Discussion about overcommit and how the OOM
+4. [Transparent Huge Pages][trans-huge-pages] - Discussion about the kernel's
+   [transparent huge pages][transhuge] functionality. __WORK IN PROGRESS__
+
+5. [Out of Memory Killer][oom] - Discussion about overcommit and how the OOM
    killer selects and kills victims.
 
-5. [Process Autopsy][autopsy] - Examining the memory allocation performed by the
+6. [Process Autopsy][autopsy] - Examining the memory allocation performed by the
    kernel for a simple userland application. __WORK IN PROGRESS__
 
 ### Function Cheat Sheets
@@ -56,9 +59,6 @@ code:
   physical memory allocator.
 
 * [SLUB Allocator][slub] - Discussion about the default object allocator.
-
-* [Huge Pages][huge] - Discussion about huge pages, including
-  [transparent huge pages][transhuge].
 
 * [cgroup Memory Management][cgroup] - Discussion about cgroup memory management
   functionality.
@@ -104,7 +104,7 @@ These notes are licensed under [Creative Commons BY-NC-SA][license].
 [buddy]:./buddy.md
 [cgroup]:./cgroup.md
 [fundamentals]:./fundamentals.md
-[huge]:./huge.md
+[trans-huge-pages]:./trans-huge-pages.md
 [oom]:./oom.md
 [page-tables]:./page-tables.md
 [physical]:./physical.md
