@@ -559,10 +559,14 @@ includes huge pages, or the range is specified to be a full flush range
 
 Otherwise, the number of pages to flush is compared to the
 [tlb_single_page_flush_ceiling][tlb_single_page_flush_ceiling] variable, which
-is set at `33`. If the number of pages to flush exceeds this value, then a full
-flush is performed instead. The [Documentation/x86/tlb.txt][tlb.txt]
-documentation goes into more detail as to the trade off between a full flush and
-individual flushes, and the code comment above this value explains:
+is set at `33` by default and tunable via
+`/sys/kernel/debug/x86/tlb_single_page_flush_ceiling`. If this value is set to
+0, page-granularity flushes are not performed at all.
+
+If the number of pages to flush exceeds this value, then a full flush is
+performed instead. The [Documentation/x86/tlb.txt][tlb.txt] documentation goes
+into more detail as to the trade off between a full flush and individual
+flushes, and the code comment above this value explains:
 
 ```c
 /*
