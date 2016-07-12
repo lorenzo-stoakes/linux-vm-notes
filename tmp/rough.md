@@ -10,7 +10,7 @@ be full of errors, swearing and bullshit.
 
 * Discuss split page table locks in page-tables.md.
 
-## General
+## Ideas
 
 * `pXX_large()` seems to duplicate `pXX_huge()`, though the latter seems to be
   in hugetlb context, and there are some variations, for example:
@@ -19,8 +19,6 @@ be full of errors, swearing and bullshit.
 pud_large -> pse/present pud_huge -> pse
 pmd_large -> pse         pmd_huge -> pse/not present
 ```
-
-## TODO general
 
 * Cover `switch_mm()` etc.
 
@@ -130,8 +128,6 @@ pmd_large -> pse         pmd_huge -> pse/not present
 * [for_each_process_thread()][for_each_process_thread]
   vs. [for_each_process()][for_each_process] - does the former double-count, or
   does the latter simply skip thread processes? Check.
-
-## Thoughts
 
 * When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
   always referring to an underlying lower-level page table page, am I always
