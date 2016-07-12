@@ -9,7 +9,7 @@
   pages are 1GiB.
 
 * Using larger pages makes sense for tasks which allocate larger blocks of
-  memory because [TLB][tlb] resources are scarce and flushes expensive.
+  memory because [TLB][tlb] resources are scarce, and TLB misses are expensive.
 
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
