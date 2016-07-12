@@ -5,6 +5,10 @@
   specify that the final physical page they refer to is larger than the standard
   page size.
 
+* This functionality transparently converts processes' pages to huge pages where
+  it makes sense to do so, without userland being aware or needing to take any
+  action whatsoever.
+
 ## Huge Pages
 
 * On x86 the standard page size is 4KiB, huge pages are 2MiB and 'gigantic'
