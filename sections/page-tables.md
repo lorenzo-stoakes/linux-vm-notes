@@ -580,6 +580,6 @@ static int __handle_mm_fault(struct mm_struct *mm, struct vm_area_struct *vma,
 [virtual-memory]:https://en.wikipedia.org/wiki/Virtual_memory
 [xen]:https://en.wikipedia.org/wiki/Xen
 
-[funcs]:./page-table-funcs.md
+[funcs]:../funcs/page-table-funcs.md
 [huge]:./huge.md
 [physical]:./physical.md

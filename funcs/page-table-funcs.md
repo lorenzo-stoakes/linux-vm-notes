@@ -4,7 +4,7 @@
 
 ### Flag Functions
 
-See [Page Table Flag Functions](./page-table-flag-funcs.md), which lists
+See [Page Table Flag Functions][page-table-flag-funcs], which lists
 functions relating to page table entry flags.
 
 These have been moved for readability.
@@ -1825,3 +1825,5 @@ pointed at physical page.
 [swapper_pg_dir]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64.h#L25
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
 [virt_to_page]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page.h#L63
+
+[page-table-flag-funcs]:./page-table-flag-funcs.md

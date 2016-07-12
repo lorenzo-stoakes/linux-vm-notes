@@ -100,18 +100,18 @@ These notes are licensed under [Creative Commons BY-NC-SA][license].
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
 [vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
 
-[autopsy]:./autopsy.md
-[buddy]:./buddy.md
-[cgroup]:./cgroup.md
-[fundamentals]:./fundamentals.md
-[trans-huge-pages]:./trans-huge-pages.md
-[oom]:./oom.md
-[page-tables]:./page-tables.md
-[physical]:./physical.md
-[process]:./process.md
-[slub]:./slub.md
+[autopsy]:sections/autopsy.md
+[buddy]:sections/buddy.md
+[cgroup]:sections/cgroup.md
+[fundamentals]:sections/fundamentals.md
+[trans-huge-pages]:sections/trans-huge-pages.md
+[oom]:sections/oom.md
+[page-tables]:sections/page-tables.md
+[physical]:sections/physical.md
+[process]:sections/process.md
+[slub]:sections/slub.md
 
-[funcs]:./funcs.md
-[page-table-flag-funcs]:./page-table-flag-funcs.md
-[page-table-funcs]:./page-table-funcs.md
-[vma-funcs]:./vma-funcs.md
+[funcs]:funcs/funcs.md
+[page-table-flag-funcs]:funcs/page-table-flag-funcs.md
+[page-table-funcs]:funcs/page-table-funcs.md
+[vma-funcs]:funcs/vma-funcs.md

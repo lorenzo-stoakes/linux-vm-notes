@@ -28,7 +28,7 @@ pmd_large -> pse         pmd_huge -> pse/not present
 
 * Cover `switch_mm()` etc.
 
-* Fixup link to vmalloc in [functions](./funcs.md) page from being a link to
+* Fixup link to vmalloc in [functions][funcs] page from being a link to
   http://www.makelinux.net/books/lkd2/ch11lev1sec5 to a local description once
   it's written.
 
@@ -180,3 +180,5 @@ pmd_large -> pse         pmd_huge -> pse/not present
 [unmap_page_range]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L1268
 [vm_normal_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L742
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
+
+[funcs]:../funcs/funcs.md
