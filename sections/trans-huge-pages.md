@@ -32,8 +32,30 @@
   impactful as this speed up occurs only once in the lifetime of the memory
   region.
 
+## khugepaged
+
+* The kernel thread which translates existing 4KiB pages to 2MiB huge pages is
+  `khugepaged`, which executes [khugepaged()][khugepaged], which is invoked (and
+  also stopped) via [start_stop_khugepaged()][start_stop_khugepaged].
+
+* When run, the thread marks itself [cgroup freezable][cgroup-freezer] and sets
+  its [niceness][nice] to maximum in order to run at lowest priority.
+
+* It then enters a loop that runs while the kthread is not marked to stop in
+  which it runs a scan via [khugepaged_do_scan()][khugepaged_do_scan] to perform
+  the core of its operation.
+
+* After the scan, the thread waits on the [khugepaged_wait][khugepaged_wait]
+  [wait queue][wait-queue] via [khugepaged_wait_work()][khugepaged_wait_work].
+
+[cgroup-freezer]:https://github.com/torvalds/linux/blob/v4.6/Documentation/cgroup-v1/freezer-subsystem.txt
+[khugepaged]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L2816
+[khugepaged_wait]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L95
 [madvise]:http://man7.org/linux/man-pages/man2/madvise.2.html
+[nice]:https://en.wikipedia.org/wiki/Nice_(Unix)
+[start_stop_khugepaged]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L179
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
+[wait-queue]:http://www.makelinux.net/ldd3/chp-6-sect-2
 
 [page-tables]:./page-tables.md
