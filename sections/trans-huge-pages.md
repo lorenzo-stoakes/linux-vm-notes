@@ -9,6 +9,15 @@
   it makes sense to do so, without userland being aware or needing to take any
   action whatsoever.
 
+* In order for transparent huge pages to be available,
+  `CONFIG_TRANSPARENT_HUGEPAGE` has to be enabled.
+
+* The mode in which transparent huge pages run is specified by
+  `/sys/kernel/mm/transparent_hugepage/enabled`. This is set to one of 'always',
+  'madvise', and 'never' - enabling unconditionally, enabling if memory is
+  [madvise][madvise]d with `MADV_HUGEPAGE`, and disabling altogether,
+  respectively.
+
 ## Huge Pages
 
 * On x86 the standard page size is 4KiB, huge pages are 2MiB and 'gigantic'
@@ -23,6 +32,7 @@
   impactful as this speed up occurs only once in the lifetime of the memory
   region.
 
+[madvise]:http://man7.org/linux/man-pages/man2/madvise.2.html
 [tlb]:https://en.wikipedia.org/wiki/Translation_lookaside_buffer
 [transhuge]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/transhuge.txt
 
