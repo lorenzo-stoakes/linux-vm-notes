@@ -50,7 +50,9 @@
 
 [cgroup-freezer]:https://github.com/torvalds/linux/blob/v4.6/Documentation/cgroup-v1/freezer-subsystem.txt
 [khugepaged]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L2816
+[khugepaged_do_scan]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L2766
 [khugepaged_wait]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L95
+[khugepaged_wait_work]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L2800
 [madvise]:http://man7.org/linux/man-pages/man2/madvise.2.html
 [nice]:https://en.wikipedia.org/wiki/Nice_(Unix)
 [start_stop_khugepaged]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L179
