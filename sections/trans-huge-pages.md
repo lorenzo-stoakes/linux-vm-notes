@@ -48,11 +48,31 @@
 * After the scan, the thread waits on the [khugepaged_wait][khugepaged_wait]
   [wait queue][wait-queue] via [khugepaged_wait_work()][khugepaged_wait_work].
 
+* The number of pages that `khugepaged` scans for suitability to conversion to a
+  huge page is determined by
+  [khugepaged_pages_to_scan][khugepaged_pages_to_scan], which is tunable via
+  `/sys/kernel/mm/transparent_hugepage/khugepaged/pages_to_scan` and initialised
+  to 4096 on x86-64, equal to the number of pointers in a PMD page, `1 <<
+  (PMD_SHIFT - PAGE_SHIFT)`, multiplied by 8.
+
+* The number of additional smaller pages that can be allocated when collapsing
+  smaller pages to large is determined by
+  [khugepaged_max_ptes_none][khugepaged_max_ptes_none], which is tunable via
+  `/sys/kernel/mm/transparent_hugepage/khugepaged/max_ptes_none`. This is
+  initialised to 511 on x86-64, equal to the number of pointers in a PMD page,
+  subtracting 1 - since 2MiB/4KiB = 512 this is equivalent to the additional
+  space required to convert a single 4KiB page to a huge 2MiB one.
+
+* The initialisation takes part in [hugepage_init()][hugepage_init].
+
 [cgroup-freezer]:https://github.com/torvalds/linux/blob/v4.6/Documentation/cgroup-v1/freezer-subsystem.txt
+[hugepage_init]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L662
 [khugepaged]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L2816
 [khugepaged_do_scan]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L2766
+[khugepaged_pages_to_scan]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L86
 [khugepaged_wait]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L95
 [khugepaged_wait_work]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L2800
+[khugepaged_max_ptes_none]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L101
 [madvise]:http://man7.org/linux/man-pages/man2/madvise.2.html
 [nice]:https://en.wikipedia.org/wiki/Nice_(Unix)
 [start_stop_khugepaged]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L179
