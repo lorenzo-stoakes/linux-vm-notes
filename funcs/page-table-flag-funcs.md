@@ -268,8 +268,11 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 [pgd_bad()][pgd_bad] determines whether the specified PGD entry itself is not in
 a state where it, or descendent tables, can be safely modified.
 
-In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
-`_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set.
+In x86-64 the test consists of masking out `_PAGE_USER` (ignored so the test can
+be applied to both kernel and userland mappings), then checking that the
+`_PAGE_PRESENT`, `_PAGE_RW`, `_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set,
+and __only__ those flags are set. If this is not the case, then the entry is
+bad.
 
 It's important to keep in mind that the PGD entry, if non-empty, contains the
 physical address/swap metadata for the page that contains a corresponding PUD.
@@ -308,8 +311,11 @@ Truthy (non-zero) if the PGD entry or its descendants are unsafe to modify.
 [pud_bad()][pud_bad] determines whether the specified PUD entry itself is not in
 a state where it, or descendent tables, can be safely modified.
 
-In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
-`_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set.
+In x86-64 the test consists of masking out `_PAGE_USER` (ignored so the test can
+be applied to both kernel and userland mappings), then checking that the
+`_PAGE_PRESENT`, `_PAGE_RW`, `_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set,
+and __only__ those flags are set. If this is not the case, then the entry is
+bad.
 
 It's important to keep in mind that the PUD entry, if non-empty, contains the
 physical address/swap metadata for the page that contains a corresponding PMD.
@@ -348,8 +354,11 @@ Truthy (non-zero) if the PUD entry or its descendants are unsafe to modify.
 [pmd_bad()][pmd_bad] determines whether the specified PMD entry itself is not in
 a state where it, or descendent tables, can be safely modified.
 
-In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
-`_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set.
+In x86-64 the test consists of masking out `_PAGE_USER` (ignored so the test can
+be applied to both kernel and userland mappings), then checking that the
+`_PAGE_PRESENT`, `_PAGE_RW`, `_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set,
+and __only__ those flags are set. If this is not the case, then the entry is
+bad.
 
 It's important to keep in mind that the PMD entry, if non-empty, contains the
 physical address/swap metadata for the page that contains a corresponding PTE.
