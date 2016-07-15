@@ -342,6 +342,18 @@ out:
   functions), unsuitable for use (`_bad()` functions) and the final PTE being
   swapped out or otherwise unavailable (`pte_present()`.)
 
+### Huge Pages
+
+* See the [transparent huge page][trans-huge-page] section, where I go into this
+  in a lot more details, however in brief:
+
+* When huge pages are enabled on x86-64 (providing for 2MiB pages), this is
+  achieved by setting the `_PAGE_PSE` flag on PMD entries. The PMD entries then
+  no longer refer to a PTE page, but instead the page table structure is now
+  terminated at the PMD and its physical address and flags refer to the
+  _physical_ page, leaving the remaining 21 bits (i.e. 2MiB) as an offset into
+  the physical page.
+
 ## Translating Between Page Table Entries and Physical Page Descriptors
 
 * Each physical page of memory in the system is described by a
