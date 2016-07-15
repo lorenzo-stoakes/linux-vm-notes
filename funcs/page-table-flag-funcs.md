@@ -268,17 +268,6 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 [pgd_bad()][pgd_bad] determines whether the specified PGD entry itself is not in
 a state where it, or descendent tables, can be safely modified.
 
-__NOTE:__ It seems to me that it also determines whether a page table entry is
-in a consistent state _at all_, since page tables that are empty/swapped
-out/read-only make no sense for the purposes of page table traversal (discussed
-below), but based on the definition from
-[Understanding the Linux Virtual Memory Manager][amazon-gorman] and what I've
-found online so far, 'modifiability' seems to be the canonical explanation so
-far, so I'm being conservative and sticking with that. On other architectures it
-seems the definition is more nebulous, I briefly
-[looked into this][arm64-stackoverflow] recently where the definition was - does
-this entry actually refer to a lower level table.
-
 In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
 `_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set.
 
@@ -319,17 +308,6 @@ Truthy (non-zero) if the PGD entry or its descendants are unsafe to modify.
 [pud_bad()][pud_bad] determines whether the specified PUD entry itself is not in
 a state where it, or descendent tables, can be safely modified.
 
-__NOTE:__ It seems to me that it also determines whether a page table entry is
-in a consistent state _at all_, since page tables that are marked empty/swapped
-out/read-only make no sense for the purposes of page table traversal (discussed
-below), but based on the definition from
-[Understanding the Linux Virtual Memory Manager][amazon-gorman] and what I've
-found online so far, 'modifiability' seems to be the canonical explanation so
-far, so I'm being conservative and sticking with that. On other architectures it
-seems the definition is more nebulous, I briefly
-[looked into this][arm64-stackoverflow] recently where the definition was - does
-this entry actually refer to a lower level table.
-
 In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
 `_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set.
 
@@ -369,17 +347,6 @@ Truthy (non-zero) if the PUD entry or its descendants are unsafe to modify.
 
 [pmd_bad()][pmd_bad] determines whether the specified PMD entry itself is not in
 a state where it, or descendent tables, can be safely modified.
-
-__NOTE:__ It seems to me that it also determines whether a page table entry is
-in a consistent state _at all_, since page tables that are marked empty/swapped
-out/read-only make no sense for the purposes of page table traversal (discussed
-below), but based on the definition from
-[Understanding the Linux Virtual Memory Manager][amazon-gorman] and what I've
-found online so far, 'modifiability' seems to be the canonical explanation so
-far, so I'm being conservative and sticking with that. On other architectures it
-seems the definition is more nebulous, I briefly
-[looked into this][arm64-stackoverflow] recently where the definition was - does
-this entry actually refer to a lower level table.
 
 In x86-64 the test consists of checking that the `_PAGE_PRESENT`, `_PAGE_RW`,
 `_PAGE_ACCESSED` and `_PAGE_DIRTY` flags are set.
@@ -1825,8 +1792,6 @@ A copy of the input PTE entry with the huge flag cleared.
 
 [__flush_tlb_global]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/tlbflush.h#L63
 [__pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L363
-[amazon-gorman]:http://www.amazon.co.uk/Understanding-Virtual-Memory-Manager-Perens/dp/0131453483
-[arm64-stackoverflow]:http://stackoverflow.com/a/37433195/6380063
 [canon_pgprot]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L431
 [device-mapper]:https://en.wikipedia.org/wiki/Device_mapper
 [flush_tlb_all]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/tlb.c#L280
