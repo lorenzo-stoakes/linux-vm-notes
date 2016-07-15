@@ -129,13 +129,6 @@ pmd_large -> pse         pmd_huge -> pse/not present
   vs. [for_each_process()][for_each_process] - does the former double-count, or
   does the latter simply skip thread processes? Check.
 
-* When I refer to PMDs (and even perhaps PUDs in the case of gigantic pages) as
-  always referring to an underlying lower-level page table page, am I always
-  correct in doing so? Since in huge page mode I _think_ a PMD with the PSE bit
-  set actually refers to the final physical page, but perhaps I'm wrong. If a
-  PMD does refer to a page this way, I will need to modify the function
-  descriptions accordingly.
-
 * What happens when a new kernel mapping is added in page tables? Are all shared
   mappings updated? Or kept to a single PUD maybe? Probably just pre-mapped. -
   `KERNEL_IMAGE_SIZE_DEFAULT` seems to indicate that the 512MiB kernel is
