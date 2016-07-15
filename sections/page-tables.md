@@ -486,8 +486,8 @@ context_switch(struct rq *rq, struct task_struct *prev,
 
 * A function which performs allocation is
   [__handle_mm_fault()][__handle_mm_fault]. Simplifying and stripping out the
-  huge page handling (see the [huge pages][huge] section for discussion of
-  this):
+  huge page handling (see the [transparent huge pages][trans-huge-pages] section
+  for more on this):
 
 ```c
 static int __handle_mm_fault(struct mm_struct *mm, struct vm_area_struct *vma,
@@ -581,5 +581,5 @@ static int __handle_mm_fault(struct mm_struct *mm, struct vm_area_struct *vma,
 [xen]:https://en.wikipedia.org/wiki/Xen
 
 [funcs]:../funcs/page-table-funcs.md
-[huge]:./huge.md
+[trans-huge-pages]:./trans-huge-pages.md
 [physical]:./physical.md
