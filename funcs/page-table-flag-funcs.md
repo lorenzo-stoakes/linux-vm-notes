@@ -96,18 +96,17 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 
 * [pud_huge()](#pud_huge) - Determines if the PMD page pointed at by the
   specified PUD entry is huge in the context of [hugetlb][hugetlb].
-* [pmd_huge()](#pmd_huge) - Determines if the PTE page pointed at by the
-  specified PMD entry is huge in the context of [hugetlb][hugetlb].
+* [pmd_huge()](#pmd_huge) - Determines if the specified PMD entry points at a
+  huge physical page in the context of [hugetlb][hugetlb].
 * [pte_huge()](#pte_huge) - Determines if the physical page pointed at by the
   specified PTE entry is huge (without context.)
-* [pmd_trans_huge()](#pmd_trans_huge) - Determines if the PTE page pointed at by
-  the specified PMD entry is a [transparent huge page][transhuge].
-* [pgd_large()](#pgd_large) - Determines if the pointed at PUD page is huge
-  (without context.)
-* [pud_large()](#pud_large) - Determines if the pointed at PMD page is huge
-  (without context.)
-* [pmd_large()](#pmd_large) - Determines if the pointed at PTE page is huge
-  (without context.)
+* [pmd_trans_huge()](#pmd_trans_huge) - Determines if the specified PMD entry
+  points at a huge physical page in the context of
+  [transparent huge pages][transhuge].
+* [pud_large()](#pud_large) - Determines if the specified PUD entry points at a
+  gigantic physical page.
+* [pmd_large()](#pmd_large) - Determines if the specified PMD entry points at a
+  huge physical page.
 
 ### Setting/Clearing Individual Flags
 
@@ -805,8 +804,8 @@ Looking at each flag:
   still actually present when this happens.
 
 The `_PAGE_PROTNONE` and `_PAGE_PSE` flags seem only to be meaningful at the PMD
-level when the PTE is a huge page (i.e. 2MiB in x86-64), which seems only to be
-the case when either [transparent huge pages][transhuge] or the
+level when it refers to a huge page (i.e. 2MiB in x86-64), which seems only to
+be the case when either [transparent huge pages][transhuge] or the
 [device mapper][device-mapper] are in use.
 
 #### Arguments
@@ -1166,8 +1165,8 @@ Truthy (non-zero) if the PTE entry is marked as a devmap entry.
 `int pud_huge(pud_t pud)`
 
 [pud_huge()][pud_huge] determines whether the specified PUD entry is marked huge
-in the context of [hugetlb][hugetlb], i.e. whether the PMD page it refers to is
-huge under the `hugetlb` scheme.
+(2MiB on x86-64) in the context of [hugetlb][hugetlb], i.e. whether the PMD page
+it refers to is huge under the `hugetlb` scheme.
 
 This simply checks the `_PAGE_PSE` (i.e. huge page) flag.
 
@@ -1186,8 +1185,9 @@ Truthy (non-zero) if the PUD entry is marked huge.
 `int pmd_huge(pmd_t pmd)`
 
 [pmd_huge()][pmd_huge] determines whether the specified PMD entry is marked huge
-in the context of [hugetlb][hugetlb], i.e. whether the PTE page it refers to is
-huge under the `hugetlb` scheme.
+(2MiB on x86-64) in the context of [hugetlb][hugetlb], i.e. whether it points at
+a huge physical page rather than an ordinary PTE page, under the `hugetlb`
+scheme.
 
 This function determines whether the specified PMD entry is non-empty and either
 not marked present or marked present and has the `_PAGE_PSE` (i.e. huge page)
@@ -1208,8 +1208,10 @@ Truthy (non-zero) if the PMD entry is marked huge under the `hugetlb` scheme.
 
 `int pte_huge(pte_t pte)`
 
-[pte_huge()][pte_huge] determines whether the specified PTE entry is marked
-huge, i.e. whether the physical page it refers to is huge.
+[pte_huge()][pte_huge] determines whether the specified PTE entry is marked huge
+(2MiB on x86-64), i.e. whether the physical page it refers to is huge.
+
+Typically this will be a PMD that is cast to a PTE.
 
 This simply checks the `_PAGE_PSE` (i.e. huge page) flag.
 
@@ -1228,7 +1230,9 @@ Truthy (non-zero) if the PTE entry is marked huge.
 `int pmd_trans_huge(pmd_t pmd)`
 
 [pmd_trans_huge()][pmd_trans_huge] determines whether the specified PMD entry is
-marked huge in the context of [transparent huge pages][transhuge].
+marked huge (2MiB on x86-64) in the context of
+[transparent huge pages][transhuge], i.e. whether it points at a huge physical
+page rather than an ordinary PTE page, under the transparent huge pages scheme.
 
 This checks that the `_PAGE_PSE` flag is set and the `_PAGE_DEVMAP` flag is
 _not_ set.
@@ -1245,43 +1249,24 @@ Pages scheme.
 
 ---
 
-### pgd_large()
-
-`int pgd_large(pgd_t pgd)`
-
-[pgd_large()][pgd_large] determines whether the specified PGD entry is marked
-huge, indicating the PUD page it points at is huge.
-
-This function is defined as returning 0 on x86-64 - PUD pages are never huge.
-
-#### Arguments
-
-* `pgd` - The PGD entry we want to determine is marked huge or not.
-
-#### Returns
-
-Truthy (non-zero) if the PGD entry is marked huge.
-
----
-
 ### pud_large()
 
 `int pud_large(pud_t pud)`
 
 [pud_large()][pud_large] determines whether the specified PUD entry is marked
-huge, indicating the PMD page it points at is huge.
+gigantic, indicating it points at a gigantic physical page (1GiB on x86-64.)
 
 The function tests the `_PAGE_PSE` and `_PAGE_PRESENT` flags to determine
-whether the page is marked huge and not swapped out/otherwise unavailable,
+whether the page is marked gigantic and not swapped out/otherwise unavailable,
 respectively.
 
 #### Arguments
 
-* `pud` - The PUD entry we want to determine is marked huge or not.
+* `pud` - The PUD entry we want to determine is marked gigantic or not.
 
 #### Returns
 
-Truthy (non-zero) if the PUD entry is marked huge.
+Truthy (non-zero) if the PUD entry is marked gigantic.
 
 ---
 
@@ -1290,7 +1275,7 @@ Truthy (non-zero) if the PUD entry is marked huge.
 `int pmd_large(pmd_t pmd)`
 
 [pmd_large()][pmd_large] determines whether the specified PMD entry is marked
-huge, indicating the PTE page it points at is huge.
+huge (2MiB on x86-64), indicating that it points at a huge physical page.
 
 The function simply tests the `_PAGE_PSE` flag to determine whether the page is
 marked huge. It differs from [pud_large()][pud_large] in that it doesn't also
@@ -1790,7 +1775,7 @@ A copy of the input PTE entry with the special flag set.
 
 [pmd_mkhuge()][pmd_mkhuge] returns a new [pmd_t][pmd_t] which is identical to
 the specified PMD entry except that the `_PAGE_PSE` flag is set, indicating that
-the underlying PTE page is huge.
+it points at a huge (2MiB in x86-64) physical page rather than a PTE.
 
 #### Arguments
 
@@ -1808,7 +1793,7 @@ A copy of the input PMD entry with the huge flag set.
 
 [pte_mkhuge()][pte_mkhuge] returns a new [pte_t][pte_t] which is identical to
 the specified PTE entry except that the `_PAGE_PSE` flag is set, indicating that
-the underlying physical page is huge (i.e. 2MiB in x86-64.)
+the underlying physical page is huge (2MiB in x86-64.)
 
 #### Arguments
 
@@ -1852,7 +1837,6 @@ A copy of the input PTE entry with the huge flag cleared.
 [nx-bit]:https://en.wikipedia.org/wiki/NX_bit
 [pgd_bad]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L689
 [pgd_flags]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L264
-[pgd_large]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_64.h#L130
 [pgd_none]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L694
 [pgd_present]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L662
 [pgprot_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable_types.h#L250
