@@ -21,7 +21,8 @@
 ## Huge Pages
 
 * On x86 the standard page size is 4KiB, huge pages are 2MiB and 'gigantic'
-  pages are 1GiB.
+  pages are 1GiB. For the time being we consider huge pages only (1GiB pages are
+  pretty specialist :)
 
 * Using larger pages makes sense for tasks which allocate larger blocks of
   memory because [TLB][tlb] resources are scarce and TLB misses are
