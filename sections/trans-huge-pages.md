@@ -32,6 +32,49 @@
   impactful as this speed up occurs only once in the lifetime of the memory
   region.
 
+### Page Tables
+
+* When a page table entry at the PUD or PMD level has the `_PAGE_PSE` flag set
+  this indicates that it refers to a gigantic or huge page, respectively. In
+  x86-64, a gigantic page is 1GiB and a huge page 2MiB in size.
+
+* Looking back at the [page tables][page-tables] section, we can see that the
+  'shifts' (i.e. the offset in bits each page table offset sits at in the
+  virtual address) indicate how many bits each page table level encompasses:
+
+```c
+#define PGDIR_SHIFT     39
+#define PUD_SHIFT       30
+#define PMD_SHIFT       21
+#define PAGE_SHIFT      12
+```
+
+* So we can see that the PTE offset (i.e. `PAGE_SHIFT`) refers to 12 bits
+  (`1<<12` = 4KiB) of data as there are 12 bits remaining the determine the
+  offset into the physical page the PTE entry points at.
+
+* Equally the PMD offset (i.e. `PMD_SHIFT`) refers to 21 bits (`1<<21` = 2MiB)
+  of data as there are 21 bits remaining to determine the remaining PTE offset
+  and physical page offset. The same goes for PUD at 1GiB and PGD at 512GiB.
+
+* Typically, the page tables will be walked from PGD to PUD to PMD to PTE then
+  finally the physical page. However, if the `_PAGE_PSE` flag is set at the PMD
+  or PUD level then that entry is treated as the final one, i.e. the physical
+  address and (other) flags are taken to refer to the final physical page, and
+  the remaining bits in the virtual address are treated as an offset into this
+  final physical page.
+
+* This makes sense, as if we are to allow a physical page to be larger, we need
+  more offset bits to be able to offset inside of it, and the virtual address
+  then does not have sufficient 'space' to accommodate further page table
+  offsets.
+
+* The two forms of larger page size supported by x86-64 are gigantic and pages,
+  1GiB and 2MiB respectively. For the time being we ignore gigantic pages, so it
+  follows that huge pages are implemented by setting `_PAGE_PSE` at the PMD
+  level, and therefore the remaining 21 bits are used to offset into the huge
+  physical page.
+
 ## khugepaged
 
 * The kernel thread which translates existing 4KiB pages to 2MiB huge pages is
