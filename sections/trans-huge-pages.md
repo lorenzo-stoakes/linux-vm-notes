@@ -5,9 +5,9 @@
   specify that the final physical page they refer to is larger than the standard
   page size.
 
-* This functionality transparently converts processes' pages to huge pages where
-  it makes sense to do so, without userland being aware or needing to take any
-  action whatsoever.
+* It transparently converts processes' pages to huge pages where it makes sense
+  to do so, without userland being aware or needing to take any action
+  whatsoever.
 
 * In order for transparent huge pages to be available,
   `CONFIG_TRANSPARENT_HUGEPAGE` has to be enabled.
