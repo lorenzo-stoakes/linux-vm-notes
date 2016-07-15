@@ -645,7 +645,7 @@ obtain the PMD page's physical address it points at.
 
 Note that neither PGD or PTE entries require a bitmask function, rather they use
 `PTE_PFN_MASK` and `PTE_FLAGS_MASK`. PUD and PMD entries need special treatment
-in case they refer to huge/gigantic pages.
+in case they refer to gigantic/huge pages respectively.
 
 If the PUD entry indicates it refers to a gigantic page (i.e. `_PAGE_PSE` is
 set), `PHYSICAL_PUD_PAGE_MASK` is returned, otherwise `PTE_PFN_MASK` is
@@ -672,7 +672,7 @@ obtain the PTE page's physical address it points at.
 
 Note that neither PGD or PTE entries require a bitmask function, rather they use
 `PTE_PFN_MASK` and `PTE_FLAGS_MASK`. PMD and PMD entries need special treatment
-in case they refer to huge/gigantic pages.
+in case they refer to gigantic/huge pages, respectively.
 
 If the PMD entry indicates it refers to a huge page (i.e. `_PAGE_PSE` is set),
 `PHYSICAL_PMD_PAGE_MASK` is returned, otherwise `PTE_PFN_MASK` is
