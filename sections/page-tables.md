@@ -344,7 +344,7 @@ out:
 
 ### Huge Pages
 
-* See the [transparent huge page][trans-huge-page] section, where I go into this
+* See the [transparent huge page][trans-huge-pages] section, where I go into this
   in a lot more details, however in brief:
 
 * When huge pages are enabled on x86-64 (providing for 2MiB pages), this is
