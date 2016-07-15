@@ -266,7 +266,7 @@ e.g. `pgd_present()` determines if the pointed at PUD page is present.
 `int pgd_bad(pgd_t pgd)`
 
 [pgd_bad()][pgd_bad] determines whether the specified PGD entry itself is not in
-a state where it, or descendent tables, can be safely modified.
+a state where it, or descendent tables, can be safely modified or referenced.
 
 In x86-64 the test consists of masking out `_PAGE_USER` (ignored so the test can
 be applied to both kernel and userland mappings), then checking that the
@@ -309,7 +309,7 @@ Truthy (non-zero) if the PGD entry or its descendants are unsafe to modify.
 `int pud_bad(pud_t pud)`
 
 [pud_bad()][pud_bad] determines whether the specified PUD entry itself is not in
-a state where it, or descendent tables, can be safely modified.
+a state where it, or descendent tables, can be safely modified or referenced.
 
 In x86-64 the test consists of masking out `_PAGE_USER` (ignored so the test can
 be applied to both kernel and userland mappings), then checking that the
@@ -352,7 +352,7 @@ Truthy (non-zero) if the PUD entry or its descendants are unsafe to modify.
 `int pmd_bad(pmd_t pmd)`
 
 [pmd_bad()][pmd_bad] determines whether the specified PMD entry itself is not in
-a state where it, or descendent tables, can be safely modified.
+a state where it, or descendent tables, can be safely modified or referenced.
 
 In x86-64 the test consists of masking out `_PAGE_USER` (ignored so the test can
 be applied to both kernel and userland mappings), then checking that the
