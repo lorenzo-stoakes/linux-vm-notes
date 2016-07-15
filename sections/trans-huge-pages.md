@@ -33,6 +33,9 @@
   impactful as this speed up occurs only once in the lifetime of the memory
   region.
 
+* Finally, TLB misses are less expensive as there is 1 less level of page tables
+  to traverse since huge pages terminate at the PMD level.
+
 ### Page Tables
 
 * When a page table entry at the PUD or PMD level has the `_PAGE_PSE` flag set
