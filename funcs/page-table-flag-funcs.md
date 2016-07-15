@@ -293,6 +293,9 @@ should also not be adjusted (other than code that is knowingly and intentionally
 removing the read-only status, which will not be performing a `pgd_bad()`
 check.)
 
+Any other flags being set would indicate special handling need be applied to the
+descendent page table page.
+
 #### Arguments
 
 * `pgd` - PGD entry we either (potentially) intend to modify or whose
@@ -336,6 +339,9 @@ should also not be adjusted (other than code that is knowingly and intentionally
 removing the read-only status, which will not be performing a `pud_bad()`
 check.)
 
+Any other flags being set would indicate special handling need be applied to the
+descendent page table page.
+
 #### Arguments
 
 * `pud` - PUD entry we either (potentially) intend to modify or whose
@@ -378,6 +384,9 @@ modified and presumably the read-only provision indicates that the entry's flags
 should also not be adjusted (other than code that is knowingly and intentionally
 removing the read-only status, which will not be performing a `pmd_bad()`
 check.)
+
+Any other flags being set would indicate special handling need be applied to the
+descendent page table page.
 
 #### Arguments
 
