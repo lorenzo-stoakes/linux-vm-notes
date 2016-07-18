@@ -110,7 +110,9 @@
   subtracting 1 - since 2MiB/4KiB = 512 this is equivalent to the additional
   space required to convert a single 4KiB page to a huge 2MiB one.
 
-* The initialisation takes part in [hugepage_init()][hugepage_init].
+* The initialisation of these tunables takes place in
+  [hugepage_init()][hugepage_init].
+
 
 [cgroup-freezer]:https://github.com/torvalds/linux/blob/v4.6/Documentation/cgroup-v1/freezer-subsystem.txt
 [hugepage_init]:https://github.com/torvalds/linux/blob/v4.6/mm/huge_memory.c#L662
