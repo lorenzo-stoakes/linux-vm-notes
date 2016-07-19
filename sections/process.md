@@ -255,18 +255,6 @@ struct mm_struct {
         spinlock_t                      ioctx_lock;
         struct kioctx_table __rcu       *ioctx_table;
 
-        /*
-         * "owner" points to a task that is regarded as the canonical
-         * user/owner of this mm. All of the following must be true in
-         * order for it to be changed:
-         *
-         * current == mm->owner
-         * current->mm != mm
-         * new_owner->mm == mm
-         * new_owner->alloc_lock is held
-         */
-        struct task_struct __rcu *owner;
-
         /* store ref to file /proc/<pid>/exe symlink points to */
         struct file __rcu *exe_file;
 
