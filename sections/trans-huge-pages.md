@@ -73,11 +73,11 @@
   then does not have sufficient 'space' to accommodate further page table
   offsets.
 
-* The two forms of larger page size supported by x86-64 are gigantic and pages,
-  1GiB and 2MiB respectively. For the time being we ignore gigantic pages, so it
-  follows that huge pages are implemented by setting `_PAGE_PSE` at the PMD
-  level, and therefore the remaining 21 bits are used to offset into the huge
-  physical page.
+* The two forms of larger page size supported by x86-64 are gigantic and huge
+  pages, 1GiB and 2MiB respectively. For the time being we ignore gigantic
+  pages, so it follows that huge pages are implemented by setting `_PAGE_PSE` at
+  the PMD level, and therefore the remaining 21 bits are used to offset into the
+  huge physical page.
 
 ## khugepaged
 
