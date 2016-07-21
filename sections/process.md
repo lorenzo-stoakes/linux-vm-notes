@@ -413,7 +413,10 @@ struct mm_struct {
   exclusive end of the process's command-line arguments and environmental
   variables.
 
-* `unsigned long saved_auxv[AT_VECTOR_SIZE]` - __TBD__
+* `unsigned long saved_auxv[AT_VECTOR_SIZE]` - A collection of auxiliary values
+  passed to a running process known as [auxv][auxv], or a auxiliary vector. This
+  allows passing information from the kernel such as the [VDSO][vdso]
+  address. The field is populated in [create_elf_tables()][create_elf_tables].
 
 * `struct mm_rss_stat rss_stat` - __TBD__
 
@@ -1116,8 +1119,10 @@ enum x86_pf_error_code {
 [arch_pick_mmap_layout]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L100
 [aslr]:https://en.wikipedia.org/wiki/Address_space_layout_randomization
 [atomic_inc]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/atomic.h#L89
+[auxv]:http://articles.manugarg.com/aboutelfauxiliaryvectors
 [copy-on-write]:https://en.wikipedia.org/wiki/Copy-on-write
 [copy_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L958
+[create_elf_tables]:https://github.com/torvalds/linux/blob/v4.6/fs/binfmt_elf.c#L150
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
 [do_anonymous_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L2729
 [do_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3182
