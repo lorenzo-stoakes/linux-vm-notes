@@ -384,11 +384,14 @@ struct mm_struct {
   possible future options), rather this counter was
   [introduced][pinned_vm-commit] to prevent double-counting.
 
-* `unsigned long data_vm` - __TBD__
+* `unsigned long data_vm` - Number of pages of _private_ non-executable,
+  non-stack memory mapped by the process (may not yet be faulted in.)
 
-* `unsigned long exec_vm` - __TBD__
+* `unsigned long exec_vm` - Number of pages of _private_ executable memory
+  mapped by the process (may not yet be faulted in.)
 
-* `unsigned long stack_vm` - __TBD__
+* `unsigned long stack_vm` - Number of pages of _private_ stack memory mapped by
+  the process (may not yet be faulted in.)
 
 * `unsigned long def_flags` - A bit field which can contain only the `VM_LOCKED`
   and `VM_LOCKONFAULT` flags. If one or both are set, then all VMA flags will
