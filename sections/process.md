@@ -357,9 +357,18 @@ struct mm_struct {
 * `struct list_head mmlist` - Entry for list which is strung off
   [init_mm][init_mm], protected by [mmlist_lock][mmlist_lock].
 
-* `unsigned long hiwater_rss` - __TBD__
+* `unsigned long hiwater_rss` - The 'high-watermark' of RSS usage, i.e. the
+  highest number of pages seen in the [Resident Set Size (RSS)][rss] (RSS is a
+  count of actually faulted in pages) of the process. Interestingly, this field
+  is not actually set for efficiency except when RSS is about to be _reduced_
+  (see the comment in [task_mem()][task_mem]), so if this value is less than the
+  current RSS, then the current RSS should be considered the high-watermark
+  since it's only increased so far.
 
-* `unsigned long hiwater_vm` - __TBD__
+* `unsigned long hiwater_vm` - The 'high-watermark' of `total_vm`, again this is
+  only updated when total memory is about to be _reduced_ so if this value is
+  less than `total_vm`, then `total_vm` should be considered the high-watermark
+  (see the comment in [task_mem()][task_mem].)
 
 * `unsigned long total_vm` - The total number of pages used by VMAs in the
   memory descriptor.
@@ -1148,8 +1157,10 @@ enum x86_pf_error_code {
 [rb_node]:https://github.com/torvalds/linux/blob/v4.6/include/linux/rbtree.h#L36
 [rb_root]:https://github.com/torvalds/linux/blob/v4.6/include/linux/rbtree.h#L43
 [red-black]:https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
+[rss]:https://en.wikipedia.org/wiki/Resident_set_size
 [split-page-table-lock]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/split_page_table_lock
 [swap]:https://en.wikipedia.org/wiki/Paging
+[task_mem]:https://github.com/torvalds/linux/blob/v4.6/fs/proc/task_mmu.c#L24
 [task_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L1394
 [unmap_vmas]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L1350
 [vdso]:https://en.wikipedia.org/wiki/VDSO
