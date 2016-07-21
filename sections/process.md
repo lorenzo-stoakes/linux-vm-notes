@@ -418,7 +418,16 @@ struct mm_struct {
   allows passing information from the kernel such as the [VDSO][vdso]
   address. The field is populated in [create_elf_tables()][create_elf_tables].
 
-* `struct mm_rss_stat rss_stat` - __TBD__
+* `struct mm_rss_stat rss_stat` - A set of statistics contained in
+  [struct mm_rss_stat][mm_rss_stat] relating to [Resident Set Size (RSS)][rss],
+  i.e. memory that has been faulted in. The structure is simply an array of
+  `atomic_long_t` counts for each of: `MM_FILEPAGES` - number of resident pages
+  mapping files, `MM_ANONPAGES` - number of resident anonymous pages,
+  `MM_SWAPENTS` - number of resident swap entries, and `MM_SHMEMPAGES` - number
+  of resident shared pages. Note that in the usual case where the
+  `SPLIT_RSS_COUNTING` constant is set, these statistics are only updated every
+  [TASK_RSS_EVENTS_THRESH][TASK_RSS_EVENTS_THRESH] page faults (hardcoded to
+  64.)
 
 * `struct linux_binfmt *binfmt` - __TBD__
 
@@ -1097,6 +1106,7 @@ enum x86_pf_error_code {
 [MAX_GAP]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L55
 [MIN_GAP]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L54
 [PAGE_OFFSET]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/page_types.h#L35
+[TASK_RSS_EVENTS_THRESH]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L165
 [TASK_SIZE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/processor.h#L755
 [TASK_UNMAPPED_BASE]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/processor.h#L785
 [VM_FAULT_ERROR]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm.h#L1101
@@ -1149,6 +1159,7 @@ enum x86_pf_error_code {
 [mm_alloc]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L674
 [mm_context_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/mmu.h#L11
 [mm_init]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L598
+[mm_rss_stat]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L385
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
 [mmap_is_legacy]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/mmap.c#L57
 [mmdrop]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L2613
