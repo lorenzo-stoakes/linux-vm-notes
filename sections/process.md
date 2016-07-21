@@ -370,8 +370,8 @@ struct mm_struct {
   less than `total_vm`, then `total_vm` should be considered the high-watermark
   (see the comment in [task_mem()][task_mem].)
 
-* `unsigned long total_vm` - The total number of pages used by VMAs in the
-  memory descriptor.
+* `unsigned long total_vm` - The total number of pages mapped by VMAs in the
+  memory descriptor (these may not be faulted in yet however).
 
 * `unsigned long locked_vm` - The number of locked pages referenced by the
   memory descriptor. These pages are never swapped out.
