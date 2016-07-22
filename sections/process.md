@@ -473,7 +473,10 @@ struct mm_struct {
 
 * `struct uprobes_state uprobes_state` - __TBD__
 
-* `atomic_long_t hugetlb_usage` (only if `CONFIG_HUGETLB_PAGE`) - __TBD__
+* `atomic_long_t hugetlb_usage` (only if `CONFIG_HUGETLB_PAGE`) - A count of
+  huge pages assigned using [hugetlb][hugetlb]. These are incremented and
+  decremented via [hugetlb_count_add()][hugetlb_count_add] and
+  [hugetlb_count_sub()][hugetlb_count_sub] respectively.
 
 ### Initialisation
 
@@ -1164,6 +1167,9 @@ enum x86_pf_error_code {
 [generic_file_vm_ops]:https://github.com/torvalds/linux/blob/v4.6/mm/filemap.c#L2234
 [handle_mm_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3501
 [handle_pte_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3345
+[hugetlb]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/hugetlbpage.txt
+[hugetlb_count_add]:https://github.com/torvalds/linux/blob/v4.6/include/linux/hugetlb.h#L485
+[hugetlb_count_sub]:https://github.com/torvalds/linux/blob/v4.6/include/linux/hugetlb.h#L490
 [init_mm]:https://github.com/torvalds/linux/blob/v4.6/mm/init-mm.c#L16
 [kdump-paper]:https://www.kernel.org/doc/ols/2007/ols2007v1-pages-167-178.pdf
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
