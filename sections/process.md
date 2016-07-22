@@ -451,7 +451,11 @@ struct mm_struct {
   available, and a per-process [local descriptor table][ldt] for running 16-bit
   segmented code in e.g. DOSBox or Wine.
 
-* `unsigned long flags` - __TBD__
+* `unsigned long flags` - This contains a bitmask of flags relating to the
+  memory descriptor. These are differentiated from e.g. VMA flags by the `MMF_`
+  prefix and defined in [include/linux/sched.h][sched.h-mm-flags]. For example,
+  `MMF_HAS_UPROBES` determines whether uprobes are in use in the descriptor and
+  the `MMF_DUMP_*` flags relate to core dump filtering.
 
 * `struct core_state *core_state` - This [struct core_state][core_state] field
   represents an ongoing core dump for the process. If this field is `NULL` then
@@ -1215,6 +1219,7 @@ enum x86_pf_error_code {
 [rb_root]:https://github.com/torvalds/linux/blob/v4.6/include/linux/rbtree.h#L43
 [red-black]:https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
 [rss]:https://en.wikipedia.org/wiki/Resident_set_size
+[sched.h-mm-flags]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L460
 [set_tlb_flush_pending]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L540
 [split-page-table-lock]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/split_page_table_lock
 [swap]:https://en.wikipedia.org/wiki/Paging
