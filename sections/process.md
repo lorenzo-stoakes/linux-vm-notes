@@ -258,8 +258,6 @@ struct mm_struct {
         /* store ref to file /proc/<pid>/exe symlink points to */
         struct file __rcu *exe_file;
 
-        struct mmu_notifier_mm *mmu_notifier_mm;
-
         /*
          * An operation with batched TLB flushing is going on. Anything that
          * can move process memory needs to flush the TLB when moving a
@@ -465,9 +463,6 @@ struct mm_struct {
 
 * `struct file *exe_file` - A reference to the file that started this process,
   for use in the `/proc/<pid>/exe` symlink.
-
-* `struct mmu_notifier_mm *mmu_notifier_mm` (only if `CONFIG_MMU_NOTIFIER`) -
-  __TBD__
 
 * `bool tlb_flush_pending` - Field indicating, unsurprisingly, whether a TLB
   flush is pending. However interestingly this seems only to be set when the
