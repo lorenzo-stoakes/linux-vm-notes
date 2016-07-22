@@ -471,7 +471,8 @@ struct mm_struct {
   by [set_tlb_flush_pending()][set_tlb_flush_pending] and
   [clear_tlb_flush_pending()][clear_tlb_flush_pending] respectively.
 
-* `struct uprobes_state uprobes_state` - __TBD__
+* `struct uprobes_state uprobes_state` - A [struct uprobes_state][uprobes_state]
+  representing the current state of [user probes (uprobes)][uprobes].
 
 * `atomic_long_t hugetlb_usage` (only if `CONFIG_HUGETLB_PAGE`) - A count of
   huge pages assigned using [hugetlb][hugetlb]. These are incremented and
@@ -1208,6 +1209,8 @@ enum x86_pf_error_code {
 [task_mem]:https://github.com/torvalds/linux/blob/v4.6/fs/proc/task_mmu.c#L24
 [task_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L1394
 [unmap_vmas]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L1350
+[uprobes]:https://github.com/torvalds/linux/blob/v4.6/Documentation/trace/uprobetracer.txt
+[uprobes_state]:https://github.com/torvalds/linux/blob/v4.6/include/linux/uprobes.h#L113
 [vdso]:https://en.wikipedia.org/wiki/VDSO
 [virt_to_phys]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/io.h#L118
 [vm_area_struct]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L294
