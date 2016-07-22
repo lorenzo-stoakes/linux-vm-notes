@@ -391,7 +391,7 @@ struct mm_struct {
 * `unsigned long stack_vm` - Number of pages of _private_ stack memory mapped by
   the process (may not yet be faulted in.)
 
-* `unsigned long def_flags` - A bit field specifying default VMA flags which can
+* `unsigned long def_flags` - A bitmask specifying default VMA flags which can
   contain only the `VM_LOCKED` and `VM_LOCKONFAULT` flags. If one or both are
   set, then all VMA flags will default to having these set. The former ensures
   mappings are not evictable (i.e. swapped out), and by necessary pre-faulted
