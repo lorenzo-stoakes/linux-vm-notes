@@ -469,7 +469,12 @@ struct mm_struct {
 * `struct mmu_notifier_mm *mmu_notifier_mm` (only if `CONFIG_MMU_NOTIFIER`) -
   __TBD__
 
-* `bool tlb_flush_pending` - __TBD__
+* `bool tlb_flush_pending` - Field indicating, unsurprisingly, whether a TLB
+  flush is pending. However interestingly this seems only to be set when the
+  [mprotect][mprotect] flags for a memory range are changed in
+  [change_protection_range()][change_protection_range]. The value is set/cleared
+  by [set_tlb_flush_pending()][set_tlb_flush_pending] and
+  [clear_tlb_flush_pending()][clear_tlb_flush_pending] respectively.
 
 * `struct uprobes_state uprobes_state` - __TBD__
 
@@ -1145,6 +1150,8 @@ enum x86_pf_error_code {
 [aslr]:https://en.wikipedia.org/wiki/Address_space_layout_randomization
 [atomic_inc]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/atomic.h#L89
 [auxv]:http://articles.manugarg.com/aboutelfauxiliaryvectors
+[change_protection_range]:https://github.com/torvalds/linux/blob/v4.6/mm/mprotect.c#L217
+[clear_tlb_flush_pending]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L551
 [copy-on-write]:https://en.wikipedia.org/wiki/Copy-on-write
 [copy_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L958
 [cpumask_t]:https://github.com/torvalds/linux/blob/v4.6/include/linux/cpumask.h#L15
@@ -1187,6 +1194,7 @@ enum x86_pf_error_code {
 [mmdrop]:https://github.com/torvalds/linux/blob/v4.6/include/linux/sched.h#L2613
 [mmlist_lock]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L564
 [mmput]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L705
+[mprotect]:http://man7.org/linux/man-pages/man2/mprotect.2.html
 [page-fault]:https://en.wikipedia.org/wiki/Page_fault
 [page]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L44
 [phys_base-fixup]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/kernel/head_64.S#L140
@@ -1199,6 +1207,7 @@ enum x86_pf_error_code {
 [rb_root]:https://github.com/torvalds/linux/blob/v4.6/include/linux/rbtree.h#L43
 [red-black]:https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
 [rss]:https://en.wikipedia.org/wiki/Resident_set_size
+[set_tlb_flush_pending]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L540
 [split-page-table-lock]:https://github.com/torvalds/linux/blob/v4.6/Documentation/vm/split_page_table_lock
 [swap]:https://en.wikipedia.org/wiki/Paging
 [task_mem]:https://github.com/torvalds/linux/blob/v4.6/fs/proc/task_mmu.c#L24
