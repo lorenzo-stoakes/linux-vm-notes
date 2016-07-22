@@ -391,11 +391,12 @@ struct mm_struct {
 * `unsigned long stack_vm` - Number of pages of _private_ stack memory mapped by
   the process (may not yet be faulted in.)
 
-* `unsigned long def_flags` - A bit field which can contain only the `VM_LOCKED`
-  and `VM_LOCKONFAULT` flags. If one or both are set, then all VMA flags will
-  default to having these set. The former ensures mappings are not evictable
-  (i.e. swapped out), and by necessary pre-faulted in, the latter allows the
-  pages to be faulted in as normal, but locked once they are.
+* `unsigned long def_flags` - A bit field specifying default VMA flags which can
+  contain only the `VM_LOCKED` and `VM_LOCKONFAULT` flags. If one or both are
+  set, then all VMA flags will default to having these set. The former ensures
+  mappings are not evictable (i.e. swapped out), and by necessary pre-faulted
+  in, the latter allows the pages to be faulted in as normal, but locked once
+  they are.
 
 * `unsigned long start_code, end_code, start_data, end_data` - The start address
   and exclusive end of the code and data sections of the process, i.e. `start_*`
