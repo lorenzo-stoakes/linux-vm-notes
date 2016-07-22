@@ -452,7 +452,11 @@ struct mm_struct {
 
 * `unsigned long flags` - __TBD__
 
-* `struct core_state *core_state` - __TBD__
+* `struct core_state *core_state` - This [struct core_state][core_state] field
+  represents an ongoing core dump for the process. If this field is `NULL` then
+  no core dump is being performed. The actual core dump is handled by
+  [do_coredump()][do_coredump] which calls [zap_threads()][zap_threads] which
+  sets this field, and [coredump_finish()][coredump_finish] clears it.
 
 * `spinlock_t ioctx_lock` (only if `CONFIG_AIO`) - A spinlock protecting
   `ioctx_table`.
@@ -1153,11 +1157,14 @@ enum x86_pf_error_code {
 [clear_tlb_flush_pending]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L551
 [copy-on-write]:https://en.wikipedia.org/wiki/Copy-on-write
 [copy_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L958
+[core_state]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L362
+[coredump_finish]:https://github.com/torvalds/linux/blob/v4.6/fs/coredump.c#L440
 [cpumask_t]:https://github.com/torvalds/linux/blob/v4.6/include/linux/cpumask.h#L15
 [cpumask_var_t]:https://github.com/torvalds/linux/blob/v4.6/include/linux/cpumask.h#L667
 [create_elf_tables]:https://github.com/torvalds/linux/blob/v4.6/fs/binfmt_elf.c#L150
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
 [do_anonymous_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L2729
+[do_coredump]:https://github.com/torvalds/linux/blob/v4.6/fs/coredump.c#L531
 [do_fault]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L3182
 [do_page_fault]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L1399
 [do_swap_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L2511
@@ -1225,6 +1232,7 @@ enum x86_pf_error_code {
 [x86-64-address-space]:https://en.wikipedia.org/wiki/X86-64#VIRTUAL-ADDRESS-SPACE
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
 [x86_pf_error_code]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L40
+[zap_threads]:https://github.com/torvalds/linux/blob/v4.6/fs/coredump.c#L330
 
 [linux-vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
 [multi-page-alloc]:https://github.com/lorenzo-stoakes/linux-vm-hacks/blob/master/experiments/multi_page_alloc.c
