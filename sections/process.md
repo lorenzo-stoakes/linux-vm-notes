@@ -429,7 +429,9 @@ struct mm_struct {
   [TASK_RSS_EVENTS_THRESH][TASK_RSS_EVENTS_THRESH] page faults (hardcoded to
   64.)
 
-* `struct linux_binfmt *binfmt` - __TBD__
+* `struct linux_binfmt *binfmt` - [struct linux_binfmt][linux_binfmt] which
+  contains the appropriate binary format handler for the code container in the
+  memory descriptor.
 
 * `cpumask_var_t cpu_vm_mask_var` - __TBD__
 
@@ -1192,6 +1194,7 @@ enum x86_pf_error_code {
 [x86-64-address-space]:https://en.wikipedia.org/wiki/X86-64#VIRTUAL-ADDRESS-SPACE
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
 [x86_pf_error_code]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L40
+[linux_binfmt]:https://github.com/torvalds/linux/blob/v4.6/include/linux/binfmts.h#L74
 
 [linux-vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
 [multi-page-alloc]:https://github.com/lorenzo-stoakes/linux-vm-hacks/blob/master/experiments/multi_page_alloc.c
