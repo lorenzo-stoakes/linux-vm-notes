@@ -433,7 +433,17 @@ struct mm_struct {
   contains the appropriate binary format handler for the code container in the
   memory descriptor.
 
-* `cpumask_var_t cpu_vm_mask_var` - __TBD__
+* `cpumask_var_t cpu_vm_mask_var` - A bitmask representing the CPUs which are
+  able to access the memory referenced by the memory descriptor. The
+  [cpumask_var_t][cpumask_var_t] on an x86-64 system is `typedef`'d to a
+  [cpumask_t][cpumask_t] array (see the amusing comment above the definition for
+  more), regardless this is not accessed directly, rather
+  [mm_cpumask()][mm_cpumask] acts a wrapper to this value. When a process is
+  started the scheduler assigns it to a CPU, however if a process has multiple
+  threads (i.e. other processes that share a memory descriptor) then the same
+  memory descriptor will be referenced by different CPUs. This particularly
+  comes into play in TLB flushing, as each CPU has its own TLB that'll need to
+  be cleared also.
 
 * `mm_context_t context` - Architecture-specific MMU context, though x86-64
   doesn't need to store context data here, it's used to store various x86-64
@@ -1134,6 +1144,8 @@ enum x86_pf_error_code {
 [auxv]:http://articles.manugarg.com/aboutelfauxiliaryvectors
 [copy-on-write]:https://en.wikipedia.org/wiki/Copy-on-write
 [copy_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L958
+[cpumask_t]:https://github.com/torvalds/linux/blob/v4.6/include/linux/cpumask.h#L15
+[cpumask_var_t]:https://github.com/torvalds/linux/blob/v4.6/include/linux/cpumask.h#L667
 [create_elf_tables]:https://github.com/torvalds/linux/blob/v4.6/fs/binfmt_elf.c#L150
 [demand-paging]:https://en.wikipedia.org/wiki/Demand_paging
 [do_anonymous_page]:https://github.com/torvalds/linux/blob/v4.6/mm/memory.c#L2729
@@ -1158,8 +1170,10 @@ enum x86_pf_error_code {
 [kmemcheck]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kmemcheck.txt
 [kprobes]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kprobes.txt
 [ldt]:https://en.wikipedia.org/wiki/Global_Descriptor_Table#Local_Descriptor_Table
+[linux_binfmt]:https://github.com/torvalds/linux/blob/v4.6/include/linux/binfmts.h#L74
 [mm_alloc]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L674
 [mm_context_t]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/mmu.h#L11
+[mm_cpumask]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L523
 [mm_init]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L598
 [mm_rss_stat]:https://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L385
 [mm_struct]:http://github.com/torvalds/linux/blob/v4.6/include/linux/mm_types.h#L390
@@ -1194,7 +1208,6 @@ enum x86_pf_error_code {
 [x86-64-address-space]:https://en.wikipedia.org/wiki/X86-64#VIRTUAL-ADDRESS-SPACE
 [x86-64-mm]:https://github.com/torvalds/linux/blob/v4.6/Documentation/x86/x86_64/mm.txt
 [x86_pf_error_code]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/fault.c#L40
-[linux_binfmt]:https://github.com/torvalds/linux/blob/v4.6/include/linux/binfmts.h#L74
 
 [linux-vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
 [multi-page-alloc]:https://github.com/lorenzo-stoakes/linux-vm-hacks/blob/master/experiments/multi_page_alloc.c
