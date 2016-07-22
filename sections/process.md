@@ -454,9 +454,12 @@ struct mm_struct {
 
 * `struct core_state *core_state` - __TBD__
 
-* `spinlock_t ioctx_lock` (only if `CONFIG_AIO`) - __TBD__
+* `spinlock_t ioctx_lock` (only if `CONFIG_AIO`) - A spinlock protecting
+  `ioctx_table`.
 
-* `struct kioctx_table *ioctx_table` (only if `CONFIG_AIO`) - __TBD__
+* `struct kioctx_table *ioctx_table` (only if `CONFIG_AIO`) - A
+  [struct kioctx_table][kioctx_table] which contains state relating to
+  asynchronous I/O relating to this memory descriptor.
 
 * `struct task_struct *owner` (only if `CONFIG_MEMCG`) - The canonical owner of
   this memory descriptor.
@@ -1176,6 +1179,7 @@ enum x86_pf_error_code {
 [init_mm]:https://github.com/torvalds/linux/blob/v4.6/mm/init-mm.c#L16
 [kdump-paper]:https://www.kernel.org/doc/ols/2007/ols2007v1-pages-167-178.pdf
 [kdump]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kdump/kdump.txt
+[kioctx_table]:https://github.com/torvalds/linux/blob/v4.6/fs/aio.c#L70
 [kmemcheck]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kmemcheck.txt
 [kprobes]:https://github.com/torvalds/linux/blob/v4.6/Documentation/kprobes.txt
 [ldt]:https://en.wikipedia.org/wiki/Global_Descriptor_Table#Local_Descriptor_Table
