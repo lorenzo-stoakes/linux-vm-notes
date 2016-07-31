@@ -63,8 +63,8 @@ claim to their quality or usefulness.
 This work first originated from the [notes][linux-gorman] I took from the
 excellent [Understanding the Linux Virtual Memory Manager][amazon-gorman] by
 [Mel Gorman][gorman] which, while great, targets the 2.4.22 kernel (released in
-2003.) The the obvious next stage of study was to take notes for a recent
-kernel, which is what these notes are!
+2003.) The obvious next stage of study was to take notes for a recent kernel,
+which is what these notes are!
 
 I am specifically targeting the 4.6 kernel since it was the mainline version at
 the time of writing and should remain a sane and stable basis for notes and
