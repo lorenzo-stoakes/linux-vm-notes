@@ -1,5 +1,9 @@
 # Linux VM Notes
 
+__NOTE:__ I am putting the project on hiatus for a few months in order to focus
+on hacking on the VM subsystem to gain some more experience with the code. I
+will return to this project with more experience :)
+
 ## Contents
 
 1. [Fundamentals][fundamentals] - Overview of virtual memory concepts without
