@@ -977,9 +977,9 @@ struct address_space_operations {
    |                          \---------------/                \ userland? /    |
    |                                  | No                      \---------/     |
    |                                  v                              | No       |
-   |  ------------------  Yes /---------------\                      |          |
-   |  | mm_fault_error |<----/ Return value &  \                     |          |
-   |  ------------------     \ VM_FAULT_ERROR? /                     |          |
+   | -------------------- Yes /---------------\                      |          |
+   | | mm_fault_error() |<---/ Return value &  \                     |          |
+   | --------------------    \ VM_FAULT_ERROR? /                     |          |
    |           |              \---------------/                      |          |
    |           |                      | No                           |          |
    |           |                      v                              |          |
