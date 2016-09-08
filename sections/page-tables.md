@@ -100,7 +100,7 @@ much as possible between 32 and 64-bit x86.
 #define PTRS_PER_PTE    512
 ```
 
-* And so we can now visualise what an given example address actually represents:
+* And so we can now visualise what a given example address actually represents:
 
 ```
     6         5         4         3         2         1
