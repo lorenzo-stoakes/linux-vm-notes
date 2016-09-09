@@ -1096,8 +1096,10 @@ enum x86_pf_error_code {
   the physical pages of memory when requested, but also the page tables required
   to map those pages.
 
-* In practice, it seems that multi-page allocations result in the first and last
-  pages being mapped and those in the middle not being. Experiment with the
+* In practice, memory mapped pages do indeed create all page table entries only
+  when faulted in - however note that glibc malloc assigns the first and last
+  page presumably for its own bookkeeping - this will be because these are
+  faulted in when the malloc code writes data here. Experiment with the
   [multi-page alloc][multi-page-alloc] sample code and the
   [pagetables hack][pagetables-hack], both from the sister repo
   [linux-vm-hacks][linux-vm-hacks] to explore this on a local linux system.
