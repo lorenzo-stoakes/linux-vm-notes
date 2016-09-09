@@ -1052,7 +1052,7 @@ PGD level here we use the [struct mm_struct][mm_struct]'s lock.
 * `pgd` - The PGD entry which is to point at the newly allocated PUD page (or
   whose mapping is to be used if already mapped.)
 
-* `address` - The virtual address we are allocated the PUD page for.
+* `address` - The virtual address we are allocating the PUD page for.
 
 #### Returns
 
@@ -1137,7 +1137,7 @@ PUD level here we use the [struct mm_struct][mm_struct]'s lock.
 * `pud` - The PUD entry which is to point at the newly allocated PMD page (or
   whose mapping is to be used if already mapped.)
 
-* `address` - The virtual address we are allocated the PMD page for.
+* `address` - The virtual address we are allocating the PMD page for.
 
 #### Returns
 
@@ -1248,7 +1248,7 @@ __NOTE:__ Macro, inferring function signature.
 * `pmd` - The PMD entry which is to point at the newly allocated PTE page (or
   whose mapping is to be used if already mapped.)
 
-* `address` - The virtual address we are allocated the PTE page for.
+* `address` - The virtual address we are allocating the PTE page for.
 
 #### Returns
 
@@ -1277,7 +1277,7 @@ __NOTE:__ Macro, inferring function signature.
 * `pmd` - The PMD entry which is to point at the newly allocated PTE page (or
   whose mapping is to be used if already mapped.)
 
-* `address` - The virtual address we are allocated the PTE page for.
+* `address` - The virtual address we are allocating the PTE page for.
 
 #### Returns
 
@@ -1309,7 +1309,7 @@ __NOTE:__ Macro, inferring function signature.
 * `pmd` - The PMD entry which is to point at the newly allocated PTE page (or
   whose mapping is to be used if already mapped.)
 
-* `address` - The virtual address we are allocated the PTE page for.
+* `address` - The virtual address we are allocating the PTE page for.
 
 * `ptlp` - __OUT__ - A pointer to a `spinlock_t *` which will reference the
   spinlock acquired by the function.
@@ -1363,7 +1363,7 @@ __NOTE:__ Macro, inferring function signature.
 * `pmd` - The PMD entry which is to point at the newly allocated PTE page (or
   whose mapping is to be used if already mapped.)
 
-* `address` - The virtual address we are allocated the PTE page for.
+* `address` - The virtual address we are allocating the PTE page for.
 
 #### Returns
 
