@@ -1,66 +1,59 @@
 # Process Autopsy
 
 * In this section we'll examine in detail how the kernel allocates memory for a
-  simple userland process ([simple_alloc.c][simple_alloc.c] from our sister
-  repository [linux VM hacks][vm-hacks]):
+  simple userland program ([simple_standalone_mmap.c][simple_standalone_mmap.c]
+  from my [allox][allox] project):
+
 
 ```c
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
-#define PAGES       1025
-#define ADDITIONAL  69
-#define STACK_COUNT 7000
-
-static void stack_alloc_recur(int count)
-{
-        char dummy[1024];
-
-        if (count <= 0)
-                return;
-
-        dummy[0] = 'x';
-
-        stack_alloc_recur(count-1);
-
-        dummy[1023] = dummy[0];
-}
-
-static void stack_alloc(void)
-{
-        stack_alloc_recur(STACK_COUNT);
-}
-
-static void heap_alloc(void)
-{
-        long i;
-        long page_size = sysconf(_SC_PAGESIZE);
-        long bytes = PAGES*page_size + ADDITIONAL;
-        unsigned char *buf = malloc(bytes);
-
-        for (i = 0; i < bytes; i++)
-                buf[i] = 'x';
-
-        free(buf);
-}
+/* 10MiB */
+#define SIZE (10<<20)
 
 int main(void)
 {
-        heap_alloc();
-        stack_alloc();
+        unsigned char *ptr = mmap(NULL, SIZE, PROT_READ | PROT_WRITE,
+                                MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+        if (ptr == MAP_FAILED) {
+                perror("mmap");
+                exit(1);
+        }
+
+        puts("<hit ret>");
+        getchar();
+
+        ptr[0] = 'x';
+        ptr[SIZE-1] = 'y';
+
+        puts("<hit ret>");
+        getchar();
+
+        memset(ptr, 'x', SIZE);
+
+        puts("<hit ret>");
+        getchar();
 
         return EXIT_SUCCESS;
 }
 ```
 
-* In order to examine the behaviour of the application I'm using my my
-  [kernel scripts][kernel-scripts] project to run the application within a
-  kernel under [qemu][qemu].
+* This program first allocates 10MiB of memory using [mmap()][mmap] before
+  putting some data into the first and last pages of memory of the allocated
+  block and finally filling the memory, interleaving these steps with waits on
+  user input to allow for analysis between each stage.
 
-[simple_alloc.c]:https://github.com/lorenzo-stoakes/linux-vm-hacks/blob/master/experiments/simple_alloc.c
+* It is structured this way so we can examine how the memory is first assigned
+  to the process, then partially and fully faulted in (see the
+  [process address space][process] section for more details on faulting in.)
 
-[qemu]:http://wiki.qemu.org/Main_Page
-[kernel-scripts]:https://github.com/lorenzo-stoakes/kernel-scripts
-[vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
+[allox]:https://github.com/lorenzo-stoakes/allox
+[mmap]:http://man7.org/linux/man-pages/man2/mmap.2.html
+[simple_standalone_mmap.c]:https://github.com/lorenzo-stoakes/allox/blob/master/simple_standalone_mmap.c
+
+[process]:./process.md
