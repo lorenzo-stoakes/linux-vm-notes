@@ -13,7 +13,7 @@
 #include <sys/mman.h>
 
 /* 10MiB */
-#define SIZE (10<<20)
+#define SIZE (10 << 20)
 
 int main(void)
 {
@@ -28,7 +28,7 @@ int main(void)
         getchar();
 
         ptr[0] = 'x';
-        ptr[SIZE-1] = 'y';
+        ptr[SIZE - 1] = 'y';
 
         puts("<hit ret>");
         getchar();
