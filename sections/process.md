@@ -1246,4 +1246,4 @@ enum x86_pf_error_code {
 [multi-page-alloc]:https://github.com/lorenzo-stoakes/linux-vm-hacks/blob/master/experiments/multi_page_alloc.c
 [page-tables]:./page-tables.md
 [pagetables-hack]:https://github.com/lorenzo-stoakes/linux-vm-hacks/tree/master/pagetables
-[slab]:./slub.md
+[slab]:./slab.md

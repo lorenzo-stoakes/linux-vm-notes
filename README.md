@@ -48,7 +48,7 @@
 * [Buddy Allocator][buddy] - Discussion about the fundamental underlying
   physical memory allocator.
 
-* [SLUB Allocator][slub] - Discussion about the default object allocator.
+* [Slab Allocator][slab] - Discussion about the object allocator.
 
 * [cgroup Memory Management][cgroup] - Discussion about cgroup memory management
   functionality.
@@ -101,7 +101,7 @@ These notes are licensed under [Creative Commons BY-NC-SA][license].
 [page-tables]:sections/page-tables.md
 [physical]:sections/physical.md
 [process]:sections/process.md
-[slub]:sections/slub.md
+[slab]:sections/slab.md
 
 [funcs]:funcs/funcs.md
 [page-table-flag-funcs]:funcs/page-table-flag-funcs.md
