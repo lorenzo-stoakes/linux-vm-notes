@@ -1,8 +1,7 @@
 # Process Autopsy
 
 * In this section we'll examine in detail how the kernel allocates memory for a
-  simple userland program ([simple_standalone_mmap.c][simple_standalone_mmap.c]
-  from my [allox][allox] project):
+  simple userland program:
 
 
 ```c
@@ -51,8 +50,6 @@ int main(void)
   to the process, then partially and fully faulted in (see the
   [process address space][process] section for more details on faulting in.)
 
-[allox]:https://github.com/lorenzo-stoakes/allox
 [mmap]:http://man7.org/linux/man-pages/man2/mmap.2.html
-[simple_standalone_mmap.c]:https://github.com/lorenzo-stoakes/allox/blob/master/simple_standalone_mmap.c
 
 [process]:./process.md
