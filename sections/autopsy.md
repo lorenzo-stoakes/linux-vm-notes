@@ -23,18 +23,18 @@ int main(void)
                 exit(1);
         }
 
-        puts("<hit ret>");
+        puts("mmap        <hit ret>");
         getchar();
 
         ptr[0] = 'x';
         ptr[SIZE - 1] = 'y';
 
-        puts("<hit ret>");
+        puts("0, SIZE - 1 <hit ret>");
         getchar();
 
         memset(ptr, 'x', SIZE);
 
-        puts("<hit ret>");
+        puts("memset      <hit ret>");
         getchar();
 
         return EXIT_SUCCESS;
