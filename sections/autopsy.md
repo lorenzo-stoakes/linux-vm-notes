@@ -110,7 +110,7 @@ int main(void)
 [do_execveat_common]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L1580
 [execve-syscall]:http://man7.org/linux/man-pages/man2/execve.2.html
 [execve]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L1806
-[linux_binprm]:http://github.com/torvalds/linux/blob/v4.6/include/linux/binfmts.h?v=4.6#L14
+[linux_binprm]:http://github.com/torvalds/linux/blob/v4.6/include/linux/binfmts.h#L14
 [mm_alloc]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L674
 [mm_alloc_pgd]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L540
 [mm_init]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L598
