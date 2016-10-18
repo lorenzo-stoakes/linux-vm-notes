@@ -96,7 +96,28 @@ int main(void)
 
 * This stack allocation is intended to be an initial configuration to be
   adjusted later.
-  
+
+* The newly created VMA is inserted into the memory descriptor via
+  [insert_vm_struct()][insert_vm_struct] which appends it to the address-ordered
+  list hanging off the `mmap` field in [struct mm_struct][mm_struct] and the
+  [red-black tree][red-black-tree] hanging off `mm_rb`.
+
+* Next (passing over various details we aren't interested in)
+  [__bprm_mm_init()][__bprm_mm_init] sets [struct linux_binprm][linux_binprm]'s
+  `p` field to the architecture's word size bytes below the end of the newly
+  created VMA (8 bytes in x86-64.)
+
+* Now [bprm_mm_init()][bprm_mm_init] is done, we return to
+  [do_execveat_common()][do_execveat_common] which counts input arguments and
+  environment variables, checking that arguments are not longer than permitted
+  as it goes.
+
+* The next point of interest relating to memory management comes from
+  [prepare_binprm()][prepare_binprm] which (amongst other things) pre-populates
+  [BINPRM_BUF_SIZE][BINPRM_BUF_SIZE] `== 128` bytes of the input binary into
+  `struct linux_binprm`'s `buf` field via [kernel_read()][kernel_read].
+
+[BINPRM_BUF_SIZE]:https://github.com/torvalds/linux/blob/v4.6/include/uapi/linux/binfmts.h#L18
 [KERNEL_PGD_BOUNDARY]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L722
 [KERNEL_PGD_PTRS]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L723
 [STACK_TOP_MAX]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/processor.h#L761
@@ -110,6 +131,8 @@ int main(void)
 [do_execveat_common]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L1580
 [execve-syscall]:http://man7.org/linux/man-pages/man2/execve.2.html
 [execve]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L1806
+[insert_vm_struct]:https://github.com/torvalds/linux/blob/v4.6/mm/mmap.c#L2769
+[kernel_read]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L822
 [linux_binprm]:http://github.com/torvalds/linux/blob/v4.6/include/linux/binfmts.h#L14
 [mm_alloc]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L674
 [mm_alloc_pgd]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L540
@@ -118,6 +141,8 @@ int main(void)
 [mmap]:http://man7.org/linux/man-pages/man2/mmap.2.html
 [pgd_alloc]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L354
 [pgd_ctor]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L116
+[prepare_binprm]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L1436
+[red-black-tree]:https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
 
 [page-tables]:./page-tables.md
 [process]:./process.md
