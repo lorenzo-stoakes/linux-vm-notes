@@ -116,22 +116,78 @@ int main(void)
 * The next point of interest relating to memory management comes from
   [prepare_binprm()][prepare_binprm] which (amongst other things) pre-populates
   [BINPRM_BUF_SIZE][BINPRM_BUF_SIZE] `== 128` bytes of the input binary into
-  `struct linux_binprm`'s `buf` field via [kernel_read()][kernel_read].
+  `struct linux_binprm`'s `buf` field via [kernel_read()][kernel_read]. This
+  will later be used to identify the binary and determine what binary loader to
+  use to execute it.
 
+* `do_execveat_common()` next copies the process's filename to the top of the
+  stack pointed at by `bprm->p` via
+  [copy_strings_kernel()][copy_strings_kernel], sets `bprm->exec` equal to
+  `bprm->p` and then copies environment variables and arguments via
+  [copy_strings()][copy_strings], resulted in a stack that looks like:
+
+```
+  ----------------------
+  | 0x0000000000000000 | Empty word
+  |--------------------|
+  |      ./foo\0       | Filename
+  |--------------------| ^ <- bprm->exec
+  |    envp[envc-1]    | |
+  |--------------------| |
+  |    envp[envc-2]    | |
+  |- - - - - - - - - - | |
+  |        ...         | | Environment Variables
+  |- - - - - - - - - - | |
+  |      envp[1]       | |
+  |--------------------| |
+  |      envp[0]       | |
+  |--------------------| x
+  |    argv[argc-1]    | |
+  |--------------------| |
+  |    argv[argc-2]    | |
+  |- - - - - - - - - - | |
+  |        ...         | | Arguments
+  |- - - - - - - - - - | |
+  |      argv[1]       | |
+  |--------------------| |
+  |      argv[0]       | |
+  |--------------------| v <- bprm->p
+```
+
+* Pages are allocated as needed via [get_arg_page()][get_arg_page] which
+  allocates pages via [get_user_pages_remote()][get_user_pages_remote] which
+  ultimately calls [__get_user_pages()][__get_user_pages] which calls
+  [find_extend_vma()][find_extend_vma] in turn which calls
+  [expand_stack()][expand_stack] to expand the stack (and consequently
+  update the VMA) as needed.
+
+* `get_arg_page()` additionally checks that pages allocated are less than or
+  equal to the larger of [ARG_MAX][ARG_MAX] (32 pages) or 1/4 the maximum stack
+  size for a process to avoid using too much stack for environment
+  variables/arguments.
+
+[ARG_MAX]:https://github.com/torvalds/linux/blob/v4.6/include/uapi/linux/limits.h#L7
 [BINPRM_BUF_SIZE]:https://github.com/torvalds/linux/blob/v4.6/include/uapi/linux/binfmts.h#L18
 [KERNEL_PGD_BOUNDARY]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L722
 [KERNEL_PGD_PTRS]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L723
 [STACK_TOP_MAX]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/processor.h#L761
 [TASK_SIZE_MAX]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/processor.h#L747
 [__bprm_mm_init]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L260
+[__get_user_pages]:https://github.com/torvalds/linux/blob/v4.6/mm/gup.c#L516
 [_pgd_alloc]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L319
 [allocate_mm]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L566
 [bprm_mm_init]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L373
 [clone_pgd_range]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L879
+[copy_strings]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L465
+[copy_strings_kernel]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L556
 [do_execve]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L1724
 [do_execveat_common]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L1580
 [execve-syscall]:http://man7.org/linux/man-pages/man2/execve.2.html
 [execve]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L1806
+[expand_stack]:https://github.com/torvalds/linux/blob/v4.6/mm/mmap.c#L2212
+[find_extend_vma]:https://github.com/torvalds/linux/blob/v4.6/mm/mmap.c#L2225
+[get_arg_page]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L189
+[get_user_pages_remote]:https://github.com/torvalds/linux/blob/v4.6/mm/gup.c#L957
 [insert_vm_struct]:https://github.com/torvalds/linux/blob/v4.6/mm/mmap.c#L2769
 [kernel_read]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L822
 [linux_binprm]:http://github.com/torvalds/linux/blob/v4.6/include/linux/binfmts.h#L14
