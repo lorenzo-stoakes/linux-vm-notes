@@ -105,7 +105,8 @@ int main(void)
 * Next (passing over various details we aren't interested in)
   [__bprm_mm_init()][__bprm_mm_init] sets [struct linux_binprm][linux_binprm]'s
   `p` field to the architecture's word size bytes below the end of the newly
-  created VMA (8 bytes in x86-64.)
+  created VMA (8 bytes in x86-64) - this is to provide a 0 word at the top of
+  the stack.
 
 * Now [bprm_mm_init()][bprm_mm_init] is done, we return to
   [do_execveat_common()][do_execveat_common] which counts input arguments and
