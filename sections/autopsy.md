@@ -166,6 +166,25 @@ int main(void)
   size for a process to avoid using too much stack for environment
   variables/arguments.
 
+* Once this is done [struct linux_binprm][linux_binprm] is set up ready for the
+  heavy lifting of the execution to proceed via [exec_binprm()][exec_binprm].
+
+* `exec_binprm()` invokes [search_binary_handler()][search_binary_handler] to
+  cycle through known binary formats and attempt to load the binary using the
+  appropriate handler.
+
+* Each binary format handler registers a [struct linux_binfmt][linux_binfmt]
+  with a `load_binary` function pointer which `search_binary_handler()` calls to
+  attempt to execute the binary with the specific format handler.
+
+* In the case of our binary, we're interested in the [ELF][elf] handler,
+  [elf_format][elf_format] and its `load_binary` function
+  [load_elf_binary()][load_elf_binary] in particular.
+
+* `load_elf_binary()` starts by taking the 128 bytes loaded into the `bprm->buf`
+  field and performs consistency checks on this data to ensure that the binary
+  is in fact an ELF binary.
+
 [ARG_MAX]:https://github.com/torvalds/linux/blob/v4.6/include/uapi/linux/limits.h#L7
 [BINPRM_BUF_SIZE]:https://github.com/torvalds/linux/blob/v4.6/include/uapi/linux/binfmts.h#L18
 [KERNEL_PGD_BOUNDARY]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/include/asm/pgtable.h#L722
@@ -182,6 +201,9 @@ int main(void)
 [copy_strings_kernel]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L556
 [do_execve]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L1724
 [do_execveat_common]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L1580
+[elf]:https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
+[elf_format]:https://github.com/torvalds/linux/blob/v4.6/fs/binfmt_elf.c#L84
+[exec_binprm]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L1555
 [execve-syscall]:http://man7.org/linux/man-pages/man2/execve.2.html
 [execve]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L1806
 [expand_stack]:https://github.com/torvalds/linux/blob/v4.6/mm/mmap.c#L2212
@@ -190,7 +212,9 @@ int main(void)
 [get_user_pages_remote]:https://github.com/torvalds/linux/blob/v4.6/mm/gup.c#L957
 [insert_vm_struct]:https://github.com/torvalds/linux/blob/v4.6/mm/mmap.c#L2769
 [kernel_read]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L822
+[linux_binfmt]:https://github.com/torvalds/linux/blob/v4.6/include/linux/binfmts.h#L74
 [linux_binprm]:http://github.com/torvalds/linux/blob/v4.6/include/linux/binfmts.h#L14
+[load_elf_binary]:https://github.com/torvalds/linux/blob/v4.6/fs/binfmt_elf.c#L668
 [mm_alloc]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L674
 [mm_alloc_pgd]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L540
 [mm_init]:https://github.com/torvalds/linux/blob/v4.6/kernel/fork.c#L598
@@ -200,6 +224,7 @@ int main(void)
 [pgd_ctor]:https://github.com/torvalds/linux/blob/v4.6/arch/x86/mm/pgtable.c#L116
 [prepare_binprm]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L1436
 [red-black-tree]:https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
+[search_binary_handler]:https://github.com/torvalds/linux/blob/v4.6/fs/exec.c#L1502
 
 [page-tables]:./page-tables.md
 [process]:./process.md
