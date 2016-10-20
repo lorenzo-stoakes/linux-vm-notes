@@ -111,7 +111,7 @@ int main(void)
 * Now [bprm_mm_init()][bprm_mm_init] is done, we return to
   [do_execveat_common()][do_execveat_common] which counts input arguments and
   environment variables, checking that arguments are not longer than permitted
-  as it goes.
+  and storing these counts in the `struct linux_binprm`.
 
 * The next point of interest relating to memory management comes from
   [prepare_binprm()][prepare_binprm] which (amongst other things) pre-populates
