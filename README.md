@@ -12,23 +12,24 @@
 3. [Process Address Space][process] - Discussion about virtual memory address
   space for processes - managing VMAs, process data structure
   construction/destruction, file/device-backed memory regions, page faulting,
-  demand allocation, COW pages, copying to/from userland. __WORK IN PROGRESS__
+  demand allocation, COW pages, copying to/from userland.
 
 4. [Transparent Huge Pages][trans-huge-pages] - Discussion about the kernel's
-   [transparent huge pages][transhuge] functionality. __WORK IN PROGRESS__
+   [transparent huge pages][transhuge] functionality.
 
 5. [Out of Memory Killer][oom] - Discussion about overcommit and how the OOM
    killer selects and kills victims.
 
 6. [Process Autopsy][autopsy] - Examining the memory allocation performed by the
-   kernel for a simple userland application. __WORK IN PROGRESS__
+   kernel for a simple userland application.
 
 ## Introduction
 
 __NOTE:__ I target [linux 4.6][linux-4.6] and an x86-64 non-[NUMA][numa] system.
 
 This repo contains my notes on the linux 4.6 VM subsystem. I don't make any
-claim to their quality or usefulness.
+claim to their quality or usefulness. They are an ongoing project and as such
+are a constant work in progress.
 
 This work first originated from the [notes][linux-gorman] I took from the
 excellent [Understanding the Linux Virtual Memory Manager][amazon-gorman] by
