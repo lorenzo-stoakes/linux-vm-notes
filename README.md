@@ -40,19 +40,6 @@
    Virtual Memory Areas (VMAs), which are described in the
    [Process Address Space][process] section.
 
-### Forthcoming
-
-* [Physical Pages][physical] - Discussion about how physical pages are managed
-  in linux.
-
-* [Buddy Allocator][buddy] - Discussion about the fundamental underlying
-  physical memory allocator.
-
-* [Slab Allocator][slab] - Discussion about the object allocator.
-
-* [cgroup Memory Management][cgroup] - Discussion about cgroup memory management
-  functionality.
-
 ## Introduction
 
 __NOTE:__ I target [linux 4.6][linux-4.6] and an x86-64 non-[NUMA][numa] system.
@@ -93,15 +80,11 @@ These notes are licensed under [Creative Commons BY-NC-SA][license].
 [vm-hacks]:https://github.com/lorenzo-stoakes/linux-vm-hacks
 
 [autopsy]:sections/autopsy.md
-[buddy]:sections/buddy.md
-[cgroup]:sections/cgroup.md
 [fundamentals]:sections/fundamentals.md
 [trans-huge-pages]:sections/trans-huge-pages.md
 [oom]:sections/oom.md
 [page-tables]:sections/page-tables.md
-[physical]:sections/physical.md
 [process]:sections/process.md
-[slab]:sections/slab.md
 
 [funcs]:funcs/funcs.md
 [page-table-flag-funcs]:funcs/page-table-flag-funcs.md

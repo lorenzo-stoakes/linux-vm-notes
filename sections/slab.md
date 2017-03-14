@@ -1,3 +1,0 @@
-# Slub Allocator
-
-TBD

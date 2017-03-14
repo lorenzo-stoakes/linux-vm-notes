@@ -1,3 +1,0 @@
-# Buddy Allocator
-
-TBD

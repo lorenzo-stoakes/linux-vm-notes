@@ -1,3 +1,0 @@
-# cgroup Memory Management
-
-TBD
