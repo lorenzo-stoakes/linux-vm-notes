@@ -1,9 +1,5 @@
 # Page Tables
 
-__NOTE:__ The [page table functions][funcs] page contains a lot of details and
-often expands a great deal on functions referenced to here. It's highly
-recommended to study that page along with this.
-
 ## Introduction
 
 * [Virtual memory][virtual-memory], used by the majority of modern operating
@@ -592,6 +588,5 @@ static int __handle_mm_fault(struct mm_struct *mm, struct vm_area_struct *vma,
 [virtual-memory]:https://en.wikipedia.org/wiki/Virtual_memory
 [xen]:https://en.wikipedia.org/wiki/Xen
 
-[funcs]:../funcs/page-table-funcs.md
 [trans-huge-pages]:./trans-huge-pages.md
 [physical]:./physical.md

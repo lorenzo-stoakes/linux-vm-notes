@@ -23,23 +23,6 @@
 6. [Process Autopsy][autopsy] - Examining the memory allocation performed by the
    kernel for a simple userland application. __WORK IN PROGRESS__
 
-### Function Cheat Sheets
-
-1. [General Functions][funcs] - A list of general functions that don't fit under
-   any other category.
-
-2. [Page Table Functions][page-table-funcs] - Functions relating to
-   [page tables][page-tables] (other than the copious functions relating to page
-   table flags which rendered this page too huge.)
-
-3. [Page Table Flag Functions][page-table-flag-funcs] - Functions relating to
-   page table flags, separated out to avoid the page table functions page
-   getting too huge.
-
-4. [VMA Functions][vma-funcs] - Functions relating to memory descriptors and
-   Virtual Memory Areas (VMAs), which are described in the
-   [Process Address Space][process] section.
-
 ## Introduction
 
 __NOTE:__ I target [linux 4.6][linux-4.6] and an x86-64 non-[NUMA][numa] system.
@@ -85,8 +68,3 @@ These notes are licensed under [Creative Commons BY-NC-SA][license].
 [oom]:sections/oom.md
 [page-tables]:sections/page-tables.md
 [process]:sections/process.md
-
-[funcs]:funcs/funcs.md
-[page-table-flag-funcs]:funcs/page-table-flag-funcs.md
-[page-table-funcs]:funcs/page-table-funcs.md
-[vma-funcs]:funcs/vma-funcs.md
