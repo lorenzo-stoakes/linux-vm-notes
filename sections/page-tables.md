@@ -80,7 +80,7 @@ much as possible between 32 and 64-bit x86.
   than a power of 2 will be masked by the power minus 1 (e.g. `0b1000 - 1 =
   0b0111`), so the `_SHIFT` and `PTRS_PER_` values are all you need to determine
   these indexes. Typically this kind of operation is performed using helper
-  [functions][funcs] however.
+  functions however.
 
 * Gathering all these values together for the typical 4KiB page size case:
 
@@ -225,11 +225,6 @@ PTE_FLAGS_MASK = ~PTE_PFN_MASK =
   [pgd_t][pgd_t] entry's flags refer to the PUD page that PGD entry is pointing
   at, so each `pXX_t` entry value actually describes a `pXX` a level lower.
 
-* The [functions][funcs] page contains a list of helper functions for
-  interacting with these flags. Generally they don't need to be manually
-  manipulated, rather the `pXX_<flag>()` and `pXX_mk<flag>()` functions can be
-  used.
-
 * Examining the more commonly used page flags (all taken from
   [arch/x86/include/asm/pgtable_types.h][pgtable_types.h]):
 
@@ -328,11 +323,10 @@ out:
 }
 ```
 
-* The [functions][funcs] section contains detailed descriptions of each of the
-  functions used here. Note that the `_offset()` functions are confusingly
-  named - they actually provide the virtual address of the required page table
-  entry which contains the physical address of either the page table or the
-  final physical page the entry refers to.
+* Note that the `_offset()` functions are confusingly named - they actually
+  provide the virtual address of the required page table entry which contains
+  the physical address of either the page table or the final physical page the
+  entry refers to.
 
 * Note that we have to check in each case for the entry being empty (`_none()`
   functions), unsuitable for use (`_bad()` functions) and the final PTE being
@@ -356,9 +350,9 @@ out:
   [struct page][page].
 
 * A number of functions are available for translating between addresses, page
-  table entries and [struct page][page]s, listed over in the [functions][funcs]
-  section. A key one of these is [virt_to_page()][virt_to_page] which translates
-  a virtual kernel address to its corresponding [struct page][page].
+  table entries and [struct page][page]s. A key one of these is
+  [virt_to_page()][virt_to_page] which translates a virtual kernel address to
+  its corresponding [struct page][page].
 
 * Additionally, page table pages can be retrieved using the `pXX_page()` family
   of functions - for example, [pgd_page()][pgd_page] retrieves the
@@ -401,9 +395,9 @@ out:
   processes' non-kernel mappings will be entirely different and maintaining a
   TLB cache for this makes no sense.
 
-* The TLB can also be flushed manually via a number of [functions][funcs], for
-  example [flush_tlb_mm()][flush_tlb_mm] will flush the TLB entries for the
-  specified [struct mm_struct][mm_struct].
+* The TLB can also be flushed manually via a number of functions, for example
+  [flush_tlb_mm()][flush_tlb_mm] will flush the TLB entries for the specified
+  [struct mm_struct][mm_struct].
 
 * The finer grained `invlpg` instruction on 486+ x86 CPUs allows for the
   invalidation of individual page mappings, which makes sense when a partial
@@ -486,10 +480,6 @@ context_switch(struct rq *rq, struct task_struct *prev,
 * Conversely, freeing is performed by [pgd_free()][pgd_free],
   [pud_free()][pud_free], [pmd_free()][pmd_free], [pte_free()][pte_free] and
   [pte_free_kernel()][pte_free_kernel].
-
-* There are interesting details as to the operation of each of these functions,
-  I go into a fair bit of detail in these in the [page table functions][funcs]
-  page.
 
 * A function which performs allocation is
   [__handle_mm_fault()][__handle_mm_fault]. Simplifying and stripping out the
