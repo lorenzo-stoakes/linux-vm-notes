@@ -122,7 +122,7 @@
 
 * If a memory cgroup controller is in place with OOM handling enabled,
   [mem_cgroup_oom_synchronize()][mem_cgroup_oom_synchronize] (see the section on
-  [cgroup Memory Management][cgroup]) is invoked to handle the OOM, otherwise
+  cgroup Memory Management) is invoked to handle the OOM, otherwise
   `pagefault_out_of_memory()` invokes [out_of_memory()][out_of_memory] while
   holding the `oom_lock`.
 
@@ -530,5 +530,4 @@ of selecting a victim.
 [vm_memory_committed]:https://github.com/torvalds/linux/blob/v4.6/mm/util.c#L459
 [wake_oom_reaper]:https://github.com/torvalds/linux/blob/v4.6/mm/oom_kill.c#L548
 
-[cgroup]:./cgroup.md
 [process]:./process.md

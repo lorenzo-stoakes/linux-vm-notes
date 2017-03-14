@@ -67,9 +67,8 @@ int main(void)
   configuration.
 
 * The memory descriptor allocation is performed by [mm_alloc()][mm_alloc] which
-  calls [allocate_mm()][allocate_mm], a simple wrapper around a [slab][slab]
-  allocation, zeroes the memory and calls [mm_init()][mm_init] to initialise the
-  descriptor.
+  calls [allocate_mm()][allocate_mm], a simple wrapper around a slab allocation,
+  zeroes the memory and calls [mm_init()][mm_init] to initialise the descriptor.
 
 * `mm_init()` sets descriptor fields to appropriate initial values inherits the
   forked process's memory flags and allocates a new PGD (see the section on
@@ -80,8 +79,8 @@ int main(void)
 
 * `pgd_alloc()` calls [_pgd_alloc()][_pgd_alloc] to actually allocate the PGD
   itself which (except in the case of a xen paravirtualised configuration) wraps
-  a [slab][slab] allocation. In the non-PAE case (we are only considering x86-64
-  in these notes so we can neglect PAE behaviour) [pgd_ctor()][pgd_ctor] clones
+  a slab allocation. In the non-PAE case (we are only considering x86-64 in
+  these notes so we can neglect PAE behaviour) [pgd_ctor()][pgd_ctor] clones
   kernel mappings into the PGD via [clone_pgd_range()][clone_pgd_range] which is
   a wrapper around the kernel `memcpy()`, starting from
   [KERNEL_PGD_BOUNDARY][KERNEL_PGD_BOUNDARY] and copying
@@ -228,4 +227,3 @@ int main(void)
 
 [page-tables]:./page-tables.md
 [process]:./process.md
-[slab]:./slab.md

@@ -510,8 +510,8 @@ struct mm_struct {
   zeroed via [mm_alloc()][mm_alloc].
 
 * Both of these functions use [allocate_mm()][allocate_mm] to perform the
-  allocation via the [slab][slab] allocator. They also both initialise
-  process-specific fields are initialised via [mm_init()][mm_init].
+  allocation via the slab allocator. They also both initialise process-specific
+  fields are initialised via [mm_init()][mm_init].
 
 ### Freeing
 
@@ -1246,4 +1246,3 @@ enum x86_pf_error_code {
 [multi-page-alloc]:https://github.com/lorenzo-stoakes/linux-vm-hacks/blob/master/experiments/multi_page_alloc.c
 [page-tables]:./page-tables.md
 [pagetables-hack]:https://github.com/lorenzo-stoakes/linux-vm-hacks/tree/master/pagetables
-[slab]:./slab.md
