@@ -353,8 +353,7 @@ out:
 ## Translating Between Page Table Entries and Physical Page Descriptors
 
 * Each physical page of memory in the system is described by a
-  [struct page][page]. See the [Physical Pages][physical] section for more
-  details on this.
+  [struct page][page].
 
 * A number of functions are available for translating between addresses, page
   table entries and [struct page][page]s, listed over in the [functions][funcs]
@@ -589,4 +588,3 @@ static int __handle_mm_fault(struct mm_struct *mm, struct vm_area_struct *vma,
 [xen]:https://en.wikipedia.org/wiki/Xen
 
 [trans-huge-pages]:./trans-huge-pages.md
-[physical]:./physical.md
