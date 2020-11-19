@@ -1,5 +1,11 @@
 # Linux VM Notes
 
+## NOTE
+
+These notes are somewhat out of date (kernel 4.6) and I am no longer
+maintaining them. I am now keeping more recent (though succinct) notes at
+[linux-mm-notes][mm-notes].
+
 ## Contents
 
 1. [Fundamentals][fundamentals] - Overview of virtual memory concepts without
@@ -69,3 +75,5 @@ These notes are licensed under [Creative Commons BY-NC-SA][license].
 [oom]:sections/oom.md
 [page-tables]:sections/page-tables.md
 [process]:sections/process.md
+
+[mm-notes]:https://github.com/lorenzo-stoakes/linux-mm-notes
