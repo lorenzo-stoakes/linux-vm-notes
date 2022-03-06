@@ -1,10 +1,11 @@
 # Linux VM Notes
 
-## NOTE
+## IMPORTANT
 
-These notes are somewhat out of date (kernel 4.6) and I am no longer
-maintaining them. I am now keeping more recent (though succinct) notes at
-[linux-mm-notes][mm-notes].
+These notes are superceded by my new [linux mm
+book](https://github.com/lorenzo-stoakes/mm-book) project where I will be trying
+to write a book on the subject based on a recent kernel. All future efforts in
+this area will be made there.
 
 ## Contents
 
