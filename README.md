@@ -2,10 +2,9 @@
 
 ## IMPORTANT
 
-These notes are superceded by my new [linux mm
-book](https://github.com/lorenzo-stoakes/mm-book) project where I will be trying
+These notes are superceded by my new linux mm book project where I will be trying
 to write a book on the subject based on a recent kernel. All future efforts in
-this area will be made there.
+this area will be made there. See [ljs.io](https://ljs.io) for updates on this.
 
 ## Contents
 
